@@ -9,7 +9,7 @@ import { getCurrentProfile } from "@/lib/data";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE.url),
+  metadataBase: new URL(SITE.url || "http://localhost:3000"),
   title: {
     default: "Lash Lux | Luxury Lash Extensions",
     template: "%s | Lash Lux",

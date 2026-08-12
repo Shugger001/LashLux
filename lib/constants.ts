@@ -1,5 +1,15 @@
 /** Site-wide constants for Lash Lux. */
 
+function resolveSiteUrl() {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!raw) return "http://localhost:3000";
+  try {
+    return new URL(raw).toString().replace(/\/$/, "");
+  } catch {
+    return "http://localhost:3000";
+  }
+}
+
 export const SITE = {
   name: "Lash Lux",
   nameCompact: "LASHLUX",
@@ -8,7 +18,7 @@ export const SITE = {
   promise: "Healthy lashes, happy you.",
   badge: "Confidence starts with your lashes.",
   policy: "Walk-ins welcome | Appointments preferred",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: resolveSiteUrl(),
   email: "hello@lashlux.com",
   phone: "0547986899",
   phoneDisplay: "054 798 6899",
