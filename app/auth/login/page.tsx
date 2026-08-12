@@ -17,6 +17,7 @@ export default function LoginPage({
     requestedNext?.startsWith("/") && !requestedNext.startsWith("//")
       ? requestedNext
       : "/";
+  const isAdminLogin = nextPath === "/admin" || nextPath.startsWith("/admin/");
 
   return (
     <section className="section-pad">
@@ -24,27 +25,34 @@ export default function LoginPage({
         <div className="frame-lux mx-auto max-w-md">
           <div className="frame-lux-inner p-6 sm:p-8">
             <div className="mb-8 text-center">
-              <p className="eyebrow">Optional</p>
+              <p className="eyebrow">{isAdminLogin ? "Studio access" : "Account"}</p>
               <h1 className="mt-4 text-balance font-display text-4xl text-ink">
-                Client login
+                {isAdminLogin ? "Admin login" : "Sign in"}
               </h1>
-              <p className="mt-2 text-pretty text-sm text-muted-foreground">
-                No account needed to book. Sign in only if you already have a
-                profile to view past requests.
+              <p className="mt-3 text-pretty text-sm leading-6 text-ink/75">
+                {isAdminLogin
+                  ? "Sign in with your studio email and password to manage bookings, services, and settings."
+                  : "Sign in to view your booking requests. You can still book as a guest without an account."}
               </p>
             </div>
             <LoginForm nextPath={nextPath} />
-            <p className="mt-6 text-center text-sm text-muted-foreground">
-              Prefer WhatsApp?{" "}
-              <a
-                href="https://wa.me/233547986899?text=Hi%20Lash%20Lux!%20I%E2%80%99d%20like%20to%20book%20eyelash%20fixing."
-                className="font-medium text-rose-deep hover:underline"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Message us to book
-              </a>
-            </p>
+            {!isAdminLogin ? (
+              <p className="mt-6 text-center text-sm text-ink/70">
+                Prefer WhatsApp?{" "}
+                <a
+                  href="https://wa.me/233547986899?text=Hi%20Lash%20Lux!%20I%E2%80%99d%20like%20to%20book%20eyelash%20fixing."
+                  className="font-medium text-rose-deep hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Message us to book
+                </a>
+              </p>
+            ) : (
+              <p className="mt-6 text-center text-sm text-ink/70">
+                Need help accessing the dashboard? Contact the studio owner.
+              </p>
+            )}
           </div>
         </div>
       </div>

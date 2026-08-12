@@ -66,7 +66,7 @@ export function LoginForm({ nextPath = "/" }: { nextPath?: string }) {
     return (
       <div className="rounded-xl border border-border bg-secondary p-6 text-center">
         <h2 className="font-display text-2xl text-ink">Sign-in is not available yet.</h2>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+        <p className="mt-2 text-sm leading-6 text-ink/75">
           Online accounts are still being configured. You can continue to book
           an appointment without signing in.
         </p>
@@ -110,7 +110,7 @@ export function LoginForm({ nextPath = "/" }: { nextPath?: string }) {
       </Button>
       <div className="flex items-center gap-4" aria-hidden>
         <span className="h-px flex-1 bg-border" />
-        <span className="text-xs uppercase tracking-wider text-muted-foreground">or</span>
+        <span className="text-xs uppercase tracking-wider text-ink/55">or</span>
         <span className="h-px flex-1 bg-border" />
       </div>
       <Button
@@ -124,9 +124,9 @@ export function LoginForm({ nextPath = "/" }: { nextPath?: string }) {
         {isGoogleLoading && <Loader2 className="animate-spin" aria-hidden />}
         {isGoogleLoading ? "Connecting…" : "Continue with Google"}
       </Button>
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-center text-sm text-ink/75">
         Prefer to book as a guest?{" "}
-        <Link className="font-medium text-primary hover:underline" href="/book">
+        <Link className="font-medium text-rose-deep hover:underline" href="/book">
           Book eyelash fixing
         </Link>
       </p>
