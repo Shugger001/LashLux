@@ -53,11 +53,14 @@ export function HoursContactCta() {
 
         <FadeIn delay={0.1}>
           <div className="frame-lux">
-            <div className="frame-lux-inner relative overflow-hidden p-6 sm:p-8">
-              <div className="absolute right-3 top-3 max-w-[7.5rem] opacity-95 sm:right-4 sm:top-4 sm:max-w-[9rem]">
-                <BrandLogo size="sm" className="h-auto w-full" />
+            <div className="frame-lux-inner p-6 sm:p-8">
+              <div className="flex items-start justify-between gap-4">
+                <h3 className="font-display text-2xl text-ink">Opening hours</h3>
+                <BrandLogo
+                  size="sm"
+                  className="h-12 w-auto shrink-0 sm:h-14"
+                />
               </div>
-              <h3 className="font-display text-2xl text-ink">Opening hours</h3>
               <ul className="mt-6 space-y-3 text-sm">
                 {(
                   Object.keys(DEFAULT_HOURS) as Array<keyof typeof DEFAULT_HOURS>
@@ -67,7 +70,7 @@ export function HoursContactCta() {
                     className="flex items-center justify-between gap-4 border-b border-[#c9a27e]/15 pb-3 last:border-0"
                   >
                     <span>{DAY_LABELS[key]}</span>
-                    <span className="text-muted-foreground">
+                    <span className="text-right text-muted-foreground">
                       {DEFAULT_HOURS[key]}
                     </span>
                   </li>
