@@ -27,7 +27,7 @@ export default async function BookPage() {
             until we confirm it.
           </p>
         </div>
-        <Suspense fallback={<BookingPageSkeleton />}>
+        <Suspense fallback={<BookingWizardSkeleton />}>
           <BookingWizard services={services} />
         </Suspense>
       </div>
