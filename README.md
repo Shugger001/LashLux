@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lash Lux
 
-## Getting Started
+Production-ready luxury lash studio site for **Lash Lux** (Manna Apartment, Old Ashongman).
 
-First, run the development server:
+**Stack:** Next.js 14 (App Router) · TypeScript · Tailwind CSS · Supabase · Resend · Vercel
+
+## Brand
+
+- Tagline: *Luxury in every lash.*
+- Slogan: *Enhance. Elevate. Empower.*
+- Phone / WhatsApp: `0547986899`
+- Instagram: [@lashlux_](https://instagram.com/lashlux_)
+- Snapchat: `c_tamidu`
+
+Official flyer asset: `public/images/lashlux-flyer.png`
+
+## Features
+
+- Public marketing site (home, services, gallery, about, contact)
+- Multi-step appointment booking with availability checks
+- Email/password + Google OAuth (Supabase Auth)
+- Role-based admin (`client` / `admin`) with middleware protection
+- Admin: appointments, services, gallery, testimonials, clients, settings
+- Demo mode works without Supabase env vars (seeded local data)
+
+## Quick start
+
+```bash
+npm install
+cp .env.example .env.local
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+## Supabase setup
+
+1. Create a Supabase project (or use the connected Hasana/Lash Lux project).
+2. Run the migration in `supabase/migrations/001_initial_schema.sql`.
+3. Enable Email and Google providers under Authentication → Providers.
+4. Add redirect URL: `http://localhost:3000/auth/callback` (and your production URL).
+5. Create a Storage bucket named `gallery` (public) if you plan to upload images.
+6. Promote an admin after signup:
+
+```sql
+update public.users set role = 'admin' where id = '<your-auth-user-uuid>';
+```
+
+## Environment variables
+
+See `.env.example`.
+
+## Scripts
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm run start
+npm run lint
+npm run typecheck
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Push this repo to GitHub.
+2. Import the project in Vercel.
+3. Add env vars for Preview + Production.
+4. Set `NEXT_PUBLIC_SITE_URL` to your production domain.
+5. Deploy.
