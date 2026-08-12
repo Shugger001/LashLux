@@ -215,7 +215,7 @@ export async function getAdminAppointments(): Promise<Appointment[]> {
       console.error("[admin:appointments-query]", { message: error.message });
       return [];
     }
-    return (data as Appointment[]) ?? [];
+    return ((data as unknown as Appointment[]) ?? []);
   } catch (error) {
     console.error("[admin:appointments-failed]", {
       message: error instanceof Error ? error.message : "unknown",
