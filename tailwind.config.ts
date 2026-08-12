@@ -12,6 +12,7 @@ const config: Config = {
       fontFamily: {
         sans: ["Outfit", "system-ui", "sans-serif"],
         display: ["Montserrat", "system-ui", "sans-serif"],
+        editorial: ["Cormorant Garamond", "Georgia", "serif"],
         script: ["Great Vibes", "cursive"],
       },
       colors: {
@@ -70,6 +71,7 @@ const config: Config = {
       },
       boxShadow: {
         soft: "0 12px 40px -20px rgba(74, 58, 53, 0.25)",
+        lux: "0 24px 60px -32px rgba(58, 42, 44, 0.4)",
       },
       keyframes: {
         "fade-up": {

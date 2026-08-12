@@ -33,7 +33,7 @@ export function SiteHeader({
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-40 px-3 pb-2 pt-3 sm:px-4 sm:pt-4">
       <div className="pointer-events-auto container-page">
-        <div className="flex items-center justify-between gap-3 rounded-full border border-[#c9a27e]/25 bg-cream/80 px-3 py-2 shadow-[0_18px_40px_-28px_rgba(58,42,44,0.45)] backdrop-blur-xl sm:px-4">
+        <div className="flex items-center justify-between gap-3 rounded-full border border-[#c9a27e]/30 bg-cream/75 px-3 py-2 shadow-[0_18px_44px_-24px_rgba(58,42,44,0.5)] backdrop-blur-2xl sm:px-4">
           <Link href="/" className="rounded-full focus-ring">
             <BrandWordmark />
           </Link>
@@ -99,7 +99,7 @@ export function SiteHeader({
             transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
             className="pointer-events-auto container-page mt-2 md:hidden"
           >
-            <div className="rounded-[1.5rem] border border-[#c9a27e]/25 bg-cream/95 p-4 shadow-soft backdrop-blur-xl">
+            <div className="rounded-[1.75rem] border border-[#c9a27e]/30 bg-cream/95 p-5 shadow-lux backdrop-blur-2xl">
               <nav className="flex flex-col gap-1" aria-label="Mobile">
                 {NAV.map((item, index) => (
                   <motion.div
@@ -110,7 +110,7 @@ export function SiteHeader({
                   >
                     <Link
                       href={item.href}
-                      className="block rounded-xl px-3 py-3 text-base"
+                      className="block rounded-xl px-3 py-3.5 text-base font-medium"
                       onClick={() => setOpen(false)}
                     >
                       {item.label}

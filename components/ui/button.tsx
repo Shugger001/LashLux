@@ -10,11 +10,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "rounded-full bg-rose-gold text-ink shadow-[0_14px_30px_-16px_rgba(176,104,113,0.7)] hover:brightness-[1.03] hover:-translate-y-0.5",
+          "rounded-full bg-rose-gold text-ink shadow-[0_16px_36px_-14px_rgba(168,104,113,0.65)] hover:brightness-[1.04] hover:-translate-y-0.5",
         secondary:
           "rounded-full bg-secondary text-secondary-foreground hover:bg-sand",
         outline:
-          "rounded-full border border-[#c9a27e]/45 bg-transparent hover:bg-white/70 hover:border-[#c9a27e]",
+          "rounded-full border border-[#c9a27e]/50 bg-white/40 backdrop-blur-sm hover:bg-white/80 hover:border-[#c9a27e]",
         ghost: "rounded-full hover:bg-secondary hover:text-foreground",
         danger:
           "rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90",

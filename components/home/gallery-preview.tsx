@@ -21,12 +21,12 @@ export function GalleryPreview({ items }: { items: GalleryItem[] }) {
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   return (
-    <section className="section-pad bg-gradient-to-b from-blush/40 to-transparent">
+    <section className="section-pad relative overflow-hidden bg-gradient-to-b from-blush/50 via-blush/20 to-transparent">
       <div className="container-page">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <FadeIn>
             <span className="eyebrow">Gallery</span>
-            <h2 className="mt-4 font-display text-3xl text-ink sm:text-4xl lg:text-5xl">
+            <h2 className="mt-4 font-editorial text-4xl text-ink sm:text-5xl lg:text-6xl">
               Recent work
             </h2>
             <p className="mt-3 max-w-md text-muted-foreground">
@@ -62,22 +62,22 @@ export function GalleryPreview({ items }: { items: GalleryItem[] }) {
                 key={item.id}
                 className="relative min-w-0 flex-[0_0_85%] sm:flex-[0_0_48%] lg:flex-[0_0_31%]"
               >
-                <div className="frame-lux">
+                <div className="frame-lux group">
                   <div className="frame-lux-inner overflow-hidden">
                     <div className="relative aspect-[3/4]">
                       <Image
                         src={item.image_url}
                         alt={item.title}
                         fill
-                        className="object-cover"
+                        className="object-cover transition-transform duration-700 transition-lux group-hover:scale-105"
                         sizes="(max-width:768px) 85vw, 30vw"
                       />
-                    </div>
-                    <div className="px-4 py-4">
-                      <p className="font-display text-xl text-ink">{item.title}</p>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {item.category}
-                      </p>
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent p-5 pt-16">
+                        <p className="font-display text-xl text-cream">{item.title}</p>
+                        <p className="mt-1 text-xs uppercase tracking-[0.16em] text-[#f0d2b8]">
+                          {item.category}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

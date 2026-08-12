@@ -12,11 +12,12 @@ export function HoursContactCta() {
       <div className="container-page grid gap-12 lg:grid-cols-2">
         <FadeIn>
           <span className="eyebrow">Book eyelash fixing</span>
-          <h2 className="mt-4 font-display text-3xl text-ink sm:text-4xl lg:text-5xl">
+          <h2 className="mt-4 font-editorial text-4xl text-ink sm:text-5xl lg:text-6xl">
             Ready when you are.
           </h2>
-          <p className="mt-4 font-script text-4xl text-rose">{SITE.badge}</p>
-          <p className="mt-5 max-w-md text-muted-foreground">
+          <p className="mt-4 font-script text-4xl text-rose sm:text-5xl">{SITE.badge}</p>
+          <div className="mt-5 h-px w-16 bg-gradient-to-r from-[#c9a27e] to-transparent" />
+          <p className="mt-5 max-w-md text-muted-foreground leading-7">
             Book a classic, hybrid, volume, or mega volume set online, WhatsApp
             us, or walk in when the schedule allows, appointments preferred.
           </p>
@@ -63,7 +64,7 @@ export function HoursContactCta() {
                 ).map((key) => (
                   <li
                     key={key}
-                    className="flex items-center justify-between gap-4 border-b border-border/70 pb-3 last:border-0"
+                    className="flex items-center justify-between gap-4 border-b border-[#c9a27e]/15 pb-3 last:border-0"
                   >
                     <span>{DAY_LABELS[key]}</span>
                     <span className="text-muted-foreground">
