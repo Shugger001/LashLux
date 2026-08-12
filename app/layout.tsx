@@ -25,10 +25,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/lashlux-flyer.png",
-        width: 1200,
-        height: 1500,
-        alt: "Lash Lux eyelash fixing flyer",
+        url: "/images/lash-lux-logo.png",
+        width: 1024,
+        height: 682,
+        alt: "Lash Lux logo",
       },
     ],
   },
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Lash Lux | Eyelash Fixing",
     description: "Book classic, hybrid, volume, or mega volume lashes at Lash Lux.",
-    images: ["/images/lashlux-flyer.png"],
+    images: ["/images/lash-lux-logo.png"],
   },
 };
 

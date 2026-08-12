@@ -10,7 +10,7 @@ export function localBusinessJsonLd() {
     url: SITE.url,
     telephone: `+233${SITE.phone.replace(/^0/, "")}`,
     email: SITE.email,
-    image: `${SITE.url}/images/lashlux-flyer.png`,
+    image: `${SITE.url}/images/lash-lux-logo.png`,
     priceRange: "GH₵",
     address: {
       "@type": "PostalAddress",

@@ -54,8 +54,8 @@ export function HoursContactCta() {
         <FadeIn delay={0.1}>
           <div className="frame-lux">
             <div className="frame-lux-inner relative overflow-hidden p-6 sm:p-8">
-              <div className="absolute right-4 top-4 opacity-90">
-                <BrandLogo size="md" />
+              <div className="absolute right-3 top-3 max-w-[7.5rem] opacity-95 sm:right-4 sm:top-4 sm:max-w-[9rem]">
+                <BrandLogo size="sm" className="h-auto w-full" />
               </div>
               <h3 className="font-display text-2xl text-ink">Opening hours</h3>
               <ul className="mt-6 space-y-3 text-sm">

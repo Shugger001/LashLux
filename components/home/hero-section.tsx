@@ -35,16 +35,12 @@ export function HeroSection() {
 
       <div className="container-page relative flex min-h-[100svh] flex-col justify-end pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-24 sm:pb-16 sm:pt-28 lg:pb-20">
         <div className="max-w-2xl text-cream">
-          <div className="mb-5 hidden items-center gap-3 sm:mb-8 sm:flex">
-            <BrandLogo size="lg" className="border-[#c9a27e] bg-white/95 shadow-soft" />
-            <div>
-              <p className="font-display text-xl font-bold tracking-[0.22em] sm:text-2xl">
-                LASH<span className="text-rose-gold">LUX</span>
-              </p>
-              <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-cream/55">
-                Eyelash fixing · Lash extensions
-              </p>
-            </div>
+          <div className="mb-5 hidden sm:mb-8 sm:block">
+            <BrandLogo
+              size="lg"
+              priority
+              className="rounded-xl bg-cream/95 p-2 shadow-soft"
+            />
           </div>
 
           <p className="font-script text-[2.85rem] leading-none text-[#f0d2b8] sm:text-5xl lg:text-6xl">

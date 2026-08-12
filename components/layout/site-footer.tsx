@@ -24,7 +24,7 @@ export function SiteFooter() {
 
       <div className="container-page relative grid gap-10 py-12 pb-[max(3rem,calc(env(safe-area-inset-bottom)+2rem))] md:grid-cols-3 md:gap-12 md:py-16">
         <div>
-          <BrandWordmark light showTagline />
+          <BrandWordmark size="footer" className="rounded-lg bg-cream p-1.5" />
           <p className="mt-5 font-script text-3xl text-[#e8c4a8]">{SITE.slogan}</p>
           <p className="mt-2 text-sm text-cream/70">{SITE.promise}</p>
           <a
@@ -84,9 +84,9 @@ export function SiteFooter() {
               )
             )}
           </ul>
-          <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-[#c9a27e]/40 bg-white/5 px-4 py-3">
+          <div className="mt-8 inline-flex items-center gap-3 rounded-2xl border border-[#c9a27e]/40 bg-cream/95 px-3 py-2">
             <BrandLogo size="sm" />
-            <p className="max-w-[10rem] text-[10px] font-semibold uppercase leading-snug tracking-[0.12em] text-[#e8c4a8]">
+            <p className="max-w-[10rem] text-[10px] font-semibold uppercase leading-snug tracking-[0.12em] text-rose-deep">
               {SITE.badge}
             </p>
           </div>
