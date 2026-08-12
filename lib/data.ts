@@ -7,10 +7,17 @@ import { isSupabaseConfigured } from "@/lib/supabase/client";
 import { createClient } from "@/lib/supabase/server";
 import type { GalleryItem, Service, Testimonial } from "@/types";
 
-/** Fetch active services, falls back to demo data without Supabase. */
+function allowDemoFallback() {
+  return (
+    process.env.VERCEL_ENV !== "production" &&
+    process.env.NODE_ENV !== "production"
+  );
+}
+
+/** Fetch active services. Demo IDs are local-only — never in production booking. */
 export async function getServices(): Promise<Service[]> {
   if (!isSupabaseConfigured()) {
-    return [...DEMO_SERVICES] as Service[];
+    return allowDemoFallback() ? ([...DEMO_SERVICES] as Service[]) : [];
   }
 
   try {
@@ -23,13 +30,20 @@ export async function getServices(): Promise<Service[]> {
       .eq("is_active", true)
       .order("sort_order", { ascending: true });
 
-    if (error || !data?.length) {
-      return [...DEMO_SERVICES] as Service[];
+    if (error) {
+      console.error("[data:services]", { message: error.message });
+      return allowDemoFallback() ? ([...DEMO_SERVICES] as Service[]) : [];
+    }
+    if (!data?.length) {
+      return allowDemoFallback() ? ([...DEMO_SERVICES] as Service[]) : [];
     }
 
     return data as Service[];
-  } catch {
-    return [...DEMO_SERVICES] as Service[];
+  } catch (error) {
+    console.error("[data:services-failed]", {
+      message: error instanceof Error ? error.message : "unknown",
+    });
+    return allowDemoFallback() ? ([...DEMO_SERVICES] as Service[]) : [];
   }
 }
 

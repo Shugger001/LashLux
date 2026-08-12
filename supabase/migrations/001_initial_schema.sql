@@ -150,6 +150,9 @@ as $$
   );
 $$;
 
+-- Required so RLS policies that call is_admin() work for browser clients.
+grant execute on function public.is_admin() to anon, authenticated;
+
 -- RLS
 alter table public.users enable row level security;
 alter table public.services enable row level security;
@@ -180,7 +183,8 @@ create policy "Admins manage users"
 drop policy if exists "Public can view active services" on public.services;
 create policy "Public can view active services"
   on public.services for select
-  using (is_active = true or public.is_admin());
+  to anon, authenticated
+  using (is_active = true);
 
 drop policy if exists "Admins manage services" on public.services;
 create policy "Admins manage services"
@@ -224,7 +228,8 @@ create policy "Admins manage gallery"
 drop policy if exists "Public view approved testimonials" on public.testimonials;
 create policy "Public view approved testimonials"
   on public.testimonials for select
-  using (is_approved = true or public.is_admin());
+  to anon, authenticated
+  using (is_approved = true);
 
 drop policy if exists "Anyone can submit testimonials" on public.testimonials;
 create policy "Anyone can submit testimonials"

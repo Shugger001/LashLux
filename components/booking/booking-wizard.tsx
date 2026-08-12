@@ -210,6 +210,12 @@ export function BookingWizard({ services }: { services: Service[] }) {
             <p className="mt-2 text-muted-foreground">
               Select the look you would like to book.
             </p>
+            {!services.length ? (
+              <p className="mt-6 rounded-xl bg-secondary p-6 text-center text-muted-foreground">
+                Services are temporarily unavailable. Please WhatsApp us to book,
+                or try again shortly.
+              </p>
+            ) : null}
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               {services.map((service) => (
                 <button
