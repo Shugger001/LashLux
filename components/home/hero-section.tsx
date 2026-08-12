@@ -11,10 +11,10 @@ export function HeroSection() {
     <section className="hero-flush relative min-h-[100svh] overflow-hidden">
       <Image
         src="/images/hero-lashes.jpg"
-        alt="Black woman with volume eyelash extensions after a Lash Lux appointment"
+        alt="Beauty model with polished makeup and defined lashes"
         fill
         priority
-        className="object-cover object-[center_12%] sm:object-[center_18%] motion-safe:animate-hero-ken"
+        className="object-cover object-[center_20%] sm:object-[center_22%] motion-safe:animate-hero-ken"
         sizes="100vw"
       />
       <div className="absolute inset-0 bg-gradient-to-r from-ink/92 via-ink/68 to-ink/28" />

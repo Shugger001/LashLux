@@ -14,15 +14,15 @@ const STYLE_CIRCLES = [
   },
   {
     label: "Hybrid",
-    image: "/gallery/look-02.png",
+    image: "/gallery/look-01.png",
   },
   {
     label: "Volume",
-    image: "/images/hero-lashes.jpg",
+    image: "/gallery/look-02.png",
   },
   {
     label: "Mega",
-    image: "/gallery/look-02.png",
+    image: "/images/hero-lashes.jpg",
   },
 ] as const;
 
