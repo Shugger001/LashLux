@@ -78,19 +78,19 @@ export function ServicesCatalog({ services }: { services: Service[] }) {
                   <p className="eyebrow">
                     {service.category}
                   </p>
-                  <h2 className="mt-2 font-display text-3xl text-ink">
+                  <h2 className="mt-2 font-editorial text-3xl text-ink">
                     {service.name}
                   </h2>
                 </div>
-                <p className="font-medium text-rose">
+                <p className="font-display text-base font-semibold text-rose-deep">
                   {formatCurrency(Number(service.price))}
                 </p>
               </div>
               <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
                 {service.description}
               </p>
-              <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4" aria-hidden />
+              <p className="mt-4 flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-[#c9a27e]">
+                <Clock className="h-3.5 w-3.5" aria-hidden />
                 {formatDuration(service.duration)}
               </p>
               <div className="mt-6 flex gap-3">

@@ -143,9 +143,9 @@ export function BookingWizard({ services }: { services: Service[] }) {
   return (
     <div className="frame-lux mx-auto max-w-3xl">
       <div className="frame-lux-inner overflow-hidden">
-      <div className="border-b border-border p-6 sm:p-8">
+      <div className="border-b border-[#c9a27e]/20 bg-gradient-to-r from-blush/40 via-white to-transparent p-6 sm:p-8">
         <div className="flex items-center justify-between gap-4">
-          <p className="text-sm font-medium text-rose">
+          <p className="text-sm font-medium tracking-wide text-rose-deep">
             Step {step} of 6 · {STEP_LABELS[step - 1]}
           </p>
           {selectedService && step < 6 && (
@@ -155,7 +155,7 @@ export function BookingWizard({ services }: { services: Service[] }) {
           )}
         </div>
         <div
-          className="mt-4 h-2 overflow-hidden rounded-full bg-secondary"
+          className="mt-4 h-1.5 overflow-hidden rounded-full bg-[#c9a27e]/15"
           role="progressbar"
           aria-label="Booking progress"
           aria-valuemin={1}
@@ -163,7 +163,7 @@ export function BookingWizard({ services }: { services: Service[] }) {
           aria-valuenow={step}
         >
           <div
-            className="h-full rounded-full bg-primary transition-[width] duration-300"
+            className="h-full rounded-full bg-rose-gold transition-[width] duration-500 transition-lux"
             style={{ width: progress }}
           />
         </div>
@@ -172,7 +172,7 @@ export function BookingWizard({ services }: { services: Service[] }) {
       <div className="p-6 sm:p-8">
         {step === 1 && (
           <section aria-labelledby="service-step-title">
-            <h2 id="service-step-title" className="font-display text-3xl text-ink">
+            <h2 id="service-step-title" className="font-editorial text-3xl text-ink sm:text-4xl">
               Choose your service
             </h2>
             <p className="mt-2 text-muted-foreground">
@@ -184,20 +184,22 @@ export function BookingWizard({ services }: { services: Service[] }) {
                   key={service.id}
                   type="button"
                   className={cn(
-                    "rounded-xl border p-5 text-left transition-colors focus-ring",
+                    "rounded-2xl border p-5 text-left transition-all duration-300 transition-lux focus-ring",
                     serviceId === service.id
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/50"
+                      ? "border-[#c9a27e] bg-blush/40 shadow-soft"
+                      : "border-[#c9a27e]/25 hover:border-[#c9a27e]/60 hover:bg-white/70"
                   )}
                   aria-pressed={serviceId === service.id}
                   onClick={() => setServiceId(service.id)}
                 >
-                  <span className="font-display text-2xl text-ink">
+                  <span className="font-display text-xl text-ink sm:text-2xl">
                     {service.name}
                   </span>
                   <span className="mt-2 flex justify-between gap-3 text-sm text-muted-foreground">
                     <span>{formatDuration(service.duration)}</span>
-                    <span>{formatCurrency(Number(service.price))}</span>
+                    <span className="font-medium text-rose-deep">
+                      {formatCurrency(Number(service.price))}
+                    </span>
                   </span>
                 </button>
               ))}

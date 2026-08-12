@@ -19,10 +19,11 @@ export default async function BookPage() {
       <div className="container-page">
         <div className="mx-auto mb-8 max-w-2xl text-center sm:mb-10">
           <p className="eyebrow">Online booking</p>
-          <h1 className="mt-4 text-balance font-display text-4xl text-ink sm:mt-5 sm:text-6xl">
+          <h1 className="mt-4 text-balance font-editorial text-4xl text-ink sm:mt-5 sm:text-6xl">
             Book your eyelash fixing.
           </h1>
-          <p className="mt-3 text-pretty text-sm text-muted-foreground sm:mt-4 sm:text-base">
+          <div className="mx-auto mt-5 h-px w-16 bg-gradient-to-r from-transparent via-[#c9a27e] to-transparent" />
+          <p className="mt-4 text-pretty text-sm text-muted-foreground sm:text-base">
             Choose a lash set and preferred time. Your request stays pending
             until we confirm it.
           </p>

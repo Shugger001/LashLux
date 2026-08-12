@@ -73,12 +73,14 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
                 src={item.image_url}
                 alt={item.title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                className="object-cover transition-transform duration-700 transition-lux group-hover:scale-105"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 to-transparent p-5 pt-16 text-left text-white">
-                <p className="font-display text-2xl">{item.title}</p>
-                <p className="mt-1 text-sm text-white/80">{item.category}</p>
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 via-ink/25 to-transparent p-5 pt-16 text-left text-white">
+                <p className="font-editorial text-2xl sm:text-3xl">{item.title}</p>
+                <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-[#f0d2b8]">
+                  {item.category}
+                </p>
               </div>
             </div>
           </button>
