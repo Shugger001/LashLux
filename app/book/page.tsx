@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { BookingWizard } from "@/components/booking/booking-wizard";
-import { Skeleton } from "@/components/ui/card";
+import { BookingWizardSkeleton } from "@/components/ui/page-skeletons";
 import { getServices } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export default async function BookPage() {
             until we confirm it.
           </p>
         </div>
-        <Suspense fallback={<Skeleton className="mx-auto h-[560px] max-w-3xl" />}>
+        <Suspense fallback={<BookingPageSkeleton />}>
           <BookingWizard services={services} />
         </Suspense>
       </div>

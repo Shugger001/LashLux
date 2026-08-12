@@ -131,6 +131,33 @@
   .transition-lux {
     transition-timing-function: var(--ease-lux);
   }
+
+  .skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+    background-color: color-mix(in srgb, var(--sand) 88%, white);
+  }
+
+  .skeleton-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.55) 45%,
+      rgba(240, 210, 184, 0.35) 55%,
+      transparent 100%
+    );
+    animation: skeleton-shimmer 1.35s var(--ease-lux) infinite;
+  }
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
