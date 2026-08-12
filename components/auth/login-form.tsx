@@ -125,12 +125,9 @@ export function LoginForm({ nextPath = "/" }: { nextPath?: string }) {
         {isGoogleLoading ? "Connecting…" : "Continue with Google"}
       </Button>
       <p className="text-center text-sm text-muted-foreground">
-        New to Lash Lux?{" "}
-        <Link
-          className="font-medium text-primary hover:underline"
-          href={`/auth/signup?next=${encodeURIComponent(safeNextPath)}`}
-        >
-          Create an account
+        Prefer to book as a guest?{" "}
+        <Link className="font-medium text-primary hover:underline" href="/book">
+          Book eyelash fixing
         </Link>
       </p>
     </form>

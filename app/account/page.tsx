@@ -179,16 +179,37 @@ function SignedOutAccount() {
       <div className="container-page">
         <div className="frame-lux mx-auto max-w-xl">
           <div className="frame-lux-inner p-8 text-center sm:p-10">
-            <p className="eyebrow">Your Lash Lux account</p>
+            <p className="eyebrow">Book without signing in</p>
             <h1 className="mt-4 text-balance font-display text-4xl text-ink">
-              Sign in to view your appointments.
+              Ready for eyelash fixing?
             </h1>
             <p className="mt-3 text-pretty text-muted-foreground">
-              Your requests and confirmed sessions will appear here.
+              Guests can book online or WhatsApp us. Sign in is only needed if
+              you already saved a profile.
             </p>
-            <Button asChild className="mt-7">
-              <Link href="/auth/login?next=%2Faccount">Sign in to your account</Link>
-            </Button>
+            <div className="mt-7 flex flex-wrap justify-center gap-3">
+              <Button asChild>
+                <Link href="/book">Book fixing</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <a
+                  href="https://wa.me/233547986899?text=Hi%20Lash%20Lux!%20I%E2%80%99d%20like%20to%20book%20eyelash%20fixing."
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  WhatsApp
+                </a>
+              </Button>
+            </div>
+            <p className="mt-6 text-sm text-muted-foreground">
+              Already have a profile?{" "}
+              <Link
+                href="/auth/login?next=%2Faccount"
+                className="font-medium text-rose-deep hover:underline"
+              >
+                Sign in
+              </Link>
+            </p>
           </div>
         </div>
       </div>

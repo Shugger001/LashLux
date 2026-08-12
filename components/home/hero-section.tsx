@@ -11,11 +11,11 @@ export function HeroSection() {
   return (
     <section className="relative -mt-[4.5rem] min-h-[100dvh] overflow-hidden">
       <Image
-        src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=1800&q=80"
-        alt="Close-up of professional eyelash fixing and lash extensions"
+        src="/images/hero-lashes.jpg"
+        alt="Close-up of professional eyelash extensions after fixing"
         fill
         priority
-        className="object-cover object-[center_28%]"
+        className="object-cover object-[center_40%]"
         sizes="100vw"
       />
       <div className="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/55 to-ink/25" />

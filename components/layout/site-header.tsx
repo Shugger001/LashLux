@@ -61,13 +61,9 @@ export function SiteHeader({
                 <Link href="/admin">Admin</Link>
               </Button>
             )}
-            {isLoggedIn ? (
+            {isLoggedIn && (
               <Button asChild variant="ghost" size="sm">
-                <Link href="/account">Account</Link>
-              </Button>
-            ) : (
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/auth/login">Sign in</Link>
+                <Link href="/account">My bookings</Link>
               </Button>
             )}
             <Button asChild size="sm">
@@ -125,13 +121,15 @@ export function SiteHeader({
                     Admin
                   </Link>
                 )}
-                <Link
-                  href={isLoggedIn ? "/account" : "/auth/login"}
-                  className="block rounded-xl px-3 py-3 text-base"
-                  onClick={() => setOpen(false)}
-                >
-                  {isLoggedIn ? "Account" : "Sign in"}
-                </Link>
+                {isLoggedIn && (
+                  <Link
+                    href="/account"
+                    className="block rounded-xl px-3 py-3 text-base"
+                    onClick={() => setOpen(false)}
+                  >
+                    My bookings
+                  </Link>
+                )}
                 <Button asChild className="mt-2">
                   <Link href="/book" onClick={() => setOpen(false)}>
                     Book now

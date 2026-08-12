@@ -102,12 +102,9 @@ export function SignupForm({ nextPath = "/" }: { nextPath?: string }) {
         {isSubmitting ? "Creating account…" : "Create your account"}
       </Button>
       <p className="text-center text-sm text-muted-foreground">
-        Already have an account?{" "}
-        <Link
-          className="font-medium text-primary hover:underline"
-          href={`/auth/login?next=${encodeURIComponent(safeNextPath)}`}
-        >
-          Sign in
+        Prefer to book as a guest?{" "}
+        <Link className="font-medium text-primary hover:underline" href="/book">
+          Book without an account
         </Link>
       </p>
     </form>

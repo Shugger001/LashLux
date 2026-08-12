@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { WhatsAppFloat } from "@/components/layout/whatsapp-float";
 import { Providers } from "@/components/providers";
 import { SITE } from "@/lib/constants";
 import { getCurrentProfile } from "@/lib/data";
@@ -61,6 +62,7 @@ export default async function RootLayout({
           />
           <main id="main">{children}</main>
           <SiteFooter />
+          <WhatsAppFloat />
         </Providers>
       </body>
     </html>
