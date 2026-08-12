@@ -4,7 +4,7 @@ import {
   DEMO_TESTIMONIALS,
   SITE,
 } from "@/lib/constants";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { createAdminClient, createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import type {
   AdminStats,
   Appointment,
@@ -201,15 +201,27 @@ export async function getAdminTestimonials(): Promise<Testimonial[]> {
 
 /** Return appointments with related service and client profile data. */
 export async function getAdminAppointments(): Promise<Appointment[]> {
-  return queryOrDemo(
-    () =>
-      createClient()
-        .from("appointments")
-        .select("id, user_id, service_id, appointment_date, appointment_time, status, notes, client_name, client_email, client_phone, created_at, updated_at, service:services(id, name, description, price, duration, category, image_url, is_active, sort_order, created_at), user:users(id, full_name, phone, role, created_at, updated_at)")
-        .order("appointment_date")
-        .order("appointment_time"),
-    DEMO_APPOINTMENTS
-  );
+  if (!isSupabaseConfigured()) return DEMO_APPOINTMENTS;
+  try {
+    const admin = createAdminClient();
+    const { data, error } = await admin
+      .from("appointments")
+      .select(
+        "id, user_id, service_id, appointment_date, appointment_time, status, notes, client_name, client_email, client_phone, payment_status, payment_reference, deposit_amount, reminder_sent_at, created_at, updated_at, service:services(id, name, description, price, duration, category, image_url, is_active, sort_order, created_at), user:users(id, full_name, phone, role, created_at, updated_at)"
+      )
+      .order("appointment_date", { ascending: false })
+      .order("appointment_time", { ascending: false });
+    if (error) {
+      console.error("[admin:appointments-query]", { message: error.message });
+      return [];
+    }
+    return (data as Appointment[]) ?? [];
+  } catch (error) {
+    console.error("[admin:appointments-failed]", {
+      message: error instanceof Error ? error.message : "unknown",
+    });
+    return [];
+  }
 }
 
 /** Return client profiles and their booking history. */

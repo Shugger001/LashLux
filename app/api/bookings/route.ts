@@ -85,6 +85,16 @@ export async function POST(request: Request) {
   }
 
   if (!isSupabaseConfigured()) {
+    if (process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production") {
+      console.error("[booking:supabase-not-configured]");
+      return NextResponse.json(
+        {
+          error:
+            "Booking is temporarily unavailable. The studio database is not connected.",
+        },
+        { status: 503 }
+      );
+    }
     return NextResponse.json(
       {
         success: true,

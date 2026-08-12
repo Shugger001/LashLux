@@ -38,6 +38,13 @@ export async function GET(request: Request) {
   }
 
   if (!isSupabaseConfigured()) {
+    if (process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production") {
+      console.error("[availability:supabase-not-configured]");
+      return NextResponse.json(
+        { error: "Availability is temporarily unavailable." },
+        { status: 503 }
+      );
+    }
     const demoDuration = 120;
     const allSlots = generateBookableSlots({
       date: requestedDate,
