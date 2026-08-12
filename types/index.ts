@@ -70,6 +70,8 @@ export interface BlockedTime {
   created_at: string;
 }
 
+export type GalleryMediaType = "image" | "video";
+
 export interface GalleryItem {
   id: string;
   image_url: string;
@@ -77,6 +79,8 @@ export interface GalleryItem {
   description: string | null;
   category: string;
   is_featured: boolean;
+  media_type?: GalleryMediaType;
+  poster_url?: string | null;
   created_at: string;
 }
 

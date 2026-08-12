@@ -44,7 +44,7 @@ export async function getGallery(featuredOnly = false): Promise<GalleryItem[]> {
     let query = supabase
       .from("gallery")
       .select(
-        "id, image_url, title, description, category, is_featured, created_at"
+        "id, image_url, title, description, category, is_featured, media_type, poster_url, created_at"
       )
       .order("created_at", { ascending: false });
 

@@ -181,7 +181,7 @@ export async function getAdminGallery(): Promise<GalleryItem[]> {
     () =>
       createClient()
         .from("gallery")
-        .select("id, image_url, title, description, category, is_featured, created_at")
+        .select("id, image_url, title, description, category, is_featured, media_type, poster_url, created_at")
         .order("created_at", { ascending: false }),
     [...DEMO_GALLERY] as GalleryItem[]
   );
