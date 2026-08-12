@@ -5,6 +5,7 @@ import {
   BUFFER_MINUTES,
   generateBookableSlots,
   isBookableDate,
+  MAX_APPOINTMENTS_PER_DAY,
   rangesOverlap,
   timeToMinutes,
 } from "@/lib/schedule";
@@ -106,7 +107,16 @@ export async function GET(request: Request) {
     return NextResponse.json({ slots: [], closed: true });
   }
 
-  const bookedRanges = (data ?? []).map((appointment) => {
+  const booked = data ?? [];
+  if (booked.length >= MAX_APPOINTMENTS_PER_DAY) {
+    return NextResponse.json({
+      slots: [],
+      full: true,
+      capacity: MAX_APPOINTMENTS_PER_DAY,
+    });
+  }
+
+  const bookedRanges = booked.map((appointment) => {
     const start = timeToMinutes(String(appointment.appointment_time));
     const serviceJoin = appointment.service as
       | { duration: number }

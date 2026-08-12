@@ -55,6 +55,9 @@ export function BookingWizard({ services }: { services: Service[] }) {
   const [time, setTime] = useState("");
   const [notes, setNotes] = useState("");
   const [slots, setSlots] = useState<string[]>([]);
+  const [dayUnavailableReason, setDayUnavailableReason] = useState<
+    "full" | "closed" | "empty" | null
+  >(null);
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingId, setBookingId] = useState(searchParams.get("id") ?? "");
@@ -90,6 +93,7 @@ export function BookingWizard({ services }: { services: Service[] }) {
     const controller = new AbortController();
     setIsLoadingSlots(true);
     setTime("");
+    setDayUnavailableReason(null);
     fetch(
       `/api/availability?date=${encodeURIComponent(toDateKey(date))}&serviceId=${encodeURIComponent(serviceId)}`,
       { signal: controller.signal }
@@ -97,11 +101,22 @@ export function BookingWizard({ services }: { services: Service[] }) {
       .then(async (response) => {
         const result = await response.json();
         if (!response.ok) throw new Error(result.error ?? "Unable to load times");
-        setSlots(Array.isArray(result.slots) ? result.slots : []);
+        const nextSlots = Array.isArray(result.slots) ? result.slots : [];
+        setSlots(nextSlots);
+        if (nextSlots.length) {
+          setDayUnavailableReason(null);
+        } else if (result.full) {
+          setDayUnavailableReason("full");
+        } else if (result.closed) {
+          setDayUnavailableReason("closed");
+        } else {
+          setDayUnavailableReason("empty");
+        }
       })
       .catch((error: Error) => {
         if (error.name !== "AbortError") {
           setSlots([]);
+          setDayUnavailableReason("empty");
           toast.error(error.message);
         }
       })

@@ -21,6 +21,9 @@ export const STUDIO_HOURS: Record<Weekday, DayHours> = {
 
 export const BUFFER_MINUTES = 15;
 
+/** Hard daily capacity for online + active bookings (excludes cancelled / no-show). */
+export const MAX_APPOINTMENTS_PER_DAY = 5;
+
 /** Convert HH:mm or HH:mm:ss to minutes from midnight. */
 export function timeToMinutes(time: string) {
   const [h, m] = time.slice(0, 5).split(":").map(Number);

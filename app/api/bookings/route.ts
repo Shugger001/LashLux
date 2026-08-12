@@ -11,6 +11,7 @@ import {
   BUFFER_MINUTES,
   generateBookableSlots,
   isBookableDate,
+  MAX_APPOINTMENTS_PER_DAY,
   rangesOverlap,
   timeToMinutes,
 } from "@/lib/schedule";
@@ -173,6 +174,15 @@ export async function POST(request: Request) {
       .eq("appointment_date", input.date)
       .not("status", "in", "(cancelled,no_show)");
     if (dayError) throw dayError;
+
+    if ((dayAppointments ?? []).length >= MAX_APPOINTMENTS_PER_DAY) {
+      return NextResponse.json(
+        {
+          error: `This day is fully booked (${MAX_APPOINTMENTS_PER_DAY} appointments). Please choose another date.`,
+        },
+        { status: 409 }
+      );
+    }
 
     const hasOverlap = (dayAppointments ?? []).some((appointment) => {
       const start = timeToMinutes(String(appointment.appointment_time));
