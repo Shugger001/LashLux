@@ -127,17 +127,24 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="relative min-h-screen bg-background">
+    <div className="relative min-h-screen">
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
         <Image
           src="/images/hero-lashes.jpg"
           alt=""
           fill
           priority
-          className="object-cover object-[center_28%] opacity-[0.18] sm:object-[center_32%]"
+          className="object-cover object-[center_28%] sm:object-[center_32%]"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/92 to-background" />
+        {/* Inline rgba: Tailwind opacity on cream CSS vars does not apply. */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(255,247,244,0.82) 0%, rgba(255,247,244,0.74) 40%, rgba(255,247,244,0.88) 100%)",
+          }}
+        />
       </div>
 
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-border bg-card/95 backdrop-blur-md lg:flex">
@@ -159,7 +166,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       ) : null}
 
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex h-16 items-center border-b border-border bg-background/95 px-4 backdrop-blur-md sm:px-6 lg:hidden">
+        <header className="sticky top-0 z-30 flex h-16 items-center border-b border-border bg-[rgba(255,247,244,0.92)] px-4 backdrop-blur-md sm:px-6 lg:hidden">
           <Button
             type="button"
             variant="ghost"
