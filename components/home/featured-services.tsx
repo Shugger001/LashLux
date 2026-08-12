@@ -37,12 +37,12 @@ export function FeaturedServices({ services }: { services: Service[] }) {
     <section className="section-pad">
       <div className="container-page">
         <FadeIn className="mx-auto max-w-2xl text-center">
-          <span className="eyebrow">Signature menu</span>
+          <span className="eyebrow">Eyelash fixing menu</span>
           <h2 className="mt-5 font-display text-3xl text-ink sm:text-4xl lg:text-5xl">
             Enhance. Elevate. Empower.
           </h2>
           <p className="mt-4 text-muted-foreground">
-            From natural classic to bold mega volume — looks tailored to your eyes.
+            Classic, hybrid, volume, and mega volume fixing — looks tailored to your eyes.
           </p>
         </FadeIn>
 

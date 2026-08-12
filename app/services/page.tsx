@@ -7,9 +7,9 @@ import { LASH_CARE_TIPS } from "@/lib/constants";
 import { getServices } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Lash Services",
+  title: "Eyelash Fixing Services",
   description:
-    "Explore custom classic, hybrid, volume, lift, and tint services at Lash Lux lash studio.",
+    "Book eyelash fixing at Lash Lux — classic, hybrid, volume, mega volume, removal, and lash care in Old Ashongman.",
 };
 
 const careIcons = [Droplets, Sparkles, Eye, Moon];
@@ -22,13 +22,13 @@ export default async function ServicesPage() {
       <section className="section-pad">
         <div className="container-page">
           <div className="max-w-2xl">
-            <p className="eyebrow">The service menu</p>
+            <p className="eyebrow">Eyelash fixing menu</p>
             <h1 className="mt-5 text-balance font-display text-5xl text-ink sm:text-6xl">
-              A set made for your eyes.
+              Choose your lash look.
             </h1>
             <p className="mt-5 text-pretty text-lg leading-8 text-muted-foreground">
-              From understated definition to full, fluffy volume, every service
-              begins with a consultation and is tailored to your natural lashes.
+              From natural classic fixing to bold mega volume — every set starts
+              with a consultation and is applied with care for your natural lashes.
             </p>
           </div>
           <div className="mt-12">

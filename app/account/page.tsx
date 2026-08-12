@@ -99,11 +99,11 @@ export default async function AccountPage() {
                 Your appointments.
               </h1>
               <p className="mt-3 text-pretty text-muted-foreground">
-                Track pending requests and confirmed lash sessions in one place.
+                Track pending requests and confirmed eyelash fixing appointments in one place.
               </p>
             </div>
             <Button asChild>
-              <Link href="/book">Book a session</Link>
+              <Link href="/book">Book fixing</Link>
             </Button>
           </div>
 
@@ -161,7 +161,7 @@ export default async function AccountPage() {
                     Choose your next lash look and send a booking request.
                   </p>
                   <Button asChild className="mt-6">
-                    <Link href="/book">Book a session</Link>
+                    <Link href="/book">Book fixing</Link>
                   </Button>
                 </div>
               )}

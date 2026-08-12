@@ -65,7 +65,7 @@ export function SignupForm({ nextPath = "/" }: { nextPath?: string }) {
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           You do not need an account to request an appointment.
         </p>
-        <Button asChild className="mt-5"><Link href="/book">Book a session</Link></Button>
+        <Button asChild className="mt-5"><Link href="/book">Book fixing</Link></Button>
       </div>
     );
   }

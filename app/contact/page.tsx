@@ -7,7 +7,7 @@ import { DAY_LABELS, DEFAULT_HOURS, SITE } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Contact Lash Lux in Old Ashongman — WhatsApp, call, or book online for classic, hybrid, volume, and mega volume lashes.",
+    "Contact Lash Lux for eyelash fixing in Old Ashongman — WhatsApp, call, or book classic, hybrid, volume, and mega volume lashes online.",
 };
 
 export default function ContactPage() {
@@ -16,14 +16,14 @@ export default function ContactPage() {
       <section className="section-pad">
         <div className="container-page grid gap-12 lg:grid-cols-2">
           <div>
-            <p className="eyebrow">Contact the studio</p>
+            <p className="eyebrow">Contact the lash studio</p>
             <h1 className="mt-5 text-balance font-display text-4xl text-ink sm:text-5xl">
-              Book your lash experience.
+              Book eyelash fixing.
             </h1>
             <p className="mt-3 font-script text-3xl text-rose">{SITE.slogan}</p>
             <p className="mt-5 max-w-lg text-pretty text-lg leading-8 text-muted-foreground">
-              Questions about a service, fill, or aftercare? Message us — walk-ins
-              welcome, appointments preferred.
+              Questions about a full set, fill, removal, or aftercare? Message us —
+              walk-ins welcome, appointments preferred.
             </p>
 
             <address className="mt-8 space-y-4 text-sm not-italic">

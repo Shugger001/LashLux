@@ -25,22 +25,21 @@ export function AboutContent() {
       <section className="section-pad">
         <div className="container-page grid items-center gap-12 lg:grid-cols-2">
           <div>
-            <p className="eyebrow">Meet your lash artist</p>
+            <p className="eyebrow">Professional eyelash fixing</p>
             <h1 className="mt-5 text-balance font-display text-5xl text-ink sm:text-6xl">
-              Thoughtful artistry, never one-size-fits-all.
+              Expert lash sets, gently applied.
             </h1>
             <p className="mt-6 text-pretty text-lg leading-8 text-muted-foreground">
-              Lash Lux was created around a simple belief: beautiful lashes should
-              feel as good as they look. Every set is mapped around your eye
-              shape, natural lash health, and real life.
+              Lash Lux specializes in eyelash fixing — classic, hybrid, volume, and
+              mega volume extensions tailored to your eye shape and lifestyle.
             </p>
             <p className="mt-4 leading-7 text-muted-foreground">
-              From the first consultation through aftercare, the experience is
-              calm, considered, and personal. You leave looking polished—still
-              completely yourself.
+              Every appointment starts with a consultation for comfort, retention,
+              and a look that still feels like you. Full sets, fills, and safe
+              removals available at Manna Apartment, Old Ashongman.
             </p>
             <Button asChild size="lg" className="mt-8">
-              <Link href="/book">Book a session</Link>
+              <Link href="/book">Book eyelash fixing</Link>
             </Button>
           </div>
           <div className="frame-lux">

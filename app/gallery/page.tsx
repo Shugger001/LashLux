@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { getGallery } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Lash Gallery",
+  title: "Eyelash Fixing Gallery",
   description:
-    "Browse classic, hybrid, volume, and specialty lash looks created at Lash Lux.",
+    "Browse eyelash fixing looks from Lash Lux — classic, hybrid, volume, and specialty sets in Old Ashongman.",
 };
 
 export default async function GalleryPage() {
@@ -29,7 +29,7 @@ export default async function GalleryPage() {
             </p>
           </div>
           <Button asChild size="lg">
-            <Link href="/book">Book a session</Link>
+            <Link href="/book">Book fixing</Link>
           </Button>
         </div>
         <div className="mt-12">

@@ -11,14 +11,14 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url || "http://localhost:3000"),
   title: {
-    default: "Lash Lux | Luxury Lash Extensions",
+    default: "Lash Lux | Eyelash Fixing & Lash Extensions in Old Ashongman",
     template: "%s | Lash Lux",
   },
   description:
-    "Book classic, hybrid, volume, and mega volume lashes with Lash Lux — luxury in every lash at Manna Apartment, Old Ashongman.",
+    "Lash Lux offers professional eyelash fixing in Old Ashongman — classic, hybrid, volume, and mega volume lash extensions. Walk-ins welcome, appointments preferred.",
   openGraph: {
-    title: "Lash Lux | Luxury Lash Extensions",
-    description: SITE.slogan + " " + SITE.tagline,
+    title: "Lash Lux | Eyelash Fixing & Lash Extensions",
+    description: `${SITE.businessType}. ${SITE.tagline}`,
     url: SITE.url,
     siteName: SITE.name,
     type: "website",
@@ -27,14 +27,14 @@ export const metadata: Metadata = {
         url: "/images/lashlux-flyer.png",
         width: 1200,
         height: 1500,
-        alt: "Lash Lux official flyer",
+        alt: "Lash Lux eyelash fixing flyer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lash Lux | Luxury in Every Lash",
-    description: "Book your custom lash set with Lash Lux.",
+    title: "Lash Lux | Eyelash Fixing",
+    description: "Book classic, hybrid, volume, or mega volume lashes at Lash Lux.",
   },
 };
 

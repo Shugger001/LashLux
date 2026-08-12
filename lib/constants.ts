@@ -17,6 +17,7 @@ export const SITE = {
   slogan: "Enhance. Elevate. Empower.",
   promise: "Healthy lashes, happy you.",
   badge: "Confidence starts with your lashes.",
+  businessType: "Professional eyelash fixing & lash extensions",
   policy: "Walk-ins welcome | Appointments preferred",
   url: resolveSiteUrl(),
   email: "hello@lashlux.com",
@@ -315,20 +316,24 @@ export const LASH_CARE_TIPS = [
 
 export const FAQ_ITEMS = [
   {
-    q: "How long do lash extensions last?",
-    a: "With proper aftercare, full sets typically look their best for 2–3 weeks. We recommend fills every 2–3 weeks to maintain fullness as natural lashes shed.",
+    q: "What is eyelash fixing?",
+    a: "Eyelash fixing is the application of semi-permanent lash extensions — classic, hybrid, volume, or mega volume — to enhance your natural lashes with a custom look.",
   },
   {
-    q: "Do extensions damage my natural lashes?",
-    a: "When applied correctly with appropriate weight and isolation, extensions should not damage natural lashes. We never overload a single lash and use premium adhesives.",
+    q: "How long do fixed lashes last?",
+    a: "With proper aftercare, a full set typically looks its best for 2–3 weeks. We recommend fills every 2–3 weeks as your natural lashes shed.",
+  },
+  {
+    q: "Will fixing damage my natural lashes?",
+    a: "When applied correctly with the right weight and isolation, extensions should not damage natural lashes. We never overload a single lash and use premium adhesives.",
   },
   {
     q: "How should I prepare for my appointment?",
-    a: "Arrive with clean, makeup-free lashes. Avoid caffeine if you are sensitive to lying still, and come ready to relax for the full service duration.",
+    a: "Arrive with clean, makeup-free lashes. Come ready to relax for the full service duration so we can map and apply your set carefully.",
   },
   {
     q: "Do you accept walk-ins?",
-    a: "Walk-ins are welcome when schedule allows, but appointments are preferred so we can give you the full Lash Lux experience without rushing.",
+    a: "Walk-ins are welcome when the schedule allows, but appointments are preferred so we can give you a full, unhurried fixing session.",
   },
   {
     q: "Can I wear mascara with extensions?",

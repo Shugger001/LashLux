@@ -11,18 +11,18 @@ export function HoursContactCta() {
     <section className="section-pad border-t border-[#c9a27e]/20 bg-gradient-to-b from-blush/50 to-cream">
       <div className="container-page grid gap-12 lg:grid-cols-2">
         <FadeIn>
-          <span className="eyebrow">Book your lash experience</span>
+          <span className="eyebrow">Book eyelash fixing</span>
           <h2 className="mt-4 font-display text-3xl text-ink sm:text-4xl lg:text-5xl">
             Ready when you are.
           </h2>
           <p className="mt-4 font-script text-4xl text-rose">{SITE.badge}</p>
           <p className="mt-5 max-w-md text-muted-foreground">
-            Book online, WhatsApp us, or walk in when the schedule allows —
-            appointments preferred.
+            Book a classic, hybrid, volume, or mega volume set online, WhatsApp
+            us, or walk in when the schedule allows — appointments preferred.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">
-              <Link href="/book">Book a session</Link>
+              <Link href="/book">Book fixing</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
               <a href={SITE.whatsapp} target="_blank" rel="noreferrer">

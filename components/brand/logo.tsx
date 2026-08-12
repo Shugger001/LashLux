@@ -60,7 +60,7 @@ export function BrandWordmark({
               light ? "text-cream/60" : "text-muted-foreground"
             )}
           >
-            Luxury in every lash
+            Eyelash fixing & extensions
           </span>
         ) : null}
       </span>

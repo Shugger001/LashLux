@@ -19,7 +19,7 @@ export default async function HomePage() {
     "@context": "https://schema.org",
     "@type": "BeautySalon",
     name: SITE.name,
-    description: SITE.tagline,
+    description: SITE.businessType,
     url: SITE.url,
     telephone: SITE.phone,
     email: SITE.email,

@@ -6,9 +6,9 @@ import { Skeleton } from "@/components/ui/card";
 import { getServices } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Book a Lash Session",
+  title: "Book Eyelash Fixing",
   description:
-    "Choose your Lash Lux lash service, date, and preferred time in a few simple steps.",
+    "Book professional eyelash fixing at Lash Lux — classic, hybrid, volume, or mega volume in Old Ashongman.",
 };
 
 export default async function BookPage() {
@@ -20,11 +20,11 @@ export default async function BookPage() {
         <div className="mx-auto mb-10 max-w-2xl text-center">
           <p className="eyebrow">Online booking</p>
           <h1 className="mt-5 text-balance font-display text-5xl text-ink sm:text-6xl">
-            Book your lash session.
+            Book your eyelash fixing.
           </h1>
           <p className="mt-4 text-pretty text-muted-foreground">
-            Choose a service and preferred time. Your request stays pending
-            until the studio confirms it.
+            Choose a lash set and preferred time. Your request stays pending
+            until we confirm it.
           </p>
         </div>
         <Suspense fallback={<Skeleton className="mx-auto h-[560px] max-w-3xl" />}>

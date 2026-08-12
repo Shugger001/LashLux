@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import { AboutContent } from "@/components/about/about-content";
 
 export const metadata: Metadata = {
-  title: "About the Studio",
+  title: "About Lash Lux",
   description:
-    "Our story and learn about the careful technique, hygiene standards, and premium products behind every custom lash set.",
+    "Lash Lux is a professional eyelash fixing studio in Old Ashongman — classic, hybrid, volume, and mega volume extensions with careful hygiene standards.",
 };
 
 export default function AboutPage() {

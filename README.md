@@ -1,11 +1,12 @@
 # Lash Lux
 
-Production-ready luxury lash studio site for **Lash Lux** (Manna Apartment, Old Ashongman).
+Production-ready website for **Lash Lux** — professional eyelash fixing & lash extensions at Manna Apartment, Old Ashongman.
 
 **Stack:** Next.js 14 (App Router) · TypeScript · Tailwind CSS · Supabase · Resend · Vercel
 
 ## Brand
 
+- Business: Professional eyelash fixing & lash extensions
 - Tagline: *Luxury in every lash.*
 - Slogan: *Enhance. Elevate. Empower.*
 - Phone / WhatsApp: `0547986899`

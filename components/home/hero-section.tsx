@@ -12,7 +12,7 @@ export function HeroSection() {
     <section className="relative -mt-[4.5rem] min-h-[100dvh] overflow-hidden">
       <Image
         src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=1800&q=80"
-        alt="Close-up of luxury lash extensions"
+        alt="Close-up of professional eyelash fixing and lash extensions"
         fill
         priority
         className="object-cover object-[center_28%]"
@@ -47,8 +47,8 @@ export function HeroSection() {
               <p className="font-display text-xl font-bold tracking-[0.22em] sm:text-2xl">
                 LASH<span className="text-rose-gold">LUX</span>
               </p>
-              <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-cream/60">
-                Luxury in every lash
+              <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-cream/60">
+                Eyelash fixing · Lash extensions
               </p>
             </div>
           </div>
@@ -58,13 +58,18 @@ export function HeroSection() {
           </p>
 
           <h1 className="mt-5 max-w-xl font-display text-4xl font-semibold leading-[1.05] tracking-tight text-cream sm:text-5xl lg:text-6xl">
-            Custom lashes that feel like you — elevated.
+            Professional eyelash fixing — classic to mega volume.
           </h1>
+
+          <p className="mt-4 max-w-lg text-sm text-cream/75 sm:text-base">
+            Soft, custom lash sets mapped to your eye shape. Book a full set, fill,
+            or safe removal at Old Ashongman.
+          </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Button asChild size="lg" className="pr-2">
               <Link href="/book" className="inline-flex items-center gap-3">
-                Book your lash experience
+                Book eyelash fixing
                 <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-ink/10 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-px">
                   <ArrowUpRight className="h-4 w-4" aria-hidden />
                 </span>

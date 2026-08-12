@@ -71,7 +71,7 @@ export function LoginForm({ nextPath = "/" }: { nextPath?: string }) {
           an appointment without signing in.
         </p>
         <Button asChild className="mt-5">
-          <Link href="/book">Book a session</Link>
+          <Link href="/book">Book fixing</Link>
         </Button>
       </div>
     );

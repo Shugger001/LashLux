@@ -24,15 +24,16 @@ export function AboutTeaser() {
           </div>
         </FadeIn>
         <FadeIn delay={0.1}>
-          <span className="eyebrow">The studio</span>
+          <span className="eyebrow">The lash studio</span>
           <h2 className="mt-4 font-display text-3xl text-ink sm:text-4xl lg:text-5xl">
-            Luxury in every lash.
+            Eyelash fixing, done with care.
           </h2>
           <p className="mt-4 font-script text-4xl text-rose">{SITE.slogan}</p>
           <p className="mt-6 text-muted-foreground leading-relaxed">
-            At Lash Lux, every set is customized to your eye shape, lifestyle, and
-            desired glam — from natural classic to bold mega volume. Premium
-            products, gentle technique, and results that last.
+            Lash Lux is a professional eyelash fixing studio specializing in
+            classic, hybrid, volume, and mega volume extensions — plus safe
+            removals and aftercare. Premium products, gentle technique, and
+            results that last.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild className="pr-2">
@@ -44,7 +45,7 @@ export function AboutTeaser() {
               </Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/contact">Studio details</Link>
+              <Link href="/book">Book fixing</Link>
             </Button>
           </div>
           <p className="mt-8 text-sm text-muted-foreground">{SITE.address}</p>

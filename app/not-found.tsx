@@ -12,7 +12,7 @@ export default function NotFound() {
       </p>
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Button asChild>
-          <Link href="/book">Book a session</Link>
+          <Link href="/book">Book fixing</Link>
         </Button>
         <Button asChild variant="outline">
           <Link href="/">Back home</Link>

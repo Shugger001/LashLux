@@ -65,7 +65,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         <Link href="/admin" className="rounded-sm focus-ring">
           <span className="block font-display text-3xl text-ink">Lash Lux</span>
           <span className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            Studio admin
+            Eyelash fixing admin
           </span>
         </Link>
         <Button

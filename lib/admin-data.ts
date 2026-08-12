@@ -145,9 +145,9 @@ export const DEMO_SETTINGS: AdminSettings = {
   tiktok: SITE.tiktok,
   bookingBuffer: 30,
   maxBookingDays: 60,
-  seoTitle: "Lash Lux | Luxury Lash Extensions",
+  seoTitle: "Lash Lux | Eyelash Fixing & Lash Extensions in Old Ashongman",
   seoDescription:
-    "Book classic, hybrid, volume, and mega volume lashes with Lash Lux — luxury in every lash at Manna Apartment, Old Ashongman.",
+    "Professional eyelash fixing at Lash Lux — classic, hybrid, volume, and mega volume extensions at Manna Apartment, Old Ashongman.",
 };
 
 async function queryOrDemo<T>(
