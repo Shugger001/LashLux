@@ -33,7 +33,7 @@ export function FeaturedServices({ services }: { services: Service[] }) {
   const featured = services.slice(0, 6);
 
   return (
-    <section className="section-pad">
+    <section className="pb-16 pt-10 sm:pb-20 sm:pt-12 lg:pb-24 lg:pt-16">
       <div className="container-page">
         <FadeIn className="mx-auto max-w-2xl text-center">
           <span className="eyebrow">Eyelash fixing menu</span>
@@ -45,7 +45,7 @@ export function FeaturedServices({ services }: { services: Service[] }) {
           </p>
         </FadeIn>
 
-        <div className="mt-14 grid items-start gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
+        <div className="mt-8 grid items-start gap-8 lg:mt-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
           {/* Flyer-style services panel */}
           <FadeIn>
             <div className="frame-lux">
@@ -87,15 +87,15 @@ export function FeaturedServices({ services }: { services: Service[] }) {
             </div>
           </FadeIn>
 
-          {/* Flyer-style circular look stack */}
-          <FadeIn delay={0.1} className="lg:pt-6">
+          {/* Flyer-style circular look stack — desktop accent only */}
+          <FadeIn delay={0.1} className="hidden lg:block lg:pt-6">
             <div className="relative mx-auto max-w-md">
               <div className="absolute -inset-6 rounded-full bg-gradient-to-br from-[#f0d2b0]/35 via-transparent to-[#c98990]/25 blur-2xl" aria-hidden />
               <div className="relative grid grid-cols-2 gap-5 sm:gap-6">
                 {STYLE_CIRCLES.map((item, index) => (
                   <div
                     key={item.label}
-                    className={`group relative ${index % 2 === 1 ? "mt-8 sm:mt-12" : ""}`}
+                    className={`group relative ${index % 2 === 1 ? "mt-10" : ""}`}
                   >
                     <div className="relative aspect-square overflow-hidden rounded-full border-[3px] border-[#c9a27e]/55 shadow-[0_18px_40px_-24px_rgba(58,42,44,0.45)]">
                       <Image
@@ -103,7 +103,7 @@ export function FeaturedServices({ services }: { services: Service[] }) {
                         alt={`${item.label} lash look`}
                         fill
                         className="object-cover transition-transform duration-700 transition-lux group-hover:scale-105"
-                        sizes="(max-width:768px) 45vw, 220px"
+                        sizes="220px"
                       />
                       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/70 to-transparent px-3 pb-4 pt-10 text-center">
                         <p className="font-display text-sm font-semibold tracking-[0.12em] text-cream">
@@ -121,7 +121,7 @@ export function FeaturedServices({ services }: { services: Service[] }) {
           </FadeIn>
         </div>
 
-        <div className="mt-12 text-center">
+        <div className="mt-8 text-center sm:mt-10">
           <Button asChild variant="outline">
             <Link href="/services">Explore full menu</Link>
           </Button>
