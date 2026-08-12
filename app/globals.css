@@ -152,6 +152,11 @@
     );
     animation: skeleton-shimmer 1.35s var(--ease-lux) infinite;
   }
+
+  /* Fixed header offset — cancelled on full-bleed hero */
+  main:has(> .hero-flush) {
+    padding-top: 0;
+  }
 }
 
 @keyframes skeleton-shimmer {

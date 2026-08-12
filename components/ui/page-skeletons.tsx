@@ -4,9 +4,9 @@ import { Skeleton } from "@/components/ui/card";
 export function HomePageSkeleton() {
   return (
     <div aria-busy="true" aria-label="Loading page">
-      <section className="relative -mt-[4.5rem] min-h-[100dvh] overflow-hidden">
+      <section className="hero-flush relative min-h-[100dvh] overflow-hidden">
         <Skeleton className="absolute inset-0 rounded-none" />
-        <div className="container-page relative flex min-h-[100dvh] flex-col justify-end pb-16 pt-36 sm:pb-20 lg:justify-center lg:pb-0">
+        <div className="container-page relative flex min-h-[100dvh] flex-col justify-end pb-16 pt-28 sm:pb-20 lg:pb-24">
           <div className="max-w-2xl space-y-5">
             <div className="flex items-center gap-3">
               <Skeleton className="h-16 w-16 rounded-full" />

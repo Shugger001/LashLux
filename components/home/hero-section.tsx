@@ -9,19 +9,18 @@ import { SITE } from "@/lib/constants";
 
 export function HeroSection() {
   return (
-    <section className="relative -mt-[4.5rem] min-h-[100dvh] overflow-hidden">
+    <section className="hero-flush relative min-h-[100dvh] overflow-hidden">
       <Image
         src="/images/hero-lashes.jpg"
         alt="Close-up of professional eyelash extensions after fixing"
         fill
         priority
-        className="object-cover object-[center_40%]"
+        className="object-cover object-[center_35%]"
         sizes="100vw"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/55 to-ink/25" />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-ink/20" />
+      <div className="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/60 to-ink/30" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-ink/30" />
 
-      {/* Flyer-inspired soft marble glow corners */}
       <div
         className="pointer-events-none absolute -left-16 -top-10 h-72 w-72 rounded-full opacity-50 blur-2xl"
         style={{
@@ -39,8 +38,8 @@ export function HeroSection() {
         aria-hidden
       />
 
-      <div className="container-page relative flex min-h-[100dvh] flex-col justify-end pb-16 pt-36 sm:pb-20 lg:justify-center lg:pb-0">
-        <FadeIn className="max-w-2xl text-cream">
+      <div className="container-page relative flex min-h-[100dvh] flex-col justify-end pb-16 pt-28 sm:pb-20 lg:pb-24">
+        <FadeIn immediate className="max-w-2xl text-cream">
           <div className="mb-7 flex items-center gap-3">
             <BrandLogo size="lg" className="border-[#c9a27e] bg-white/95 shadow-soft" />
             <div>

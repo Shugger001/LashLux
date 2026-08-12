@@ -60,7 +60,9 @@ export default async function RootLayout({
             isAdmin={profile?.role === "admin"}
             isLoggedIn={Boolean(profile)}
           />
-          <main id="main">{children}</main>
+          <main id="main" className="pt-[4.75rem]">
+            {children}
+          </main>
           <SiteFooter />
           <WhatsAppFloat />
         </Providers>

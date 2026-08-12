@@ -31,7 +31,7 @@ export function SiteHeader({
   if (pathname.startsWith("/admin")) return null;
 
   return (
-    <header className="pointer-events-none sticky top-0 z-40 px-3 pb-2 pt-3 sm:px-4 sm:pt-4">
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-40 px-3 pb-2 pt-3 sm:px-4 sm:pt-4">
       <div className="pointer-events-auto container-page">
         <div className="flex items-center justify-between gap-3 rounded-full border border-[#c9a27e]/25 bg-cream/80 px-3 py-2 shadow-[0_18px_40px_-28px_rgba(58,42,44,0.45)] backdrop-blur-xl sm:px-4">
           <Link href="/" className="rounded-full focus-ring">
