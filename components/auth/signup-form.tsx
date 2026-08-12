@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -16,10 +17,13 @@ import {
 import { type SignupInput, signupSchema } from "@/lib/validations";
 
 /** Supabase account creation form with email confirmation feedback. */
-export function SignupForm() {
+export function SignupForm({ nextPath = "/" }: { nextPath?: string }) {
+  const router = useRouter();
   const [authError, setAuthError] = useState("");
   const [isComplete, setIsComplete] = useState(false);
   const isConfigured = isSupabaseConfigured();
+  const safeNextPath =
+    nextPath.startsWith("/") && !nextPath.startsWith("//") ? nextPath : "/";
   const {
     register,
     handleSubmit,
@@ -32,16 +36,23 @@ export function SignupForm() {
   async function onSubmit(values: SignupInput) {
     if (!isConfigured) return;
     setAuthError("");
-    const { error } = await createClient().auth.signUp({
+    const callbackUrl = new URL("/auth/callback", window.location.origin);
+    callbackUrl.searchParams.set("next", safeNextPath);
+    const { data, error } = await createClient().auth.signUp({
       email: values.email,
       password: values.password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: callbackUrl.toString(),
         data: { full_name: values.fullName, phone: values.phone ?? "" },
       },
     });
     if (error) {
       setAuthError(error.message);
+      return;
+    }
+    if (data.session) {
+      router.push(safeNextPath);
+      router.refresh();
       return;
     }
     setIsComplete(true);
@@ -92,7 +103,12 @@ export function SignupForm() {
       </Button>
       <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link className="font-medium text-primary hover:underline" href="/auth/login">Sign in</Link>
+        <Link
+          className="font-medium text-primary hover:underline"
+          href={`/auth/login?next=${encodeURIComponent(safeNextPath)}`}
+        >
+          Sign in
+        </Link>
       </p>
     </form>
   );

@@ -7,23 +7,33 @@ export const metadata: Metadata = {
   description: "Create a Lash Lux account to keep track of your lash appointments.",
 };
 
-export default function SignupPage() {
+export default function SignupPage({
+  searchParams,
+}: {
+  searchParams?: { next?: string };
+}) {
+  const requestedNext = searchParams?.next;
+  const nextPath =
+    requestedNext?.startsWith("/") && !requestedNext.startsWith("//")
+      ? requestedNext
+      : "/";
+
   return (
     <section className="section-pad">
       <div className="container-page">
-        <div className="mx-auto max-w-md rounded-xl border border-border bg-card p-6 shadow-soft sm:p-8">
-          <div className="mb-8 text-center">
-            <p className="text-sm font-medium uppercase tracking-[0.16em] text-rose">
-              Your Lash Lux profile
-            </p>
-            <h1 className="mt-3 font-display text-4xl text-ink">
-              Create an account
-            </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Keep your booking details in one place.
-            </p>
+        <div className="frame-lux mx-auto max-w-md">
+          <div className="frame-lux-inner p-6 sm:p-8">
+            <div className="mb-8 text-center">
+              <p className="eyebrow">Your Lash Lux profile</p>
+              <h1 className="mt-4 text-balance font-display text-4xl text-ink">
+                Create an account
+              </h1>
+              <p className="mt-2 text-pretty text-sm text-muted-foreground">
+                Keep your booking details in one place.
+              </p>
+            </div>
+            <SignupForm nextPath={nextPath} />
           </div>
-          <SignupForm />
         </div>
       </div>
     </section>

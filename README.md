@@ -38,7 +38,7 @@ Open [http://localhost:3000](http://localhost:3000).
 1. Create a Supabase project (or use the connected Hasana/Lash Lux project).
 2. Run the migration in `supabase/migrations/001_initial_schema.sql`.
 3. Enable Email and Google providers under Authentication → Providers.
-4. Add redirect URL: `http://localhost:3000/auth/callback` (and your production URL).
+4. Add redirect URL: `http://localhost:3000/auth/callback` and `https://lash-lux.vercel.app/auth/callback`.
 5. Create a Storage bucket named `gallery` (public) if you plan to upload images.
 6. Promote an admin after signup:
 
@@ -46,6 +46,7 @@ Open [http://localhost:3000](http://localhost:3000).
 update public.users set role = 'admin' where id = '<your-auth-user-uuid>';
 ```
 
+Set `NEXT_PUBLIC_SITE_URL=https://lash-lux.vercel.app` in production.
 ## Environment variables
 
 See `.env.example`.

@@ -17,11 +17,13 @@ import {
 import { type LoginInput, loginSchema } from "@/lib/validations";
 
 /** Email/password and Google sign-in form backed by Supabase Auth. */
-export function LoginForm() {
+export function LoginForm({ nextPath = "/" }: { nextPath?: string }) {
   const router = useRouter();
   const [authError, setAuthError] = useState("");
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const isConfigured = isSupabaseConfigured();
+  const safeNextPath =
+    nextPath.startsWith("/") && !nextPath.startsWith("//") ? nextPath : "/";
   const {
     register,
     handleSubmit,
@@ -39,7 +41,7 @@ export function LoginForm() {
       setAuthError(error.message);
       return;
     }
-    router.push("/dashboard");
+    router.push(safeNextPath);
     router.refresh();
   }
 
@@ -48,9 +50,11 @@ export function LoginForm() {
     setAuthError("");
     setIsGoogleLoading(true);
     const origin = window.location.origin;
+    const callbackUrl = new URL("/auth/callback", origin);
+    callbackUrl.searchParams.set("next", safeNextPath);
     const { error } = await createClient().auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${origin}/auth/callback` },
+      options: { redirectTo: callbackUrl.toString() },
     });
     if (error) {
       setAuthError(error.message);
@@ -122,7 +126,10 @@ export function LoginForm() {
       </Button>
       <p className="text-center text-sm text-muted-foreground">
         New to Lash Lux?{" "}
-        <Link className="font-medium text-primary hover:underline" href="/auth/signup">
+        <Link
+          className="font-medium text-primary hover:underline"
+          href={`/auth/signup?next=${encodeURIComponent(safeNextPath)}`}
+        >
           Create an account
         </Link>
       </p>

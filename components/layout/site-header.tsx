@@ -56,11 +56,16 @@ export function SiteHeader({
           </nav>
 
           <div className="hidden items-center gap-2 md:flex">
-            {isAdmin ? (
+            {isAdmin && (
               <Button asChild variant="outline" size="sm">
                 <Link href="/admin">Admin</Link>
               </Button>
-            ) : isLoggedIn ? null : (
+            )}
+            {isLoggedIn ? (
+              <Button asChild variant="ghost" size="sm">
+                <Link href="/account">Account</Link>
+              </Button>
+            ) : (
               <Button asChild variant="ghost" size="sm">
                 <Link href="/auth/login">Sign in</Link>
               </Button>
@@ -111,6 +116,22 @@ export function SiteHeader({
                     </Link>
                   </motion.div>
                 ))}
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    className="block rounded-xl px-3 py-3 text-base"
+                    onClick={() => setOpen(false)}
+                  >
+                    Admin
+                  </Link>
+                )}
+                <Link
+                  href={isLoggedIn ? "/account" : "/auth/login"}
+                  className="block rounded-xl px-3 py-3 text-base"
+                  onClick={() => setOpen(false)}
+                >
+                  {isLoggedIn ? "Account" : "Sign in"}
+                </Link>
                 <Button asChild className="mt-2">
                   <Link href="/book" onClick={() => setOpen(false)}>
                     Book now

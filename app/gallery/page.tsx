@@ -19,13 +19,11 @@ export default async function GalleryPage() {
       <div className="container-page">
         <div className="flex flex-col justify-between gap-8 sm:flex-row sm:items-end">
           <div className="max-w-2xl">
-            <p className="text-sm font-medium uppercase tracking-[0.16em] text-rose">
-              Recent artistry
-            </p>
-            <h1 className="mt-3 font-display text-5xl text-ink sm:text-6xl">
+            <p className="eyebrow">Recent artistry</p>
+            <h1 className="mt-5 text-balance font-display text-5xl text-ink sm:text-6xl">
               Find your next lash look.
             </h1>
-            <p className="mt-5 text-lg leading-8 text-muted-foreground">
+            <p className="mt-5 text-pretty text-lg leading-8 text-muted-foreground">
               Every set is mapped to suit the client&apos;s eye shape, natural
               lashes, and preferred level of glam.
             </p>

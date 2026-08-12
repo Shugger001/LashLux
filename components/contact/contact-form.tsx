@@ -46,7 +46,8 @@ export function ContactForm() {
 
   if (isSent) {
     return (
-      <div className="rounded-xl border border-border bg-card p-8 text-center" role="status">
+      <div className="frame-lux" role="status">
+        <div className="frame-lux-inner p-8 text-center">
         <CheckCircle2 className="mx-auto h-10 w-10 text-primary" aria-hidden />
         <h2 className="mt-4 font-display text-3xl text-ink">Message received.</h2>
         <p className="mt-2 text-muted-foreground">
@@ -55,16 +56,18 @@ export function ContactForm() {
         <Button variant="outline" className="mt-6" onClick={() => setIsSent(false)}>
           Send another message
         </Button>
+        </div>
       </div>
     );
   }
 
   return (
     <form
-      className="space-y-5 rounded-xl border border-border bg-card p-6 shadow-soft sm:p-8"
+      className="frame-lux"
       onSubmit={handleSubmit(onSubmit)}
       noValidate
     >
+      <div className="frame-lux-inner space-y-5 p-6 sm:p-8">
       <div className="space-y-2">
         <Label htmlFor="contact-name">Name</Label>
         <Input
@@ -127,6 +130,7 @@ export function ContactForm() {
         {isSubmitting && <Loader2 className="animate-spin" aria-hidden />}
         {isSubmitting ? "Sending…" : "Send your message"}
       </Button>
+      </div>
     </form>
   );
 }

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Clock } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { FadeIn } from "@/components/ui/fade-in";
 import {
   Dialog,
   DialogContent,
@@ -54,10 +55,9 @@ export function ServicesCatalog({ services }: { services: Service[] }) {
 
       <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((service) => (
-          <article
-            key={service.id}
-            className="group overflow-hidden rounded-xl border border-border bg-card shadow-soft"
-          >
+          <FadeIn key={service.id}>
+          <article className="frame-lux group h-full">
+            <div className="frame-lux-inner h-full overflow-hidden">
             <button
               type="button"
               className="relative block aspect-[4/3] w-full overflow-hidden focus-ring"
@@ -75,7 +75,7 @@ export function ServicesCatalog({ services }: { services: Service[] }) {
             <div className="p-6">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-rose">
+                  <p className="eyebrow">
                     {service.category}
                   </p>
                   <h2 className="mt-2 font-display text-3xl text-ink">
@@ -108,14 +108,18 @@ export function ServicesCatalog({ services }: { services: Service[] }) {
                 </Button>
               </div>
             </div>
+            </div>
           </article>
+          </FadeIn>
         ))}
       </div>
 
       {filtered.length === 0 && (
-        <p className="mt-10 rounded-xl border border-border bg-card p-8 text-center text-muted-foreground">
-          No services are available in this category yet.
-        </p>
+        <div className="frame-lux mt-10">
+          <p className="frame-lux-inner p-8 text-center text-muted-foreground">
+            No services are available in this category yet.
+          </p>
+        </div>
       )}
 
       <Dialog
@@ -136,7 +140,7 @@ export function ServicesCatalog({ services }: { services: Service[] }) {
               </div>
               <div className="p-6 sm:p-8">
                 <DialogHeader>
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-rose">
+                  <p className="eyebrow">
                     {selectedService.category}
                   </p>
                   <DialogTitle className="text-4xl text-ink">

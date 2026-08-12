@@ -2,6 +2,13 @@ import { NextResponse } from "next/server";
 
 import { sendBookingConfirmation } from "@/lib/email";
 import {
+  BUFFER_MINUTES,
+  generateBookableSlots,
+  isBookableDate,
+  rangesOverlap,
+  timeToMinutes,
+} from "@/lib/schedule";
+import {
   createAdminClient,
   createClient,
   isSupabaseConfigured,
@@ -13,7 +20,8 @@ const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT = 8;
 
 function isRateLimited(request: Request) {
-  const key = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
+  const key =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
   const now = Date.now();
   const current = requests.get(key);
   if (!current || current.resetAt <= now) {
@@ -39,10 +47,14 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
+
   const parsed = bookingApiSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message ?? "Check your booking details." },
+      {
+        error:
+          parsed.error.issues[0]?.message ?? "Check your booking details.",
+      },
       { status: 400 }
     );
   }
@@ -54,21 +66,26 @@ export async function POST(request: Request) {
     phone: parsed.data.phone.trim(),
     notes: parsed.data.notes?.trim() || undefined,
   };
+
   const appointmentDate = new Date(`${input.date}T12:00:00`);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
   if (
     Number.isNaN(appointmentDate.getTime()) ||
-    appointmentDate < today ||
-    appointmentDate.getDay() === 0 ||
-    appointmentDate.getDay() === 1
+    !isBookableDate(appointmentDate)
   ) {
-    return NextResponse.json({ error: "Choose an available studio date." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Choose an available studio date." },
+      { status: 400 }
+    );
   }
 
   if (!isSupabaseConfigured()) {
     return NextResponse.json(
-      { success: true, id: `demo-${crypto.randomUUID()}`, demo: true },
+      {
+        success: true,
+        id: `demo-${crypto.randomUUID()}`,
+        demo: true,
+        emailSent: false,
+      },
       { status: 201 }
     );
   }
@@ -83,18 +100,51 @@ export async function POST(request: Request) {
       .eq("is_active", true)
       .maybeSingle();
     if (serviceError || !service) {
-      return NextResponse.json({ error: "That service is not available." }, { status: 404 });
+      return NextResponse.json(
+        { error: "That service is not available." },
+        { status: 404 }
+      );
     }
 
-    const { data: existingSlot } = await admin
+    const normalizedTime = input.time.slice(0, 5);
+    const validSlots = generateBookableSlots({
+      date: appointmentDate,
+      durationMinutes: service.duration,
+    });
+    if (!validSlots.includes(normalizedTime)) {
+      return NextResponse.json(
+        { error: "That time is outside studio hours for this service." },
+        { status: 400 }
+      );
+    }
+
+    const { data: dayAppointments, error: dayError } = await admin
       .from("appointments")
-      .select("id")
+      .select("id, appointment_time, service:services(duration)")
       .eq("appointment_date", input.date)
-      .eq("appointment_time", input.time)
-      .neq("status", "cancelled")
-      .limit(1)
-      .maybeSingle();
-    if (existingSlot) {
+      .neq("status", "cancelled");
+    if (dayError) throw dayError;
+
+    const proposedStart = timeToMinutes(normalizedTime);
+    const proposedEnd = proposedStart + service.duration;
+    const hasOverlap = (dayAppointments ?? []).some((appointment) => {
+      const start = timeToMinutes(String(appointment.appointment_time));
+      const serviceJoin = appointment.service as
+        | { duration: number }
+        | { duration: number }[]
+        | null;
+      const duration = Array.isArray(serviceJoin)
+        ? serviceJoin[0]?.duration ?? 60
+        : serviceJoin?.duration ?? 60;
+      return rangesOverlap(
+        proposedStart,
+        proposedEnd,
+        start,
+        start + duration,
+        BUFFER_MINUTES
+      );
+    });
+    if (hasOverlap) {
       return NextResponse.json(
         { error: "That time was just booked. Please choose another." },
         { status: 409 }
@@ -104,28 +154,19 @@ export async function POST(request: Request) {
     const {
       data: { user: signedInUser },
     } = await sessionClient.auth.getUser();
-    let userId = signedInUser?.id;
 
-    if (!userId) {
-      const { data: usersData, error: usersError } =
-        await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
-      if (usersError) throw usersError;
-      userId = usersData.users.find(
-        (user) => user.email?.toLowerCase() === input.email
-      )?.id;
-    }
+    let userId: string | null = signedInUser?.id ?? null;
 
+    // Link to an existing auth user by email when possible — never invent passwords.
     if (!userId) {
-      const temporaryPassword = `${crypto.randomUUID()}Aa1!`;
-      const { data: created, error: createError } =
-        await admin.auth.admin.createUser({
-          email: input.email,
-          password: temporaryPassword,
-          email_confirm: true,
-          user_metadata: { full_name: input.fullName, phone: input.phone },
-        });
-      if (createError || !created.user) throw createError ?? new Error("User creation failed");
-      userId = created.user.id;
+      const { data: authUsers } = await admin.auth.admin.listUsers({
+        page: 1,
+        perPage: 1000,
+      });
+      userId =
+        authUsers?.users.find(
+          (user) => user.email?.toLowerCase() === input.email
+        )?.id ?? null;
     }
 
     const { data: appointment, error: insertError } = await admin
@@ -134,7 +175,7 @@ export async function POST(request: Request) {
         user_id: userId,
         service_id: service.id,
         appointment_date: input.date,
-        appointment_time: input.time,
+        appointment_time: normalizedTime,
         status: "pending",
         notes: input.notes ?? null,
         client_name: input.fullName,
@@ -145,15 +186,17 @@ export async function POST(request: Request) {
       .single();
     if (insertError) throw insertError;
 
+    let emailSent = false;
     try {
-      await sendBookingConfirmation({
+      const result = await sendBookingConfirmation({
         to: input.email,
         clientName: input.fullName,
         serviceName: service.name,
         date: input.date,
-        time: input.time,
+        time: normalizedTime,
         notes: input.notes,
       });
+      emailSent = !result.skipped;
     } catch (error) {
       console.error("[booking:notification-failed]", {
         appointmentId: appointment.id,
@@ -162,7 +205,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { success: true, id: appointment.id },
+      { success: true, id: appointment.id, emailSent },
       { status: 201 }
     );
   } catch (error) {

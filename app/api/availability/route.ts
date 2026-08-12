@@ -2,17 +2,23 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import {
+  BUFFER_MINUTES,
+  generateBookableSlots,
+  isBookableDate,
+  rangesOverlap,
+  timeToMinutes,
+} from "@/lib/schedule";
+import {
   createAdminClient,
   isSupabaseConfigured,
 } from "@/lib/supabase/server";
-import { generateTimeSlots } from "@/lib/utils";
 
 const querySchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   serviceId: z.string().min(1).max(100),
 });
 
-/** Return available 30-minute start times for a service and date. */
+/** Return available start times for a service and date (duration + buffer aware). */
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const parsed = querySchema.safeParse({
@@ -20,27 +26,23 @@ export async function GET(request: Request) {
     serviceId: url.searchParams.get("serviceId"),
   });
   if (!parsed.success) {
-    return NextResponse.json({ error: "Choose a valid date and service." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Choose a valid date and service." },
+      { status: 400 }
+    );
   }
 
   const requestedDate = new Date(`${parsed.data.date}T12:00:00`);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  if (
-    Number.isNaN(requestedDate.getTime()) ||
-    requestedDate < today ||
-    requestedDate.getDay() === 0 ||
-    requestedDate.getDay() === 1
-  ) {
+  if (Number.isNaN(requestedDate.getTime()) || !isBookableDate(requestedDate)) {
     return NextResponse.json({ slots: [] });
   }
 
-  const allSlots = generateTimeSlots(
-    requestedDate.getDay() === 6 ? "09:00" : "10:00",
-    requestedDate.getDay() === 6 ? "16:00" : "18:00"
-  );
-
   if (!isSupabaseConfigured()) {
+    const demoDuration = 120;
+    const allSlots = generateBookableSlots({
+      date: requestedDate,
+      durationMinutes: demoDuration,
+    });
     return NextResponse.json({
       slots: allSlots.filter((_, index) => index % 5 !== 3),
       demo: true,
@@ -56,30 +58,57 @@ export async function GET(request: Request) {
       { status: 503 }
     );
   }
+
   const { data: service, error: serviceError } = await supabase
     .from("services")
-    .select("id")
+    .select("id, duration")
     .eq("id", parsed.data.serviceId)
     .eq("is_active", true)
     .maybeSingle();
   if (serviceError || !service) {
-    return NextResponse.json({ error: "That service is not available." }, { status: 404 });
+    return NextResponse.json(
+      { error: "That service is not available." },
+      { status: 404 }
+    );
   }
+
+  const allSlots = generateBookableSlots({
+    date: requestedDate,
+    durationMinutes: service.duration,
+  });
 
   const { data, error } = await supabase
     .from("appointments")
-    .select("appointment_time")
+    .select("appointment_time, service:services(duration)")
     .eq("appointment_date", parsed.data.date)
     .neq("status", "cancelled");
   if (error) {
     console.error("[availability:query-failed]", { code: error.code });
-    return NextResponse.json({ error: "Available times could not be loaded." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Available times could not be loaded." },
+      { status: 500 }
+    );
   }
 
-  const booked = new Set(
-    (data ?? []).map((appointment) =>
-      String(appointment.appointment_time).slice(0, 5)
-    )
-  );
-  return NextResponse.json({ slots: allSlots.filter((slot) => !booked.has(slot)) });
+  const bookedRanges = (data ?? []).map((appointment) => {
+    const start = timeToMinutes(String(appointment.appointment_time));
+    const serviceJoin = appointment.service as
+      | { duration: number }
+      | { duration: number }[]
+      | null;
+    const duration = Array.isArray(serviceJoin)
+      ? serviceJoin[0]?.duration ?? 60
+      : serviceJoin?.duration ?? 60;
+    return { start, end: start + duration };
+  });
+
+  const slots = allSlots.filter((slot) => {
+    const start = timeToMinutes(slot);
+    const end = start + service.duration;
+    return !bookedRanges.some((range) =>
+      rangesOverlap(start, end, range.start, range.end, BUFFER_MINUTES)
+    );
+  });
+
+  return NextResponse.json({ slots });
 }

@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { SITE } from "@/lib/constants";
+import { isBookableDate } from "@/lib/schedule";
 import {
   type BookingDetailsInput,
   bookingDetailsSchema,
@@ -37,7 +39,7 @@ export function BookingWizard({ services }: { services: Service[] }) {
   const preselected = services.some((item) => item.id === requestedServiceId)
     ? requestedServiceId
     : "";
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(preselected ? 2 : 1);
   const [serviceId, setServiceId] = useState(preselected ?? "");
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState("");
@@ -46,6 +48,7 @@ export function BookingWizard({ services }: { services: Service[] }) {
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingId, setBookingId] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
   const selectedService = services.find((item) => item.id === serviceId);
 
   const {
@@ -109,6 +112,7 @@ export function BookingWizard({ services }: { services: Service[] }) {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "Booking could not be sent");
       setBookingId(result.id ?? "");
+      setEmailSent(result.emailSent === true);
       setStep(6);
     } catch (error) {
       toast.error(
@@ -119,8 +123,26 @@ export function BookingWizard({ services }: { services: Service[] }) {
     }
   }
 
+  const confirmationDate = date?.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  const whatsappMessage = [
+    "Hi Lash Lux, I just sent an appointment request.",
+    selectedService ? `Service: ${selectedService.name}` : "",
+    confirmationDate ? `Date: ${confirmationDate}` : "",
+    time ? `Time: ${formatTime(time)}` : "",
+    bookingId ? `Reference: ${bookingId}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+  const whatsappHref = `${SITE.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
+
   return (
-    <div className="mx-auto max-w-3xl overflow-hidden rounded-xl border border-border bg-card shadow-soft">
+    <div className="frame-lux mx-auto max-w-3xl">
+      <div className="frame-lux-inner overflow-hidden">
       <div className="border-b border-border p-6 sm:p-8">
         <div className="flex items-center justify-between gap-4">
           <p className="text-sm font-medium text-rose">
@@ -197,17 +219,15 @@ export function BookingWizard({ services }: { services: Service[] }) {
               Choose a date
             </h2>
             <p className="mt-2 text-muted-foreground">
-              The studio is closed Sundays and Mondays.
+              Monday–Saturday are open for online booking. Sundays are by
+              appointment and are not bookable online.
             </p>
             <div className="mt-6 flex justify-center rounded-xl border border-border p-4">
               <DayPicker
                 mode="single"
                 selected={date}
                 onSelect={setDate}
-                disabled={[
-                  { before: new Date() },
-                  (day) => day.getDay() === 0 || day.getDay() === 1,
-                ]}
+                disabled={(day) => !isBookableDate(day)}
                 className="mx-auto"
               />
             </div>
@@ -376,19 +396,49 @@ export function BookingWizard({ services }: { services: Service[] }) {
               Your request is in.
             </h2>
             <p className="mx-auto mt-3 max-w-md text-muted-foreground">
-              We sent your booking details by email and will confirm your
-              appointment shortly.
+              Your appointment request is pending confirmation.
+            </p>
+            {selectedService && confirmationDate && time && (
+              <dl className="mx-auto mt-6 max-w-md rounded-xl bg-secondary p-5 text-left text-sm">
+                <div className="flex justify-between gap-4">
+                  <dt className="text-muted-foreground">Service</dt>
+                  <dd className="font-medium text-ink">{selectedService.name}</dd>
+                </div>
+                <div className="mt-3 flex justify-between gap-4">
+                  <dt className="text-muted-foreground">Date</dt>
+                  <dd className="text-right font-medium text-ink">
+                    {confirmationDate}
+                  </dd>
+                </div>
+                <div className="mt-3 flex justify-between gap-4">
+                  <dt className="text-muted-foreground">Time</dt>
+                  <dd className="font-medium text-ink">{formatTime(time)}</dd>
+                </div>
+              </dl>
+            )}
+            <p className="mx-auto mt-5 max-w-md text-sm text-muted-foreground">
+              {emailSent
+                ? "We sent your request details by email. We will follow up once the appointment is confirmed."
+                : "We will confirm your appointment via WhatsApp or phone."}
             </p>
             {bookingId && (
               <p className="mt-4 text-xs text-muted-foreground">
                 Reference: {bookingId}
               </p>
             )}
-            <Button asChild className="mt-8">
-              <Link href="/">Return home</Link>
-            </Button>
+            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+              <Button asChild>
+                <a href={whatsappHref} target="_blank" rel="noreferrer">
+                  Message us on WhatsApp
+                </a>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/">Return home</Link>
+              </Button>
+            </div>
           </section>
         )}
+      </div>
       </div>
     </div>
   );

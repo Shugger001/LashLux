@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   const next = url.searchParams.get("next");
   const safeNext = next?.startsWith("/") && !next.startsWith("//")
     ? next
-    : "/dashboard";
+    : "/";
 
   if (!isSupabaseConfigured()) {
     return NextResponse.redirect(new URL("/auth/login?error=not-configured", url.origin));

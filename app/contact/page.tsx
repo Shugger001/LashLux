@@ -16,14 +16,12 @@ export default function ContactPage() {
       <section className="section-pad">
         <div className="container-page grid gap-12 lg:grid-cols-2">
           <div>
-            <p className="text-sm font-medium uppercase tracking-[0.16em] text-rose">
-              Contact the studio
-            </p>
-            <h1 className="mt-3 font-display text-4xl text-ink sm:text-5xl">
+            <p className="eyebrow">Contact the studio</p>
+            <h1 className="mt-5 text-balance font-display text-4xl text-ink sm:text-5xl">
               Book your lash experience.
             </h1>
             <p className="mt-3 font-script text-3xl text-rose">{SITE.slogan}</p>
-            <p className="mt-5 max-w-lg text-lg leading-8 text-muted-foreground">
+            <p className="mt-5 max-w-lg text-pretty text-lg leading-8 text-muted-foreground">
               Questions about a service, fill, or aftercare? Message us — walk-ins
               welcome, appointments preferred.
             </p>
@@ -76,12 +74,16 @@ export default function ContactPage() {
               </a>
             </div>
           </div>
-          <ContactForm />
+          <div>
+            <ContactForm />
+          </div>
         </div>
       </section>
 
-      <section className="border-y border-border bg-secondary/50">
-        <div className="container-page grid gap-0 lg:grid-cols-2">
+      <section className="section-pad border-y border-border bg-secondary/50">
+        <div className="container-page">
+          <div className="frame-lux">
+          <div className="frame-lux-inner grid overflow-hidden lg:grid-cols-2">
           <iframe
             title="Map showing Lash Lux at Manna Apartment, Old Ashongman"
             src="https://www.google.com/maps?q=Manna%20Apartment%20Old%20Ashongman&output=embed"
@@ -90,7 +92,8 @@ export default function ContactPage() {
             referrerPolicy="no-referrer-when-downgrade"
           />
           <div className="p-8 sm:p-12">
-            <h2 className="font-display text-3xl text-ink">Opening hours</h2>
+            <p className="eyebrow">Plan your visit</p>
+            <h2 className="mt-4 font-display text-3xl text-ink">Opening hours</h2>
             <ul className="mt-6 space-y-3 text-sm">
               {(Object.keys(DEFAULT_HOURS) as Array<keyof typeof DEFAULT_HOURS>).map(
                 (key) => (
@@ -104,6 +107,8 @@ export default function ContactPage() {
                 )
               )}
             </ul>
+          </div>
+          </div>
           </div>
         </div>
       </section>

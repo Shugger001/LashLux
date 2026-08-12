@@ -18,15 +18,13 @@ export default async function BookPage() {
     <section className="section-pad">
       <div className="container-page">
         <div className="mx-auto mb-10 max-w-2xl text-center">
-          <p className="text-sm font-medium uppercase tracking-[0.16em] text-rose">
-            Online booking
-          </p>
-          <h1 className="mt-3 font-display text-5xl text-ink sm:text-6xl">
+          <p className="eyebrow">Online booking</p>
+          <h1 className="mt-5 text-balance font-display text-5xl text-ink sm:text-6xl">
             Book your lash session.
           </h1>
-          <p className="mt-4 text-muted-foreground">
-            Choose a service and preferred time. We will email you once your
-            appointment is confirmed.
+          <p className="mt-4 text-pretty text-muted-foreground">
+            Choose a service and preferred time. Your request stays pending
+            until the studio confirms it.
           </p>
         </div>
         <Suspense fallback={<Skeleton className="mx-auto h-[560px] max-w-3xl" />}>

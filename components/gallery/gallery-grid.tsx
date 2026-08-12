@@ -60,14 +60,14 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
           <button
             key={item.id}
             type="button"
-            className="group relative mb-6 block w-full break-inside-avoid overflow-hidden rounded-xl bg-sand focus-ring"
+            className="frame-lux group relative mb-6 block w-full break-inside-avoid focus-ring"
             onClick={() => setSelectedItem(item)}
             aria-label={`Open ${item.title}`}
           >
             <div
-              className={
+              className={`frame-lux-inner overflow-hidden ${
                 index % 3 === 1 ? "relative aspect-[4/5]" : "relative aspect-[4/3]"
-              }
+              }`}
             >
               <Image
                 src={item.image_url}
@@ -99,9 +99,11 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
       )}
 
       {filtered.length === 0 && (
-        <p className="mt-10 rounded-xl border border-border bg-card p-8 text-center text-muted-foreground">
-          No looks are available in this category yet.
-        </p>
+        <div className="frame-lux mt-10">
+          <p className="frame-lux-inner p-8 text-center text-muted-foreground">
+            No looks are available in this category yet.
+          </p>
+        </div>
       )}
 
       <Dialog
@@ -122,9 +124,7 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
                 />
               </div>
               <DialogHeader className="p-6 sm:p-8">
-                <p className="text-xs font-medium uppercase tracking-[0.16em] text-rose">
-                  {selectedItem.category}
-                </p>
+                <p className="eyebrow">{selectedItem.category}</p>
                 <DialogTitle className="text-4xl text-ink">
                   {selectedItem.title}
                 </DialogTitle>
