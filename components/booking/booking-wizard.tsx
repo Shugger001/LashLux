@@ -334,7 +334,11 @@ export function BookingWizard({ services }: { services: Service[] }) {
               </div>
             ) : (
               <p className="mt-6 rounded-xl bg-secondary p-6 text-center text-muted-foreground">
-                No times remain for this date. Please choose another day.
+                {dayUnavailableReason === "full"
+                  ? "This day is fully booked (5 appointments). Please choose another day."
+                  : dayUnavailableReason === "closed"
+                    ? "The studio is closed on this date. Please choose another day."
+                    : "No times remain for this date. Please choose another day."}
               </p>
             )}
             <WizardActions

@@ -14,6 +14,7 @@ import {
   Users,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -126,8 +127,21 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-border bg-card lg:flex">
+    <div className="relative min-h-screen">
+      <div className="pointer-events-none fixed inset-0 -z-10" aria-hidden>
+        <Image
+          src="/images/hero-lashes.jpg"
+          alt=""
+          fill
+          priority
+          className="object-cover object-[center_28%] sm:object-[center_32%]"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-cream/88" />
+        <div className="absolute inset-0 bg-gradient-to-br from-cream/70 via-transparent to-ink/10" />
+      </div>
+
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-border/80 bg-card/90 backdrop-blur-md lg:flex">
         {navigation}
       </aside>
 
@@ -139,14 +153,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             aria-label="Close navigation"
             onClick={() => setIsDrawerOpen(false)}
           />
-          <aside className="relative flex h-full w-[min(18rem,85vw)] flex-col bg-card shadow-2xl">
+          <aside className="relative flex h-full w-[min(18rem,85vw)] flex-col bg-card/95 shadow-2xl backdrop-blur-md">
             {navigation}
           </aside>
         </div>
       ) : null}
 
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex h-16 items-center border-b border-border bg-background/90 px-4 backdrop-blur-md sm:px-6 lg:hidden">
+        <header className="sticky top-0 z-30 flex h-16 items-center border-b border-border/80 bg-cream/80 px-4 backdrop-blur-md sm:px-6 lg:hidden">
           <Button
             type="button"
             variant="ghost"
