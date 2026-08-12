@@ -11,13 +11,13 @@ export function HeroSection() {
     <section className="hero-flush relative min-h-[100svh] overflow-hidden">
       <Image
         src="/images/hero-lashes.jpg"
-        alt="Beauty model with polished makeup and defined lashes"
+        alt="Close-up of volume eyelash extensions on a Black woman"
         fill
         priority
-        className="object-cover object-[center_12%] sm:object-[center_15%] motion-safe:animate-hero-ken"
+        className="object-cover object-[center_28%] sm:object-[center_32%] motion-safe:animate-hero-ken"
         sizes="100vw"
       />
-      {/* Keep copy readable over bright clothing in the photo */}
+      {/* Keep copy readable over the photo */}
       <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/45" />
       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/35" />
       <div
