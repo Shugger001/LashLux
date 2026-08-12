@@ -1,28 +1,27 @@
 import Link from "next/link";
 import { AtSign, MessageCircle } from "lucide-react";
 
+import { BrandLogo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/ui/fade-in";
 import { DAY_LABELS, DEFAULT_HOURS, SITE } from "@/lib/constants";
 
 export function HoursContactCta() {
   return (
-    <section className="section-pad border-t border-border bg-secondary/50">
+    <section className="section-pad border-t border-[#c9a27e]/20 bg-gradient-to-b from-blush/50 to-cream">
       <div className="container-page grid gap-12 lg:grid-cols-2">
         <FadeIn>
-          <p className="text-sm font-medium uppercase tracking-[0.16em] text-rose">
-            Book your lash experience
-          </p>
-          <h2 className="mt-3 font-display text-3xl text-ink sm:text-4xl">
+          <span className="eyebrow">Book your lash experience</span>
+          <h2 className="mt-4 font-display text-3xl text-ink sm:text-4xl lg:text-5xl">
             Ready when you are.
           </h2>
-          <p className="mt-3 font-script text-3xl text-rose">{SITE.badge}</p>
-          <p className="mt-4 max-w-md text-muted-foreground">
+          <p className="mt-4 font-script text-4xl text-rose">{SITE.badge}</p>
+          <p className="mt-5 max-w-md text-muted-foreground">
             Book online, WhatsApp us, or walk in when the schedule allows —
             appointments preferred.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild size="lg" className="bg-rose-gold text-ink hover:opacity-95">
+            <Button asChild size="lg">
               <Link href="/book">Book a session</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
@@ -52,23 +51,31 @@ export function HoursContactCta() {
         </FadeIn>
 
         <FadeIn delay={0.1}>
-          <div className="rounded-xl border border-[#c9a27e]/40 bg-card p-6 sm:p-8">
-            <h3 className="font-display text-2xl">Opening hours</h3>
-            <ul className="mt-6 space-y-3 text-sm">
-              {(
-                Object.keys(DEFAULT_HOURS) as Array<keyof typeof DEFAULT_HOURS>
-              ).map((key) => (
-                <li
-                  key={key}
-                  className="flex items-center justify-between gap-4 border-b border-border/70 pb-3 last:border-0"
-                >
-                  <span>{DAY_LABELS[key]}</span>
-                  <span className="text-muted-foreground">
-                    {DEFAULT_HOURS[key]}
-                  </span>
-                </li>
-              ))}
-            </ul>
+          <div className="frame-lux">
+            <div className="frame-lux-inner relative overflow-hidden p-6 sm:p-8">
+              <div className="absolute right-4 top-4 opacity-90">
+                <BrandLogo size="md" />
+              </div>
+              <h3 className="font-display text-2xl text-ink">Opening hours</h3>
+              <ul className="mt-6 space-y-3 text-sm">
+                {(
+                  Object.keys(DEFAULT_HOURS) as Array<keyof typeof DEFAULT_HOURS>
+                ).map((key) => (
+                  <li
+                    key={key}
+                    className="flex items-center justify-between gap-4 border-b border-border/70 pb-3 last:border-0"
+                  >
+                    <span>{DAY_LABELS[key]}</span>
+                    <span className="text-muted-foreground">
+                      {DEFAULT_HOURS[key]}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 rounded-xl border border-[#c9a27e]/30 bg-blush/50 px-4 py-3 text-center text-xs uppercase tracking-[0.14em] text-ink">
+                {SITE.policy}
+              </p>
+            </div>
           </div>
         </FadeIn>
       </div>

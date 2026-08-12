@@ -21,16 +21,17 @@ export function GalleryPreview({ items }: { items: GalleryItem[] }) {
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   return (
-    <section className="section-pad bg-secondary/40">
+    <section className="section-pad bg-gradient-to-b from-blush/40 to-transparent">
       <div className="container-page">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <FadeIn>
-            <p className="text-sm font-medium uppercase tracking-[0.16em] text-rose">
-              Gallery
-            </p>
-            <h2 className="mt-3 font-display text-4xl text-ink sm:text-5xl">
+            <span className="eyebrow">Gallery</span>
+            <h2 className="mt-4 font-display text-3xl text-ink sm:text-4xl lg:text-5xl">
               Recent work
             </h2>
+            <p className="mt-3 max-w-md text-muted-foreground">
+              Soft classics to dramatic mega volume — every set mapped to the eye.
+            </p>
           </FadeIn>
           <div className="flex gap-2">
             <Button
@@ -54,30 +55,38 @@ export function GalleryPreview({ items }: { items: GalleryItem[] }) {
           </div>
         </div>
 
-        <div className="mt-10 overflow-hidden" ref={emblaRef}>
-          <div className="flex gap-4">
+        <div className="mt-12 overflow-hidden" ref={emblaRef}>
+          <div className="flex gap-5">
             {items.map((item) => (
               <div
                 key={item.id}
-                className="relative min-w-0 flex-[0_0_85%] sm:flex-[0_0_45%] lg:flex-[0_0_30%]"
+                className="relative min-w-0 flex-[0_0_85%] sm:flex-[0_0_48%] lg:flex-[0_0_31%]"
               >
-                <div className="relative aspect-[3/4] overflow-hidden rounded-xl">
-                  <Image
-                    src={item.image_url}
-                    alt={item.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width:768px) 85vw, 30vw"
-                  />
+                <div className="frame-lux">
+                  <div className="frame-lux-inner overflow-hidden">
+                    <div className="relative aspect-[3/4]">
+                      <Image
+                        src={item.image_url}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width:768px) 85vw, 30vw"
+                      />
+                    </div>
+                    <div className="px-4 py-4">
+                      <p className="font-display text-xl text-ink">{item.title}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {item.category}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <p className="mt-3 font-display text-xl">{item.title}</p>
-                <p className="text-sm text-muted-foreground">{item.category}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="mt-8">
+        <div className="mt-10">
           <Button asChild variant="outline">
             <Link href="/gallery">View full gallery</Link>
           </Button>

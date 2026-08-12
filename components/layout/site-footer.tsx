@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AtSign, MapPin, MessageCircle, Phone } from "lucide-react";
 import { usePathname } from "next/navigation";
 
-import { BrandWordmark } from "@/components/brand/logo";
+import { BrandLogo, BrandWordmark } from "@/components/brand/logo";
 import { DAY_LABELS, DEFAULT_HOURS, SITE } from "@/lib/constants";
 
 export function SiteFooter() {
@@ -12,13 +12,20 @@ export function SiteFooter() {
   if (pathname.startsWith("/admin")) return null;
 
   return (
-    <footer className="border-t border-border bg-ink text-cream">
-      <div className="container-page grid gap-12 py-16 md:grid-cols-3">
+    <footer className="relative overflow-hidden border-t border-[#c9a27e]/20 bg-ink text-cream">
+      <div
+        className="pointer-events-none absolute -left-20 top-0 h-64 w-64 rounded-full opacity-30 blur-3xl"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(201,162,126,0.45), transparent 70%)",
+        }}
+        aria-hidden
+      />
+
+      <div className="container-page relative grid gap-12 py-16 md:grid-cols-3">
         <div>
           <BrandWordmark light showTagline />
-          <p className="mt-4 max-w-sm font-script text-2xl text-[#e8c4a8]">
-            {SITE.slogan}
-          </p>
+          <p className="mt-5 font-script text-3xl text-[#e8c4a8]">{SITE.slogan}</p>
           <p className="mt-2 text-sm text-cream/70">{SITE.promise}</p>
           <a
             href={SITE.instagram}
@@ -77,6 +84,12 @@ export function SiteFooter() {
               )
             )}
           </ul>
+          <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-[#c9a27e]/40 bg-white/5 px-4 py-3">
+            <BrandLogo size="sm" />
+            <p className="max-w-[10rem] text-[10px] font-semibold uppercase leading-snug tracking-[0.12em] text-[#e8c4a8]">
+              {SITE.badge}
+            </p>
+          </div>
         </div>
       </div>
 

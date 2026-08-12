@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
@@ -8,59 +9,80 @@ import { SITE } from "@/lib/constants";
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-[min(92vh,900px)] overflow-hidden">
+    <section className="relative -mt-[4.5rem] min-h-[100dvh] overflow-hidden">
       <Image
         src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=1800&q=80"
         alt="Close-up of luxury lash extensions"
         fill
         priority
-        className="object-cover object-[center_30%]"
+        className="object-cover object-[center_28%]"
         sizes="100vw"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/50 to-ink/20" />
+      <div className="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/55 to-ink/25" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-ink/20" />
+
+      {/* Flyer-inspired soft marble glow corners */}
       <div
-        className="pointer-events-none absolute -left-10 top-0 h-48 w-48 opacity-40 sm:h-64 sm:w-64"
+        className="pointer-events-none absolute -left-16 -top-10 h-72 w-72 rounded-full opacity-50 blur-2xl"
         style={{
           background:
-            "radial-gradient(circle at 30% 30%, rgba(201,162,126,0.55), transparent 70%)",
+            "radial-gradient(circle, rgba(232,196,168,0.55), transparent 70%)",
+        }}
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute -bottom-20 -right-10 h-80 w-80 rounded-full opacity-40 blur-2xl"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(201,137,144,0.45), transparent 70%)",
         }}
         aria-hidden
       />
 
-      <div className="container-page relative flex min-h-[min(92vh,900px)] flex-col justify-end pb-16 pt-28 sm:pb-20 lg:justify-center lg:pb-0">
-        <FadeIn className="max-w-xl text-cream">
-          <div className="mb-6 flex items-center gap-3">
-            <BrandLogo size="md" className="border-[#c9a27e] bg-white/90" />
-            <p className="font-display text-sm font-bold tracking-[0.22em] text-cream/90">
-              LASH<span className="text-[#e8c4a8]">LUX</span>
-            </p>
+      <div className="container-page relative flex min-h-[100dvh] flex-col justify-end pb-16 pt-36 sm:pb-20 lg:justify-center lg:pb-0">
+        <FadeIn className="max-w-2xl text-cream">
+          <div className="mb-7 flex items-center gap-3">
+            <BrandLogo size="lg" className="border-[#c9a27e] bg-white/95 shadow-soft" />
+            <div>
+              <p className="font-display text-xl font-bold tracking-[0.22em] sm:text-2xl">
+                LASH<span className="text-rose-gold">LUX</span>
+              </p>
+              <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-cream/60">
+                Luxury in every lash
+              </p>
+            </div>
           </div>
-          <p className="font-script text-4xl text-[#f0d2b8] sm:text-5xl">
+
+          <p className="font-script text-5xl leading-none text-[#f0d2b8] sm:text-6xl">
             {SITE.slogan}
           </p>
-          <h1 className="mt-4 max-w-lg font-display text-4xl font-semibold leading-tight tracking-tight text-cream sm:text-5xl lg:text-6xl">
-            Luxury in every lash.
+
+          <h1 className="mt-5 max-w-xl font-display text-4xl font-semibold leading-[1.05] tracking-tight text-cream sm:text-5xl lg:text-6xl">
+            Custom lashes that feel like you — elevated.
           </h1>
-          <p className="mt-4 max-w-md text-sm text-cream/75 sm:text-base">
-            Classic, hybrid, volume, and mega volume — custom looks that enhance,
-            elevate, and empower.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild size="lg" className="bg-rose-gold text-ink hover:opacity-95">
-              <Link href="/book">Book your lash experience</Link>
+
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <Button asChild size="lg" className="pr-2">
+              <Link href="/book" className="inline-flex items-center gap-3">
+                Book your lash experience
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-ink/10 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-px">
+                  <ArrowUpRight className="h-4 w-4" aria-hidden />
+                </span>
+              </Link>
             </Button>
             <Button
               asChild
               size="lg"
               variant="outline"
-              className="border-cream/40 bg-transparent text-cream hover:bg-cream/10 hover:text-cream"
+              className="border-cream/35 text-cream hover:bg-cream/10 hover:text-cream"
             >
               <a href={SITE.whatsapp} target="_blank" rel="noreferrer">
                 DM to book
               </a>
             </Button>
           </div>
-          <p className="mt-6 text-xs uppercase tracking-[0.16em] text-cream/55">
+
+          <p className="mt-7 text-[11px] uppercase tracking-[0.18em] text-cream/55">
             {SITE.policy}
           </p>
         </FadeIn>

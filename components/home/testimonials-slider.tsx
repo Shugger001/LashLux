@@ -13,41 +13,46 @@ export function TestimonialsSlider({ items }: { items: Testimonial[] }) {
     <section className="section-pad">
       <div className="container-page">
         <FadeIn className="max-w-2xl">
-          <p className="text-sm font-medium uppercase tracking-[0.16em] text-rose">
-            Client love
-          </p>
-          <h2 className="mt-3 font-display text-4xl text-ink sm:text-5xl">
+          <span className="eyebrow">Client love</span>
+          <h2 className="mt-4 font-display text-3xl text-ink sm:text-4xl lg:text-5xl">
             Soft sets. Strong retention. Calm appointments.
           </h2>
         </FadeIn>
 
-        <div className="mt-10 overflow-hidden" ref={emblaRef}>
-          <div className="flex gap-6">
+        <div className="mt-12 overflow-hidden" ref={emblaRef}>
+          <div className="flex gap-5">
             {items.map((item) => (
               <blockquote
                 key={item.id}
-                className="min-w-0 flex-[0_0_90%] rounded-xl border border-border bg-card p-6 sm:flex-[0_0_48%] lg:flex-[0_0_32%]"
+                className="min-w-0 flex-[0_0_90%] sm:flex-[0_0_48%] lg:flex-[0_0_32%]"
               >
-                <div className="flex gap-1" aria-label={`${item.rating} out of 5 stars`}>
-                  {Array.from({ length: item.rating }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className="h-4 w-4 fill-rose text-rose"
-                      aria-hidden
-                    />
-                  ))}
-                </div>
-                <p className="mt-4 text-base leading-relaxed text-foreground">
-                  “{item.content}”
-                </p>
-                <footer className="mt-6">
-                  <p className="font-medium">{item.client_name}</p>
-                  {item.service_used ? (
-                    <p className="text-sm text-muted-foreground">
-                      {item.service_used}
+                <div className="frame-lux h-full">
+                  <div className="frame-lux-inner flex h-full flex-col p-6 sm:p-7">
+                    <div
+                      className="flex gap-1"
+                      aria-label={`${item.rating} out of 5 stars`}
+                    >
+                      {Array.from({ length: item.rating }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className="h-4 w-4 fill-[#c9a27e] text-[#c9a27e]"
+                          aria-hidden
+                        />
+                      ))}
+                    </div>
+                    <p className="mt-5 flex-1 text-base leading-relaxed text-foreground">
+                      “{item.content}”
                     </p>
-                  ) : null}
-                </footer>
+                    <footer className="mt-6 border-t border-border/70 pt-4">
+                      <p className="font-medium text-ink">{item.client_name}</p>
+                      {item.service_used ? (
+                        <p className="text-sm text-muted-foreground">
+                          {item.service_used}
+                        </p>
+                      ) : null}
+                    </footer>
+                  </div>
+                </div>
               </blockquote>
             ))}
           </div>
