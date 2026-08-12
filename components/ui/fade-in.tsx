@@ -10,11 +10,11 @@ export function FadeIn({
   children,
   className,
   delay = 0,
-  immediate: _immediate = false,
 }: {
   children: React.ReactNode;
   className?: string;
   delay?: number;
+  /** @deprecated Kept for call-site compatibility. */
   immediate?: boolean;
 }) {
   return (
