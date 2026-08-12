@@ -20,8 +20,7 @@ import { formatCurrency, formatDuration } from "@/lib/utils";
 import { whatsappBookService } from "@/lib/whatsapp";
 import type { Service } from "@/types";
 
-const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=800&q=80";
+const FALLBACK_IMAGE = "/services/volume.jpg";
 
 /** Filterable catalog of lash services with accessible detail dialogs. */
 export function ServicesCatalog({ services }: { services: Service[] }) {

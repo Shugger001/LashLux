@@ -105,8 +105,7 @@ export const DEMO_SERVICES = [
     price: 250,
     duration: 120,
     category: "Classic",
-    image_url:
-      "https://images.unsplash.com/photo-1583003879471-c8e003cdc6ea?w=800&q=80",
+    image_url: "/services/classic.jpg",
     is_active: true,
     sort_order: 1,
     created_at: new Date().toISOString(),
@@ -118,8 +117,7 @@ export const DEMO_SERVICES = [
     price: 300,
     duration: 135,
     category: "Hybrid",
-    image_url:
-      "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800&q=80",
+    image_url: "/services/hybrid.jpg",
     is_active: true,
     sort_order: 2,
     created_at: new Date().toISOString(),
@@ -131,8 +129,7 @@ export const DEMO_SERVICES = [
     price: 350,
     duration: 150,
     category: "Volume",
-    image_url:
-      "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=800&q=80",
+    image_url: "/services/volume.jpg",
     is_active: true,
     sort_order: 3,
     created_at: new Date().toISOString(),
@@ -144,8 +141,7 @@ export const DEMO_SERVICES = [
     price: 450,
     duration: 180,
     category: "Volume",
-    image_url:
-      "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=800&q=80",
+    image_url: "/services/mega-volume.jpg",
     is_active: true,
     sort_order: 4,
     created_at: new Date().toISOString(),
@@ -157,8 +153,7 @@ export const DEMO_SERVICES = [
     price: 80,
     duration: 30,
     category: "Specialty",
-    image_url:
-      "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=800&q=80",
+    image_url: "/services/removal.jpg",
     is_active: true,
     sort_order: 5,
     created_at: new Date().toISOString(),
@@ -170,8 +165,7 @@ export const DEMO_SERVICES = [
     price: 60,
     duration: 15,
     category: "Specialty",
-    image_url:
-      "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=800&q=80",
+    image_url: "/services/care.jpg",
     is_active: true,
     sort_order: 6,
     created_at: new Date().toISOString(),
@@ -184,8 +178,7 @@ export const DEMO_SERVICES = [
     price: 180,
     duration: 75,
     category: "Specialty",
-    image_url:
-      "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800&q=80",
+    image_url: "/services/fill-2week.jpg",
     is_active: true,
     sort_order: 7,
     created_at: new Date().toISOString(),
@@ -198,8 +191,7 @@ export const DEMO_SERVICES = [
     price: 220,
     duration: 90,
     category: "Specialty",
-    image_url:
-      "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=800&q=80",
+    image_url: "/services/fill-3week.jpg",
     is_active: true,
     sort_order: 8,
     created_at: new Date().toISOString(),
