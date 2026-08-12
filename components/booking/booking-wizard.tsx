@@ -14,16 +14,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { SITE } from "@/lib/constants";
+import { trackEvent, captureException } from "@/lib/analytics";
 import { isBookableDate } from "@/lib/schedule";
 import {
   type BookingDetailsInput,
   bookingDetailsSchema,
 } from "@/lib/validations";
 import { cn, formatCurrency, formatDuration, formatTime } from "@/lib/utils";
+import { whatsappBookingFollowUp } from "@/lib/whatsapp";
 import type { Service } from "@/types";
 
 const STEP_LABELS = ["Service", "Date", "Time", "Details", "Notes", "Confirmed"];
+const DEPOSIT_ENABLED =
+  process.env.NEXT_PUBLIC_DEPOSIT_ENABLED === "true" &&
+  Boolean(process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY);
+const DEPOSIT_AMOUNT = Number(process.env.NEXT_PUBLIC_DEPOSIT_AMOUNT_GHS ?? "50");
 
 function toDateKey(date: Date) {
   const year = date.getFullYear();
@@ -36,10 +41,15 @@ function toDateKey(date: Date) {
 export function BookingWizard({ services }: { services: Service[] }) {
   const searchParams = useSearchParams();
   const requestedServiceId = searchParams.get("service");
+  const payStatus = searchParams.get("pay");
   const preselected = services.some((item) => item.id === requestedServiceId)
     ? requestedServiceId
     : "";
-  const [step, setStep] = useState(preselected ? 2 : 1);
+  const [step, setStep] = useState(() => {
+    if (payStatus === "success") return 6;
+    if (preselected) return 2;
+    return 1;
+  });
   const [serviceId, setServiceId] = useState(preselected ?? "");
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState("");
@@ -47,8 +57,9 @@ export function BookingWizard({ services }: { services: Service[] }) {
   const [slots, setSlots] = useState<string[]>([]);
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [bookingId, setBookingId] = useState("");
+  const [bookingId, setBookingId] = useState(searchParams.get("id") ?? "");
   const [emailSent, setEmailSent] = useState(false);
+  const [paidConfirmed, setPaidConfirmed] = useState(payStatus === "success");
   const selectedService = services.find((item) => item.id === serviceId);
 
   const {
@@ -60,6 +71,19 @@ export function BookingWizard({ services }: { services: Service[] }) {
     resolver: zodResolver(bookingDetailsSchema),
     defaultValues: { fullName: "", email: "", phone: "", notes: "" },
   });
+
+  useEffect(() => {
+    trackEvent("book_start");
+    if (payStatus === "success") {
+      setStep(6);
+      setPaidConfirmed(true);
+      trackEvent("pay_success");
+      toast.success("Deposit received. Your appointment is confirmed.");
+    } else if (payStatus === "failed") {
+      trackEvent("pay_fail");
+      toast.error("Payment did not complete. You can request again or WhatsApp us.");
+    }
+  }, [payStatus]);
 
   useEffect(() => {
     if (step !== 3 || !date || !serviceId) return;
@@ -88,12 +112,14 @@ export function BookingWizard({ services }: { services: Service[] }) {
   const progress = useMemo(() => `${Math.round((step / 6) * 100)}%`, [step]);
 
   function continueFromDetails() {
+    trackEvent("book_step", { step: 4 });
     setStep(5);
   }
 
   async function submitBooking() {
     if (!selectedService || !date || !time) return;
     setIsSubmitting(true);
+    trackEvent("book_submit");
     try {
       const details = getValues();
       const response = await fetch("/api/bookings", {
@@ -111,10 +137,20 @@ export function BookingWizard({ services }: { services: Service[] }) {
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "Booking could not be sent");
+
+      if (result.authorizationUrl) {
+        trackEvent("pay_start", { amount: result.depositAmount ?? DEPOSIT_AMOUNT });
+        window.location.href = result.authorizationUrl as string;
+        return;
+      }
+
       setBookingId(result.id ?? "");
       setEmailSent(result.emailSent === true);
+      trackEvent("book_success");
       setStep(6);
     } catch (error) {
+      trackEvent("book_fail");
+      captureException(error, { route: "book" });
       toast.error(
         error instanceof Error ? error.message : "Booking could not be sent"
       );
@@ -129,16 +165,12 @@ export function BookingWizard({ services }: { services: Service[] }) {
     day: "numeric",
     year: "numeric",
   });
-  const whatsappMessage = [
-    "Hi Lash Lux, I just sent an appointment request.",
-    selectedService ? `Service: ${selectedService.name}` : "",
-    confirmationDate ? `Date: ${confirmationDate}` : "",
-    time ? `Time: ${formatTime(time)}` : "",
-    bookingId ? `Reference: ${bookingId}` : "",
-  ]
-    .filter(Boolean)
-    .join("\n");
-  const whatsappHref = `${SITE.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
+  const whatsappHref = whatsappBookingFollowUp({
+    serviceName: selectedService?.name ?? "eyelash fixing",
+    date: confirmationDate ?? "",
+    time: time ? formatTime(time) : "",
+    reference: bookingId || undefined,
+  });
 
   return (
     <div className="frame-lux mx-auto max-w-3xl">
@@ -383,9 +415,20 @@ export function BookingWizard({ services }: { services: Service[] }) {
                 onClick={submitBooking}
               >
                 {isSubmitting && <Loader2 className="animate-spin" aria-hidden />}
-                {isSubmitting ? "Sending request…" : "Request appointment"}
+                {isSubmitting
+                  ? DEPOSIT_ENABLED
+                    ? "Starting payment…"
+                    : "Sending request…"
+                  : DEPOSIT_ENABLED
+                    ? `Pay GH₵${Number.isFinite(DEPOSIT_AMOUNT) ? DEPOSIT_AMOUNT : 50} deposit`
+                    : "Request appointment"}
               </Button>
             </div>
+            {DEPOSIT_ENABLED && (
+              <p className="mt-3 text-center text-xs text-muted-foreground">
+                A small deposit holds your slot. Balance is paid at the studio.
+              </p>
+            )}
           </section>
         )}
 
@@ -395,10 +438,12 @@ export function BookingWizard({ services }: { services: Service[] }) {
               <Check className="h-7 w-7" aria-hidden />
             </span>
             <h2 id="confirmed-title" className="mt-6 font-display text-4xl text-ink">
-              Your request is in.
+              {paidConfirmed ? "You're confirmed." : "Your request is in."}
             </h2>
             <p className="mx-auto mt-3 max-w-md text-muted-foreground">
-              Your appointment request is pending confirmation.
+              {paidConfirmed
+                ? "Deposit received. We look forward to your eyelash fixing session."
+                : "Your appointment request is pending confirmation."}
             </p>
             {selectedService && confirmationDate && time && (
               <dl className="mx-auto mt-6 max-w-md rounded-xl bg-secondary p-5 text-left text-sm">
@@ -419,9 +464,11 @@ export function BookingWizard({ services }: { services: Service[] }) {
               </dl>
             )}
             <p className="mx-auto mt-5 max-w-md text-sm text-muted-foreground">
-              {emailSent
-                ? "We sent your request details by email. We will follow up once the appointment is confirmed."
-                : "We will confirm your appointment via WhatsApp or phone."}
+              {paidConfirmed
+                ? "A receipt was emailed when payment completed. Message us on WhatsApp if you need to reschedule."
+                : emailSent
+                  ? "We sent your request details by email. We will follow up once the appointment is confirmed."
+                  : "We will confirm your appointment via WhatsApp or phone."}
             </p>
             {bookingId && (
               <p className="mt-4 text-xs text-muted-foreground">
@@ -430,7 +477,12 @@ export function BookingWizard({ services }: { services: Service[] }) {
             )}
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
               <Button asChild>
-                <a href={whatsappHref} target="_blank" rel="noreferrer">
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => trackEvent("whatsapp_click", { source: "book_confirm" })}
+                >
                   Message us on WhatsApp
                 </a>
               </Button>

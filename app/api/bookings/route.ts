@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 
+import { SITE } from "@/lib/constants";
 import { sendBookingConfirmation } from "@/lib/email";
+import {
+  getDepositAmountGhs,
+  initializePaystackDeposit,
+  isDepositRequired,
+} from "@/lib/paystack";
 import {
   BUFFER_MINUTES,
   generateBookableSlots,
@@ -32,7 +38,7 @@ function isRateLimited(request: Request) {
   return current.count > RATE_LIMIT;
 }
 
-/** Validate and create a pending appointment request. */
+/** Validate and create a pending appointment request (optional Paystack deposit). */
 export async function POST(request: Request) {
   if (isRateLimited(request)) {
     return NextResponse.json(
@@ -85,6 +91,7 @@ export async function POST(request: Request) {
         id: `demo-${crypto.randomUUID()}`,
         demo: true,
         emailSent: false,
+        depositRequired: false,
       },
       { status: 201 }
     );
@@ -95,7 +102,7 @@ export async function POST(request: Request) {
     const admin = createAdminClient();
     const { data: service, error: serviceError } = await admin
       .from("services")
-      .select("id, name, duration")
+      .select("id, name, duration, price")
       .eq("id", input.serviceId)
       .eq("is_active", true)
       .maybeSingle();
@@ -103,6 +110,18 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: "That service is not available." },
         { status: 404 }
+      );
+    }
+
+    const { data: dayBlocks } = await admin
+      .from("blocked_times")
+      .select("start_time, end_time")
+      .eq("block_date", input.date);
+
+    if ((dayBlocks ?? []).some((block) => !block.start_time && !block.end_time)) {
+      return NextResponse.json(
+        { error: "The studio is closed on that date." },
+        { status: 400 }
       );
     }
 
@@ -118,15 +137,33 @@ export async function POST(request: Request) {
       );
     }
 
+    const proposedStart = timeToMinutes(normalizedTime);
+    const proposedEnd = proposedStart + service.duration;
+
+    const blocked = (dayBlocks ?? []).some((block) => {
+      if (!block.start_time || !block.end_time) return false;
+      return rangesOverlap(
+        proposedStart,
+        proposedEnd,
+        timeToMinutes(String(block.start_time)),
+        timeToMinutes(String(block.end_time)),
+        0
+      );
+    });
+    if (blocked) {
+      return NextResponse.json(
+        { error: "That time is blocked. Please choose another." },
+        { status: 409 }
+      );
+    }
+
     const { data: dayAppointments, error: dayError } = await admin
       .from("appointments")
       .select("id, appointment_time, service:services(duration)")
       .eq("appointment_date", input.date)
-      .neq("status", "cancelled");
+      .not("status", "in", "(cancelled,no_show)");
     if (dayError) throw dayError;
 
-    const proposedStart = timeToMinutes(normalizedTime);
-    const proposedEnd = proposedStart + service.duration;
     const hasOverlap = (dayAppointments ?? []).some((appointment) => {
       const start = timeToMinutes(String(appointment.appointment_time));
       const serviceJoin = appointment.service as
@@ -157,7 +194,6 @@ export async function POST(request: Request) {
 
     let userId: string | null = signedInUser?.id ?? null;
 
-    // Link to an existing auth user by email when possible, never invent passwords.
     if (!userId) {
       const { data: authUsers } = await admin.auth.admin.listUsers({
         page: 1,
@@ -168,6 +204,12 @@ export async function POST(request: Request) {
           (user) => user.email?.toLowerCase() === input.email
         )?.id ?? null;
     }
+
+    const depositRequired = isDepositRequired();
+    const depositAmount = depositRequired ? getDepositAmountGhs() : 0;
+    const paymentReference = depositRequired
+      ? `ll_${crypto.randomUUID().replaceAll("-", "").slice(0, 24)}`
+      : null;
 
     const { data: appointment, error: insertError } = await admin
       .from("appointments")
@@ -181,10 +223,46 @@ export async function POST(request: Request) {
         client_name: input.fullName,
         client_email: input.email,
         client_phone: input.phone,
+        payment_status: depositRequired ? "pending" : "none",
+        payment_reference: paymentReference,
+        deposit_amount: depositAmount,
       })
       .select("id")
       .single();
     if (insertError) throw insertError;
+
+    if (depositRequired && paymentReference) {
+      try {
+        const pay = await initializePaystackDeposit({
+          email: input.email,
+          amountGhs: depositAmount,
+          reference: paymentReference,
+          appointmentId: appointment.id,
+          callbackUrl: `${SITE.url}/api/paystack/callback`,
+        });
+        return NextResponse.json(
+          {
+            success: true,
+            id: appointment.id,
+            emailSent: false,
+            depositRequired: true,
+            depositAmount,
+            authorizationUrl: pay.authorization_url,
+            paymentReference: pay.reference,
+          },
+          { status: 201 }
+        );
+      } catch (error) {
+        await admin.from("appointments").delete().eq("id", appointment.id);
+        console.error("[booking:paystack-init-failed]", {
+          message: error instanceof Error ? error.message : "unknown",
+        });
+        return NextResponse.json(
+          { error: "Payment could not be started. Please try again." },
+          { status: 502 }
+        );
+      }
+    }
 
     let emailSent = false;
     try {
@@ -205,7 +283,12 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { success: true, id: appointment.id, emailSent },
+      {
+        success: true,
+        id: appointment.id,
+        emailSent,
+        depositRequired: false,
+      },
       { status: 201 }
     );
   } catch (error) {

@@ -28,6 +28,7 @@ const statusStyles: Record<AppointmentStatus, string> = {
   confirmed: "bg-success/10 text-success",
   completed: "bg-secondary text-muted-foreground",
   cancelled: "bg-destructive/10 text-destructive",
+  no_show: "bg-muted text-muted-foreground",
 };
 
 function getServiceName(service: AccountAppointment["service"]) {

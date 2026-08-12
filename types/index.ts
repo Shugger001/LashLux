@@ -6,7 +6,15 @@ export type AppointmentStatus =
   | "pending"
   | "confirmed"
   | "completed"
-  | "cancelled";
+  | "cancelled"
+  | "no_show";
+
+export type PaymentStatus =
+  | "none"
+  | "pending"
+  | "paid"
+  | "failed"
+  | "refunded";
 
 export type SettingType = "text" | "json" | "boolean";
 
@@ -34,7 +42,7 @@ export interface Service {
 
 export interface Appointment {
   id: string;
-  user_id: string;
+  user_id: string | null;
   service_id: string;
   appointment_date: string;
   appointment_time: string;
@@ -43,10 +51,23 @@ export interface Appointment {
   client_name?: string | null;
   client_email?: string | null;
   client_phone?: string | null;
+  payment_status?: PaymentStatus;
+  payment_reference?: string | null;
+  deposit_amount?: number;
+  reminder_sent_at?: string | null;
   created_at: string;
   updated_at: string;
   service?: Service | null;
   user?: UserProfile | null;
+}
+
+export interface BlockedTime {
+  id: string;
+  block_date: string;
+  start_time: string | null;
+  end_time: string | null;
+  reason: string;
+  created_at: string;
 }
 
 export interface GalleryItem {

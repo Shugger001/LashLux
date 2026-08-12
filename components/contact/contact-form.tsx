@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { trackEvent } from "@/lib/analytics";
 import {
   type ContactInput,
   contactSchema,
@@ -30,6 +31,7 @@ export function ContactForm() {
 
   async function onSubmit(values: ContactInput) {
     setServerError("");
+    trackEvent("contact_submit");
     const response = await fetch("/api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -37,11 +39,13 @@ export function ContactForm() {
     });
     const result = await response.json();
     if (!response.ok) {
+      trackEvent("contact_fail");
       setServerError(result.error ?? "Your message could not be sent. Please try again.");
       return;
     }
     reset();
     setIsSent(true);
+    trackEvent("contact_success");
   }
 
   if (isSent) {

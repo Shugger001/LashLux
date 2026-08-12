@@ -2,6 +2,7 @@
 
 import {
   CalendarDays,
+  CalendarOff,
   ChevronLeft,
   Images,
   LayoutDashboard,
@@ -25,6 +26,7 @@ import { cn } from "@/lib/utils";
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/appointments", label: "Appointments", icon: CalendarDays },
+  { href: "/admin/blocked-times", label: "Blocked times", icon: CalendarOff },
   { href: "/admin/services", label: "Services", icon: Scissors },
   { href: "/admin/gallery", label: "Gallery", icon: Images },
   {

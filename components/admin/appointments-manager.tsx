@@ -19,13 +19,14 @@ import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { buildICalEvent, formatCurrency, formatTime } from "@/lib/utils";
 import type { Appointment, AppointmentStatus } from "@/types";
 
-type ViewMode = "list" | "week";
+type ViewMode = "list" | "week" | "day";
 
 const statusStyles = {
   pending: "bg-amber-50 text-amber-800 border-amber-200",
   confirmed: "bg-blue-50 text-blue-800 border-blue-200",
   completed: "bg-emerald-50 text-emerald-800 border-emerald-200",
   cancelled: "bg-red-50 text-red-700 border-red-200",
+  no_show: "bg-stone-100 text-stone-700 border-stone-300",
 };
 
 /** Appointment filters, calendar export, and status management. */
@@ -61,18 +62,40 @@ export function AppointmentsManager({
         item.id === id ? { ...item, status: nextStatus } : item
       )
     );
-    if (isSupabaseConfigured()) {
-      const { error } = await createClient()
-        .from("appointments")
-        .update({ status: nextStatus, updated_at: new Date().toISOString() })
-        .eq("id", id);
-      if (error) {
-        setAppointments(previous);
-        toast.error("Status could not be updated.");
+    try {
+      const response = await fetch("/api/admin/appointments/status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status: nextStatus, notify: true }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? "Update failed");
+      toast.success(
+        result.emailSent
+          ? `Marked ${nextStatus} · client emailed`
+          : `Appointment marked ${nextStatus}`
+      );
+    } catch {
+      setAppointments(previous);
+      if (isSupabaseConfigured()) {
+        const { error } = await createClient()
+          .from("appointments")
+          .update({ status: nextStatus, updated_at: new Date().toISOString() })
+          .eq("id", id);
+        if (error) {
+          toast.error("Status could not be updated.");
+          return;
+        }
+        setAppointments((items) =>
+          items.map((item) =>
+            item.id === id ? { ...item, status: nextStatus } : item
+          )
+        );
+        toast.success(`Appointment marked ${nextStatus}`);
         return;
       }
+      toast.error("Status could not be updated.");
     }
-    toast.success(`Appointment marked ${nextStatus}`);
   }
 
   async function deleteAppointment(id: string) {
@@ -187,6 +210,18 @@ export function AppointmentsManager({
             <Button
               type="button"
               size="sm"
+              variant={view === "day" ? "secondary" : "ghost"}
+              onClick={() => {
+                setView("day");
+                if (!date) setDate(new Date().toISOString().slice(0, 10));
+              }}
+              aria-pressed={view === "day"}
+            >
+              Day
+            </Button>
+            <Button
+              type="button"
+              size="sm"
               variant={view === "week" ? "secondary" : "ghost"}
               onClick={() => setView("week")}
               aria-pressed={view === "week"}
@@ -203,6 +238,55 @@ export function AppointmentsManager({
             <CalendarPlus className="mx-auto h-8 w-8 text-muted-foreground" aria-hidden />
             <h2 className="mt-4 font-display text-2xl">No appointments found</h2>
             <p className="mt-2 text-sm text-muted-foreground">Clear a filter to see more bookings.</p>
+          </CardContent>
+        </Card>
+      ) : view === "day" ? (
+        <Card>
+          <CardContent className="space-y-3 p-5">
+            <h2 className="font-display text-2xl">
+              {new Date(`${date || filtered[0]?.appointment_date}T12:00:00`).toLocaleDateString(
+                "en-US",
+                { weekday: "long", month: "long", day: "numeric" }
+              )}
+            </h2>
+            {[...filtered]
+              .sort((a, b) => a.appointment_time.localeCompare(b.appointment_time))
+              .map((appointment) => (
+                <div
+                  key={appointment.id}
+                  className="flex flex-col gap-3 rounded-xl border border-border bg-secondary/40 p-4 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div>
+                    <p className="font-medium">
+                      {formatTime(appointment.appointment_time)} ·{" "}
+                      {appointment.client_name ?? "Client"}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {appointment.service?.name}
+                      {appointment.payment_status === "paid"
+                        ? " · deposit paid"
+                        : appointment.payment_status === "pending"
+                          ? " · deposit pending"
+                          : ""}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {(["confirmed", "completed", "no_show", "cancelled"] as AppointmentStatus[]).map(
+                      (next) => (
+                        <Button
+                          key={next}
+                          type="button"
+                          size="sm"
+                          variant={appointment.status === next ? "primary" : "outline"}
+                          onClick={() => updateStatus(appointment.id, next)}
+                        >
+                          {next.replace("_", " ")}
+                        </Button>
+                      )
+                    )}
+                  </div>
+                </div>
+              ))}
           </CardContent>
         </Card>
       ) : view === "week" ? (

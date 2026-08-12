@@ -81,13 +81,22 @@ export async function GET(request: Request) {
     .from("appointments")
     .select("appointment_time, service:services(duration)")
     .eq("appointment_date", parsed.data.date)
-    .neq("status", "cancelled");
+    .not("status", "in", "(cancelled,no_show)");
   if (error) {
     console.error("[availability:query-failed]", { code: error.code });
     return NextResponse.json(
       { error: "Available times could not be loaded." },
       { status: 500 }
     );
+  }
+
+  const { data: blocks } = await supabase
+    .from("blocked_times")
+    .select("start_time, end_time")
+    .eq("block_date", parsed.data.date);
+
+  if ((blocks ?? []).some((block) => !block.start_time && !block.end_time)) {
+    return NextResponse.json({ slots: [], closed: true });
   }
 
   const bookedRanges = (data ?? []).map((appointment) => {
@@ -102,12 +111,23 @@ export async function GET(request: Request) {
     return { start, end: start + duration };
   });
 
+  const blockedRanges = (blocks ?? [])
+    .filter((block) => block.start_time && block.end_time)
+    .map((block) => ({
+      start: timeToMinutes(String(block.start_time)),
+      end: timeToMinutes(String(block.end_time)),
+    }));
+
   const slots = allSlots.filter((slot) => {
     const start = timeToMinutes(slot);
     const end = start + service.duration;
-    return !bookedRanges.some((range) =>
+    const hitsBooking = bookedRanges.some((range) =>
       rangesOverlap(start, end, range.start, range.end, BUFFER_MINUTES)
     );
+    const hitsBlock = blockedRanges.some((range) =>
+      rangesOverlap(start, end, range.start, range.end, 0)
+    );
+    return !hitsBooking && !hitsBlock;
   });
 
   return NextResponse.json({ slots });

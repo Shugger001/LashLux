@@ -26,6 +26,7 @@ const STATUS_STYLES = {
   confirmed: "bg-blue-50 text-blue-800 border-blue-200",
   completed: "bg-emerald-50 text-emerald-800 border-emerald-200",
   cancelled: "bg-red-50 text-red-700 border-red-200",
+  no_show: "bg-stone-100 text-stone-700 border-stone-300",
 };
 
 /** Dashboard metrics, weekly chart, and operational shortcuts. */

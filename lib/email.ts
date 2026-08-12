@@ -119,3 +119,141 @@ export async function sendPromoEmail(input: {
 
   return { skipped: false as const };
 }
+
+/** Notify client when an appointment status changes. */
+export async function sendStatusUpdateEmail(input: {
+  to: string;
+  clientName: string;
+  serviceName: string;
+  date: string;
+  time: string;
+  status: string;
+}) {
+  const resend = getResend();
+  if (!resend) {
+    console.info("[email:skipped] status update", input.to, input.status);
+    return { skipped: true as const };
+  }
+
+  const from =
+    process.env.RESEND_FROM_EMAIL ?? `Lash Lux <bookings@${SITE.url.replace(/^https?:\/\//, "")}>`;
+  const clientName = escapeHtml(input.clientName);
+  const serviceName = escapeHtml(input.serviceName);
+  const date = escapeHtml(input.date);
+  const time = escapeHtml(input.time);
+  const status = escapeHtml(input.status);
+
+  const headlines: Record<string, string> = {
+    confirmed: "Your appointment is confirmed",
+    completed: "Thanks for visiting Lash Lux",
+    cancelled: "Your appointment was cancelled",
+    no_show: "We missed you today",
+    pending: "Your appointment is pending",
+  };
+
+  const bodies: Record<string, string> = {
+    confirmed: "We look forward to your eyelash fixing session. Reply if you need to reschedule.",
+    completed: "We hope you love your set. Book a fill in 2-3 weeks to keep them full.",
+    cancelled: "This booking is cancelled. Message us on WhatsApp anytime to rebook.",
+    no_show: "Your slot passed without a visit. Reply to rebook when you're ready.",
+    pending: "We received your request and will confirm shortly.",
+  };
+
+  await resend.emails.send({
+    from,
+    to: input.to,
+    subject: `${headlines[input.status] ?? "Appointment update"}, ${input.serviceName}`,
+    html: `
+      <div style="font-family:Georgia,serif;color:#4a3a35;line-height:1.6">
+        <h1 style="color:#c17a6b;font-weight:400">${headlines[input.status] ?? "Appointment update"}</h1>
+        <p>Hi ${clientName},</p>
+        <p>${bodies[input.status] ?? `Your booking status is now <strong>${status}</strong>.`}</p>
+        <p><strong>Service:</strong> ${serviceName}<br/>
+        <strong>Date:</strong> ${date}<br/>
+        <strong>Time:</strong> ${time}</p>
+        <p style="color:#8a756c">- ${SITE.name}</p>
+      </div>
+    `,
+  });
+
+  return { skipped: false as const };
+}
+
+/** 24-hour appointment reminder. */
+export async function sendBookingReminder(input: {
+  to: string;
+  clientName: string;
+  serviceName: string;
+  date: string;
+  time: string;
+}) {
+  const resend = getResend();
+  if (!resend) {
+    console.info("[email:skipped] reminder", input.to);
+    return { skipped: true as const };
+  }
+
+  const from =
+    process.env.RESEND_FROM_EMAIL ?? `Lash Lux <bookings@${SITE.url.replace(/^https?:\/\//, "")}>`;
+  const clientName = escapeHtml(input.clientName);
+  const serviceName = escapeHtml(input.serviceName);
+  const date = escapeHtml(input.date);
+  const time = escapeHtml(input.time);
+
+  await resend.emails.send({
+    from,
+    to: input.to,
+    subject: `Reminder, ${input.serviceName} tomorrow`,
+    html: `
+      <div style="font-family:Georgia,serif;color:#4a3a35;line-height:1.6">
+        <h1 style="color:#c17a6b;font-weight:400">See you soon, ${clientName}</h1>
+        <p>This is a friendly reminder for your <strong>${serviceName}</strong> appointment.</p>
+        <p><strong>Date:</strong> ${date}<br/>
+        <strong>Time:</strong> ${time}<br/>
+        <strong>Where:</strong> ${escapeHtml(SITE.address)}</p>
+        <p>Arrive with clean, makeup-free lashes. Need to reschedule? Reply to this email or WhatsApp us.</p>
+        <p style="color:#8a756c">- ${SITE.name}</p>
+      </div>
+    `,
+  });
+
+  return { skipped: false as const };
+}
+
+/** Deposit payment confirmation. */
+export async function sendDepositReceipt(input: {
+  to: string;
+  clientName: string;
+  serviceName: string;
+  date: string;
+  time: string;
+  amountGhs: number;
+  reference: string;
+}) {
+  const resend = getResend();
+  if (!resend) {
+    return { skipped: true as const };
+  }
+
+  const from =
+    process.env.RESEND_FROM_EMAIL ?? `Lash Lux <bookings@${SITE.url.replace(/^https?:\/\//, "")}>`;
+
+  await resend.emails.send({
+    from,
+    to: input.to,
+    subject: `Deposit received, ${input.serviceName}`,
+    html: `
+      <div style="font-family:Georgia,serif;color:#4a3a35;line-height:1.6">
+        <h1 style="color:#c17a6b;font-weight:400">Deposit confirmed</h1>
+        <p>Hi ${escapeHtml(input.clientName)}, your deposit of <strong>GH₵${input.amountGhs}</strong> is received.</p>
+        <p><strong>Service:</strong> ${escapeHtml(input.serviceName)}<br/>
+        <strong>Date:</strong> ${escapeHtml(input.date)} at ${escapeHtml(input.time)}<br/>
+        <strong>Reference:</strong> ${escapeHtml(input.reference)}</p>
+        <p>Your appointment is confirmed. See you at ${escapeHtml(SITE.address)}.</p>
+        <p style="color:#8a756c">- ${SITE.name}</p>
+      </div>
+    `,
+  });
+
+  return { skipped: false as const };
+}

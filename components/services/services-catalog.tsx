@@ -15,7 +15,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { SERVICE_CATEGORIES } from "@/lib/constants";
+import { trackEvent } from "@/lib/analytics";
 import { formatCurrency, formatDuration } from "@/lib/utils";
+import { whatsappBookService } from "@/lib/whatsapp";
 import type { Service } from "@/types";
 
 const FALLBACK_IMAGE =
@@ -93,11 +95,23 @@ export function ServicesCatalog({ services }: { services: Service[] }) {
                 <Clock className="h-3.5 w-3.5" aria-hidden />
                 {formatDuration(service.duration)}
               </p>
-              <div className="mt-6 flex gap-3">
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <Button asChild className="flex-1">
                   <Link href={`/book?service=${encodeURIComponent(service.id)}`}>
                     Book now
                   </Link>
+                </Button>
+                <Button asChild variant="outline" className="flex-1">
+                  <a
+                    href={whatsappBookService(service.name)}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() =>
+                      trackEvent("whatsapp_click", { source: "services", service: service.name })
+                    }
+                  >
+                    WhatsApp
+                  </a>
                 </Button>
                 <Button
                   type="button"
@@ -156,13 +170,30 @@ export function ServicesCatalog({ services }: { services: Service[] }) {
                     {formatCurrency(Number(selectedService.price))}
                   </span>
                 </div>
-                <Button asChild size="lg" className="mt-6 w-full">
-                  <Link
-                    href={`/book?service=${encodeURIComponent(selectedService.id)}`}
-                  >
-                    Book this service
-                  </Link>
-                </Button>
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                  <Button asChild size="lg" className="flex-1">
+                    <Link
+                      href={`/book?service=${encodeURIComponent(selectedService.id)}`}
+                    >
+                      Book this service
+                    </Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline" className="flex-1">
+                    <a
+                      href={whatsappBookService(selectedService.name)}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() =>
+                        trackEvent("whatsapp_click", {
+                          source: "services_dialog",
+                          service: selectedService.name,
+                        })
+                      }
+                    >
+                      WhatsApp to book
+                    </a>
+                  </Button>
+                </div>
               </div>
             </>
           )}

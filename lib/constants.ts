@@ -61,6 +61,18 @@ export const APPOINTMENT_STATUSES = [
   "confirmed",
   "completed",
   "cancelled",
+  "no_show",
+] as const;
+
+export const FILL_PACKAGES = [
+  {
+    name: "2-Week Fill",
+    blurb: "Refresh fullness within 2 weeks of your full set.",
+  },
+  {
+    name: "3-Week Fill",
+    blurb: "A fuller refresh around the 3-week mark.",
+  },
 ] as const;
 
 export const DEFAULT_HOURS = {
@@ -161,6 +173,34 @@ export const DEMO_SERVICES = [
       "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=800&q=80",
     is_active: true,
     sort_order: 6,
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "demo-fill-2",
+    name: "2-Week Fill",
+    description:
+      "Refresh your set within 2 weeks for lasting fullness between full appointments.",
+    price: 180,
+    duration: 75,
+    category: "Specialty",
+    image_url:
+      "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800&q=80",
+    is_active: true,
+    sort_order: 7,
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "demo-fill-3",
+    name: "3-Week Fill",
+    description:
+      "Fill package for sets needing a fuller refresh around the 3-week mark.",
+    price: 220,
+    duration: 90,
+    category: "Specialty",
+    image_url:
+      "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=800&q=80",
+    is_active: true,
+    sort_order: 8,
     created_at: new Date().toISOString(),
   },
 ] as const;
@@ -334,6 +374,14 @@ export const FAQ_ITEMS = [
   {
     q: "Do you accept walk-ins?",
     a: "Walk-ins are welcome when the schedule allows, but appointments are preferred so we can give you a full, unhurried fixing session.",
+  },
+  {
+    q: "Do you offer fill packages?",
+    a: "Yes. Book a 2-week or 3-week fill to refresh fullness between full sets. Fills work best when you return before the set becomes sparse.",
+  },
+  {
+    q: "Do I need a deposit?",
+    a: "When deposits are enabled, a small Paystack payment holds your slot online. The balance is paid at the studio. Otherwise you can request an appointment and confirm by WhatsApp.",
   },
   {
     q: "Can I wear mascara with extensions?",

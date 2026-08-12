@@ -36,6 +36,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Lash Lux | Eyelash Fixing",
     description: "Book classic, hybrid, volume, or mega volume lashes at Lash Lux.",
+    images: ["/images/lashlux-flyer.png"],
   },
 };
 

@@ -3,10 +3,11 @@ import { FeaturedServices } from "@/components/home/featured-services";
 import { GalleryPreview } from "@/components/home/gallery-preview";
 import { HeroSection } from "@/components/home/hero-section";
 import { HoursContactCta } from "@/components/home/hours-contact-cta";
+import { InstagramStrip } from "@/components/home/instagram-strip";
 import { TestimonialsSlider } from "@/components/home/testimonials-slider";
 import { ValuePropsBar } from "@/components/home/value-props-bar";
-import { SITE } from "@/lib/constants";
 import { getGallery, getServices, getTestimonials } from "@/lib/data";
+import { localBusinessJsonLd } from "@/lib/seo";
 
 export default async function HomePage() {
   const [services, gallery, testimonials] = await Promise.all([
@@ -15,24 +16,7 @@ export default async function HomePage() {
     getTestimonials(),
   ]);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BeautySalon",
-    name: SITE.name,
-    description: SITE.businessType,
-    url: SITE.url,
-    telephone: SITE.phone,
-    email: SITE.email,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "Manna Apartment",
-      addressLocality: "Old Ashongman",
-      addressCountry: "GH",
-    },
-    sameAs: [SITE.instagram, SITE.whatsapp],
-    image:
-      "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=1200&q=80",
-  };
+  const jsonLd = localBusinessJsonLd();
 
   return (
     <>
@@ -46,6 +30,7 @@ export default async function HomePage() {
       <GalleryPreview items={gallery} />
       <TestimonialsSlider items={testimonials} />
       <AboutTeaser />
+      <InstagramStrip />
       <HoursContactCta />
     </>
   );

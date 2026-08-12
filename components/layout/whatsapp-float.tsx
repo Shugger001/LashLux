@@ -3,6 +3,8 @@
 import { usePathname } from "next/navigation";
 
 import { SITE } from "@/lib/constants";
+import { trackEvent } from "@/lib/analytics";
+import { whatsappHref } from "@/lib/whatsapp";
 
 /** Fixed WhatsApp chat button for quick booking messages. */
 export function WhatsAppFloat() {
@@ -12,9 +14,7 @@ export function WhatsAppFloat() {
     return null;
   }
 
-  const href = `${SITE.whatsapp}?text=${encodeURIComponent(
-    "Hi Lash Lux! I’d like to book eyelash fixing."
-  )}`;
+  const href = whatsappHref("Hi Lash Lux! I'd like to book eyelash fixing.");
 
   return (
     <a
@@ -22,6 +22,7 @@ export function WhatsAppFloat() {
       target="_blank"
       rel="noreferrer"
       aria-label="Chat on WhatsApp"
+      onClick={() => trackEvent("whatsapp_click", { source: "float" })}
       className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-4 z-[70] inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_14px_32px_-10px_rgba(37,211,102,0.75)] transition-transform duration-300 ease-out hover:scale-105 focus-ring sm:bottom-6 sm:right-6"
     >
       <svg
