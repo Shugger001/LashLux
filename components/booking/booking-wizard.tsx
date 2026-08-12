@@ -273,7 +273,12 @@ export function BookingWizard({ services }: { services: Service[] }) {
             </div>
             <WizardActions
               onBack={() => setStep(1)}
-              onNext={() => setStep(3)}
+              onNext={() => {
+                setSlots([]);
+                setTime("");
+                setIsLoadingSlots(true);
+                setStep(3);
+              }}
               nextLabel="Choose a time"
               nextDisabled={!date}
             />
