@@ -14,18 +14,15 @@ const STYLE_CIRCLES = [
   },
   {
     label: "Hybrid",
-    image:
-      "https://images.unsplash.com/photo-1548902378-2ec44c906391?w=600&q=80",
+    image: "/gallery/look-02.png",
   },
   {
     label: "Volume",
-    image:
-      "https://images.unsplash.com/photo-1639629509821-c54cdd984227?w=600&q=80",
+    image: "/images/hero-lashes.jpg",
   },
   {
     label: "Mega",
-    image:
-      "https://images.unsplash.com/photo-1735151226446-1d364b4adc2f?w=600&q=80",
+    image: "/gallery/look-02.png",
   },
 ] as const;
 

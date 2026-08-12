@@ -14,10 +14,10 @@ export function AboutTeaser() {
           <div className="frame-lux">
             <div className="frame-lux-inner relative aspect-[4/5] overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1735151226446-1d364b4adc2f?w=1200&q=80"
-                alt="Lash artist applying eyelash extensions"
+                src="/images/hero-lashes.jpg"
+                alt="Lash Lux client with professional eyelash extensions"
                 fill
-                className="object-cover"
+                className="object-cover object-[center_15%]"
                 sizes="(max-width:1024px) 100vw, 50vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/35 via-transparent to-transparent" />
