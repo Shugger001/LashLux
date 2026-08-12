@@ -127,21 +127,20 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="relative min-h-screen">
-      <div className="pointer-events-none fixed inset-0 -z-10" aria-hidden>
+    <div className="relative min-h-screen bg-background">
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
         <Image
           src="/images/hero-lashes.jpg"
           alt=""
           fill
           priority
-          className="object-cover object-[center_28%] sm:object-[center_32%]"
+          className="object-cover object-[center_28%] opacity-[0.18] sm:object-[center_32%]"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-cream/88" />
-        <div className="absolute inset-0 bg-gradient-to-br from-cream/70 via-transparent to-ink/10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/92 to-background" />
       </div>
 
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-border/80 bg-card/90 backdrop-blur-md lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-border bg-card/95 backdrop-blur-md lg:flex">
         {navigation}
       </aside>
 
@@ -153,14 +152,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             aria-label="Close navigation"
             onClick={() => setIsDrawerOpen(false)}
           />
-          <aside className="relative flex h-full w-[min(18rem,85vw)] flex-col bg-card/95 shadow-2xl backdrop-blur-md">
+          <aside className="relative flex h-full w-[min(18rem,85vw)] flex-col bg-card shadow-2xl">
             {navigation}
           </aside>
         </div>
       ) : null}
 
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex h-16 items-center border-b border-border/80 bg-cream/80 px-4 backdrop-blur-md sm:px-6 lg:hidden">
+        <header className="sticky top-0 z-30 flex h-16 items-center border-b border-border bg-background/95 px-4 backdrop-blur-md sm:px-6 lg:hidden">
           <Button
             type="button"
             variant="ghost"
@@ -171,7 +170,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           >
             <Menu />
           </Button>
-          <span className="ml-3 font-display text-2xl">Lash Lux Admin</span>
+          <span className="ml-3 font-display text-2xl text-ink">Lash Lux Admin</span>
         </header>
         <div className="mx-auto w-full max-w-7xl p-4 sm:p-6 lg:p-8">
           {children}
