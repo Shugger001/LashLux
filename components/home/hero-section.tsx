@@ -4,7 +4,6 @@ import { ArrowUpRight } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
-import { FadeIn } from "@/components/ui/fade-in";
 import { SITE } from "@/lib/constants";
 
 export function HeroSection() {
@@ -39,7 +38,7 @@ export function HeroSection() {
       />
 
       <div className="container-page relative flex min-h-[100dvh] flex-col justify-end pb-16 pt-28 sm:pb-20 lg:pb-24">
-        <FadeIn immediate className="max-w-2xl text-cream">
+        <div className="max-w-2xl text-cream">
           <div className="mb-7 flex items-center gap-3">
             <BrandLogo size="lg" className="border-[#c9a27e] bg-white/95 shadow-soft" />
             <div>
@@ -89,7 +88,7 @@ export function HeroSection() {
           <p className="mt-7 text-[11px] uppercase tracking-[0.18em] text-cream/55">
             {SITE.policy}
           </p>
-        </FadeIn>
+        </div>
       </div>
     </section>
   );

@@ -2,16 +2,20 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 
+/**
+ * Light entrance motion that never hides content.
+ * (Opacity-based reveals were leaving blank gaps when whileInView/animate failed.)
+ */
 export function FadeIn({
   children,
   className,
   delay = 0,
-  /** Animate on mount instead of waiting for scroll into view (use above the fold). */
   immediate = false,
 }: {
   children: React.ReactNode;
   className?: string;
   delay?: number;
+  /** Kept for call-site compatibility; motion always runs safely on mount/in-view. */
   immediate?: boolean;
 }) {
   const reduce = useReducedMotion();
@@ -21,7 +25,7 @@ export function FadeIn({
   }
 
   const transition = {
-    duration: 0.7,
+    duration: 0.55,
     ease: [0.32, 0.72, 0, 1] as const,
     delay,
   };
@@ -30,8 +34,8 @@ export function FadeIn({
     return (
       <motion.div
         className={className}
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ y: 12 }}
+        animate={{ y: 0 }}
         transition={transition}
       >
         {children}
@@ -42,9 +46,9 @@ export function FadeIn({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      initial={{ y: 14 }}
+      whileInView={{ y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
       transition={transition}
     >
       {children}

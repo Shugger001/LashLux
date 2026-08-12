@@ -10,23 +10,22 @@ import type { Service } from "@/types";
 const STYLE_CIRCLES = [
   {
     label: "Classic",
-    image:
-      "https://images.unsplash.com/photo-1583003879471-c8e003cdc6ea?w=600&q=80",
+    image: "/images/hero-lashes.jpg",
   },
   {
     label: "Hybrid",
     image:
-      "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=600&q=80",
+      "https://images.unsplash.com/photo-1548902378-2ec44c906391?w=600&q=80",
   },
   {
     label: "Volume",
     image:
-      "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=600&q=80",
+      "https://images.unsplash.com/photo-1639629509821-c54cdd984227?w=600&q=80",
   },
   {
     label: "Mega",
     image:
-      "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=600&q=80",
+      "https://images.unsplash.com/photo-1735151226446-1d364b4adc2f?w=600&q=80",
   },
 ] as const;
 
