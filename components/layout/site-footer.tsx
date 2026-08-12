@@ -22,7 +22,7 @@ export function SiteFooter() {
         aria-hidden
       />
 
-      <div className="container-page relative grid gap-12 py-16 md:grid-cols-3">
+      <div className="container-page relative grid gap-10 py-12 pb-[max(3rem,calc(env(safe-area-inset-bottom)+2rem))] md:grid-cols-3 md:gap-12 md:py-16">
         <div>
           <BrandWordmark light showTagline />
           <p className="mt-5 font-script text-3xl text-[#e8c4a8]">{SITE.slogan}</p>

@@ -20,17 +20,17 @@ export function HoursContactCta() {
             Book a classic, hybrid, volume, or mega volume set online, WhatsApp
             us, or walk in when the schedule allows, appointments preferred.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild size="lg">
+          <div className="mt-6 flex w-full flex-col gap-3 sm:mt-8 sm:w-auto sm:flex-row sm:flex-wrap">
+            <Button asChild size="lg" className="w-full sm:w-auto">
               <Link href="/book">Book fixing</Link>
             </Button>
-            <Button asChild size="lg" variant="outline">
+            <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
               <a href={SITE.whatsapp} target="_blank" rel="noreferrer">
                 <MessageCircle className="h-4 w-4" aria-hidden />
                 WhatsApp
               </a>
             </Button>
-            <Button asChild size="lg" variant="ghost">
+            <Button asChild size="lg" variant="ghost" className="w-full sm:w-auto">
               <a href={SITE.instagram} target="_blank" rel="noreferrer">
                 <AtSign className="h-4 w-4" aria-hidden />
                 {SITE.instagramHandle}

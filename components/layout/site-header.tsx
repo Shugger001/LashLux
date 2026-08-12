@@ -71,16 +71,21 @@ export function SiteHeader({
             </Button>
           </div>
 
-          <button
-            type="button"
-            className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#c9a27e]/30 bg-white/70 md:hidden focus-ring"
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            aria-label={open ? "Close menu" : "Open menu"}
-            onClick={() => setOpen((v) => !v)}
-          >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            <Button asChild size="sm" className="h-10 px-4">
+              <Link href="/book">Book</Link>
+            </Button>
+            <button
+              type="button"
+              className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#c9a27e]/30 bg-white/70 focus-ring"
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+              aria-label={open ? "Close menu" : "Open menu"}
+              onClick={() => setOpen((v) => !v)}
+            >
+              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
       </div>
 

@@ -1,57 +1,28 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 /**
- * Light entrance motion that never hides content.
- * (Opacity-based reveals were leaving blank gaps when whileInView/animate failed.)
+ * Light entrance helper. Uses CSS so content never gets stuck invisible
+ * or offset when scroll observers fail (common on mobile).
  */
 export function FadeIn({
   children,
   className,
   delay = 0,
-  immediate = false,
+  immediate: _immediate = false,
 }: {
   children: React.ReactNode;
   className?: string;
   delay?: number;
-  /** Kept for call-site compatibility; motion always runs safely on mount/in-view. */
   immediate?: boolean;
 }) {
-  const reduce = useReducedMotion();
-
-  if (reduce) {
-    return <div className={className}>{children}</div>;
-  }
-
-  const transition = {
-    duration: 0.55,
-    ease: [0.32, 0.72, 0, 1] as const,
-    delay,
-  };
-
-  if (immediate) {
-    return (
-      <motion.div
-        className={className}
-        initial={{ y: 12 }}
-        animate={{ y: 0 }}
-        transition={transition}
-      >
-        {children}
-      </motion.div>
-    );
-  }
-
   return (
-    <motion.div
-      className={className}
-      initial={{ y: 14 }}
-      whileInView={{ y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={transition}
+    <div
+      className={cn("motion-safe:animate-fade-up", className)}
+      style={delay ? { animationDelay: `${delay}s` } : undefined}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

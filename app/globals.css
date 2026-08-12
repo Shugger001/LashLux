@@ -117,7 +117,7 @@
   }
 
   .section-pad {
-    @apply py-14 sm:py-16 lg:py-24;
+    @apply py-12 sm:py-16 lg:py-24;
   }
 
   .eyebrow {
@@ -130,6 +130,10 @@
 
   .transition-lux {
     transition-timing-function: var(--ease-lux);
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.55s var(--ease-lux) both;
   }
 
   .skeleton-shimmer {
@@ -159,6 +163,17 @@
   }
 }
 
+@keyframes fade-up {
+  from {
+    opacity: 0.01;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes skeleton-shimmer {
   100% {
     transform: translateX(100%);
@@ -177,5 +192,11 @@
 
   body::before {
     display: none;
+  }
+
+  .animate-fade-up {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

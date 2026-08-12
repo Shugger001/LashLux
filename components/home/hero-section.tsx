@@ -14,32 +14,16 @@ export function HeroSection() {
         alt="Close-up of professional eyelash extensions after fixing"
         fill
         priority
-        className="object-cover object-[center_28%]"
+        className="object-cover object-[center_30%] sm:object-[center_28%]"
         sizes="100vw"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/60 to-ink/30" />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/25 to-ink/35" />
+      <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/65 to-ink/35" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/30 to-ink/40" />
 
-      <div
-        className="pointer-events-none absolute -left-16 -top-10 h-72 w-72 rounded-full opacity-50 blur-2xl"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(232,196,168,0.55), transparent 70%)",
-        }}
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -bottom-20 -right-10 h-80 w-80 rounded-full opacity-40 blur-2xl"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(201,137,144,0.45), transparent 70%)",
-        }}
-        aria-hidden
-      />
-
-      <div className="container-page relative flex min-h-[100svh] flex-col justify-end pb-10 pt-28 sm:pb-14 lg:pb-16">
+      <div className="container-page relative flex min-h-[100svh] flex-col justify-end pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-24 sm:pb-14 sm:pt-28 lg:pb-16">
         <div className="max-w-2xl text-cream">
-          <div className="mb-7 flex items-center gap-3">
+          {/* Header already shows brand on mobile — keep mark light here */}
+          <div className="mb-5 hidden items-center gap-3 sm:mb-7 sm:flex">
             <BrandLogo size="lg" className="border-[#c9a27e] bg-white/95 shadow-soft" />
             <div>
               <p className="font-display text-xl font-bold tracking-[0.22em] sm:text-2xl">
@@ -51,24 +35,24 @@ export function HeroSection() {
             </div>
           </div>
 
-          <p className="font-script text-5xl leading-none text-[#f0d2b8] sm:text-6xl">
+          <p className="font-script text-[2.75rem] leading-none text-[#f0d2b8] sm:text-5xl lg:text-6xl">
             {SITE.slogan}
           </p>
 
-          <h1 className="mt-5 max-w-xl font-display text-4xl font-semibold leading-[1.05] tracking-tight text-cream sm:text-5xl lg:text-6xl">
+          <h1 className="mt-4 max-w-xl font-display text-[1.85rem] font-semibold leading-[1.1] tracking-tight text-cream sm:mt-5 sm:text-5xl lg:text-6xl">
             Professional eyelash fixing, classic to mega volume.
           </h1>
 
-          <p className="mt-4 max-w-lg text-sm text-cream/75 sm:text-base">
+          <p className="mt-3 max-w-lg text-sm leading-6 text-cream/75 sm:mt-4 sm:text-base sm:leading-7">
             Soft, custom lash sets mapped to your eye shape. Book a full set, fill,
             or safe removal at Old Ashongman.
           </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3">
-            <Button asChild size="lg" className="pr-2">
-              <Link href="/book" className="inline-flex items-center gap-3">
+          <div className="mt-6 flex w-full flex-col gap-3 sm:mt-9 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
+            <Button asChild size="lg" className="w-full pr-2 sm:w-auto">
+              <Link href="/book" className="inline-flex w-full items-center justify-center gap-3 sm:w-auto">
                 Book eyelash fixing
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-ink/10 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-px">
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-ink/10">
                   <ArrowUpRight className="h-4 w-4" aria-hidden />
                 </span>
               </Link>
@@ -77,15 +61,15 @@ export function HeroSection() {
               asChild
               size="lg"
               variant="outline"
-              className="border-cream/35 text-cream hover:bg-cream/10 hover:text-cream"
+              className="w-full border-cream/35 text-cream hover:bg-cream/10 hover:text-cream sm:w-auto"
             >
               <a href={SITE.whatsapp} target="_blank" rel="noreferrer">
-                DM to book
+                WhatsApp to book
               </a>
             </Button>
           </div>
 
-          <p className="mt-7 text-[11px] uppercase tracking-[0.18em] text-cream/55">
+          <p className="mt-5 text-[10px] uppercase tracking-[0.16em] text-cream/55 sm:mt-7 sm:text-[11px] sm:tracking-[0.18em]">
             {SITE.policy}
           </p>
         </div>

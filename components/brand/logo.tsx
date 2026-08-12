@@ -42,12 +42,12 @@ export function BrandWordmark({
   light?: boolean;
 }) {
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
+    <span className={cn("inline-flex min-w-0 items-center gap-2 sm:gap-2.5", className)}>
       <BrandLogo size="sm" />
-      <span className="leading-tight">
+      <span className="min-w-0 leading-tight">
         <span
           className={cn(
-            "block font-display text-lg font-bold tracking-[0.08em]",
+            "block font-display text-base font-bold tracking-[0.08em] sm:text-lg",
             light ? "text-cream" : "text-ink"
           )}
         >

@@ -17,12 +17,12 @@ export default async function BookPage() {
   return (
     <section className="section-pad">
       <div className="container-page">
-        <div className="mx-auto mb-10 max-w-2xl text-center">
+        <div className="mx-auto mb-8 max-w-2xl text-center sm:mb-10">
           <p className="eyebrow">Online booking</p>
-          <h1 className="mt-5 text-balance font-display text-5xl text-ink sm:text-6xl">
+          <h1 className="mt-4 text-balance font-display text-4xl text-ink sm:mt-5 sm:text-6xl">
             Book your eyelash fixing.
           </h1>
-          <p className="mt-4 text-pretty text-muted-foreground">
+          <p className="mt-3 text-pretty text-sm text-muted-foreground sm:mt-4 sm:text-base">
             Choose a lash set and preferred time. Your request stays pending
             until we confirm it.
           </p>

@@ -33,7 +33,7 @@ export function FeaturedServices({ services }: { services: Service[] }) {
   const featured = services.slice(0, 6);
 
   return (
-    <section className="pb-16 pt-10 sm:pb-20 sm:pt-12 lg:pb-24 lg:pt-16">
+    <section className="pb-12 pt-8 sm:pb-20 sm:pt-12 lg:pb-24 lg:pt-16">
       <div className="container-page">
         <FadeIn className="mx-auto max-w-2xl text-center">
           <span className="eyebrow">Eyelash fixing menu</span>
