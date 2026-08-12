@@ -137,7 +137,7 @@ export function ClientsManager({ initialClients }: { initialClients: AdminClient
           </DialogHeader>
           <form className="grid gap-4" onSubmit={sendPromotion}>
             <div className="grid gap-2"><Label htmlFor="promo-subject">Subject</Label><Input id="promo-subject" name="subject" required maxLength={120} placeholder="A fresh set for your next occasion" /></div>
-            <div className="grid gap-2"><Label htmlFor="promo-body">Message</Label><Textarea id="promo-body" name="body" required minLength={10} maxLength={3000} rows={7} placeholder="Hi — we would love to welcome you back…" /></div>
+            <div className="grid gap-2"><Label htmlFor="promo-body">Message</Label><Textarea id="promo-body" name="body" required minLength={10} maxLength={3000} rows={7} placeholder="Hi, we would love to welcome you back…" /></div>
             <Button type="submit" disabled={isSending}>{isSending ? "Sending…" : "Send promotion"}</Button>
           </form>
         </DialogContent>

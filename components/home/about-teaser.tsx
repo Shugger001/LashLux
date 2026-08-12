@@ -31,7 +31,7 @@ export function AboutTeaser() {
           <p className="mt-4 font-script text-4xl text-rose">{SITE.slogan}</p>
           <p className="mt-6 text-muted-foreground leading-relaxed">
             Lash Lux is a professional eyelash fixing studio specializing in
-            classic, hybrid, volume, and mega volume extensions — plus safe
+            classic, hybrid, volume, and mega volume extensions, plus safe
             removals and aftercare. Premium products, gentle technique, and
             results that last.
           </p>

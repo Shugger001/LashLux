@@ -56,7 +56,7 @@ export function HeroSection() {
           </p>
 
           <h1 className="mt-5 max-w-xl font-display text-4xl font-semibold leading-[1.05] tracking-tight text-cream sm:text-5xl lg:text-6xl">
-            Professional eyelash fixing — classic to mega volume.
+            Professional eyelash fixing, classic to mega volume.
           </h1>
 
           <p className="mt-4 max-w-lg text-sm text-cream/75 sm:text-base">

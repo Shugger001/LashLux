@@ -64,12 +64,12 @@ export const APPOINTMENT_STATUSES = [
 ] as const;
 
 export const DEFAULT_HOURS = {
-  mon: "10:00 AM – 6:00 PM",
-  tue: "10:00 AM – 6:00 PM",
-  wed: "10:00 AM – 6:00 PM",
-  thu: "10:00 AM – 7:00 PM",
-  fri: "10:00 AM – 7:00 PM",
-  sat: "9:00 AM – 5:00 PM",
+  mon: "10:00 AM - 6:00 PM",
+  tue: "10:00 AM - 6:00 PM",
+  wed: "10:00 AM - 6:00 PM",
+  thu: "10:00 AM - 7:00 PM",
+  fri: "10:00 AM - 7:00 PM",
+  sat: "9:00 AM - 5:00 PM",
   sun: "By appointment",
 } as const;
 
@@ -88,7 +88,7 @@ export const DEMO_SERVICES = [
   {
     id: "demo-classic",
     name: "Classic Lashes",
-    description: "Natural & timeless — one extension per natural lash for everyday elegance.",
+    description: "Natural & timeless, one extension per natural lash for everyday elegance.",
     price: 250,
     duration: 120,
     category: "Classic",
@@ -265,7 +265,7 @@ export const DEMO_TESTIMONIALS = [
     client_name: "Jade M.",
     client_image: null,
     content:
-      "Lash Lux is meticulous — my classic set looked perfect from every angle and my eyes still felt comfortable.",
+      "Lash Lux is meticulous, my classic set looked perfect from every angle and my eyes still felt comfortable.",
     rating: 5,
     service_used: "Classic Lashes",
     is_approved: true,
@@ -302,7 +302,7 @@ export const LASH_CARE_TIPS = [
   },
   {
     title: "Brush gently daily",
-    body: "Use a clean spoolie to keep lashes aligned — never from the tips inward.",
+    body: "Use a clean spoolie to keep lashes aligned, never from the tips inward.",
   },
   {
     title: "Skip oil-based products",
@@ -317,11 +317,11 @@ export const LASH_CARE_TIPS = [
 export const FAQ_ITEMS = [
   {
     q: "What is eyelash fixing?",
-    a: "Eyelash fixing is the application of semi-permanent lash extensions — classic, hybrid, volume, or mega volume — to enhance your natural lashes with a custom look.",
+    a: "Eyelash fixing is the application of semi-permanent lash extensions (classic, hybrid, volume, or mega volume) to enhance your natural lashes with a custom look.",
   },
   {
     q: "How long do fixed lashes last?",
-    a: "With proper aftercare, a full set typically looks its best for 2–3 weeks. We recommend fills every 2–3 weeks as your natural lashes shed.",
+    a: "With proper aftercare, a full set typically looks its best for 2-3 weeks. We recommend fills every 2-3 weeks as your natural lashes shed.",
   },
   {
     q: "Will fixing damage my natural lashes?",
@@ -337,6 +337,6 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Can I wear mascara with extensions?",
-    a: "We recommend skipping mascara. If needed, use a water-based formula sparingly on the tips only — never oil-based mascara.",
+    a: "We recommend skipping mascara. If needed, use a water-based formula sparingly on the tips only, never oil-based mascara.",
   },
 ] as const;

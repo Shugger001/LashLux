@@ -41,7 +41,7 @@ export function FeaturedServices({ services }: { services: Service[] }) {
             Enhance. Elevate. Empower.
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Classic, hybrid, volume, and mega volume fixing — looks tailored to your eyes.
+            Classic, hybrid, volume, and mega volume fixing, looks tailored to your eyes.
           </p>
         </FadeIn>
 
@@ -87,7 +87,7 @@ export function FeaturedServices({ services }: { services: Service[] }) {
             </div>
           </FadeIn>
 
-          {/* Flyer-style circular look stack — desktop accent only */}
+          {/* Flyer-style circular look stack, desktop accent only */}
           <FadeIn delay={0.1} className="hidden lg:block lg:pt-6">
             <div className="relative mx-auto max-w-md">
               <div className="absolute -inset-6 rounded-full bg-gradient-to-br from-[#f0d2b0]/35 via-transparent to-[#c98990]/25 blur-2xl" aria-hidden />

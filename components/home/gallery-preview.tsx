@@ -30,7 +30,7 @@ export function GalleryPreview({ items }: { items: GalleryItem[] }) {
               Recent work
             </h2>
             <p className="mt-3 max-w-md text-muted-foreground">
-              Soft classics to dramatic mega volume — every set mapped to the eye.
+              Soft classics to dramatic mega volume, every set mapped to the eye.
             </p>
           </FadeIn>
           <div className="flex gap-2">

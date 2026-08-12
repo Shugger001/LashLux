@@ -1,6 +1,6 @@
 # Lash Lux
 
-Production-ready website for **Lash Lux** — professional eyelash fixing & lash extensions at Manna Apartment, Old Ashongman.
+Production-ready website for **Lash Lux**, professional eyelash fixing & lash extensions at Manna Apartment, Old Ashongman.
 
 **Stack:** Next.js 14 (App Router) · TypeScript · Tailwind CSS · Supabase · Resend · Vercel
 

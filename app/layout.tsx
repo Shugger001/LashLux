@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s | Lash Lux",
   },
   description:
-    "Lash Lux offers professional eyelash fixing in Old Ashongman — classic, hybrid, volume, and mega volume lash extensions. Walk-ins welcome, appointments preferred.",
+    "Lash Lux offers professional eyelash fixing in Old Ashongman, classic, hybrid, volume, and mega volume lash extensions. Walk-ins welcome, appointments preferred.",
   openGraph: {
     title: "Lash Lux | Eyelash Fixing & Lash Extensions",
     description: `${SITE.businessType}. ${SITE.tagline}`,

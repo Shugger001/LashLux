@@ -18,7 +18,7 @@ export function HoursContactCta() {
           <p className="mt-4 font-script text-4xl text-rose">{SITE.badge}</p>
           <p className="mt-5 max-w-md text-muted-foreground">
             Book a classic, hybrid, volume, or mega volume set online, WhatsApp
-            us, or walk in when the schedule allows — appointments preferred.
+            us, or walk in when the schedule allows, appointments preferred.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">

@@ -219,7 +219,7 @@ export function BookingWizard({ services }: { services: Service[] }) {
               Choose a date
             </h2>
             <p className="mt-2 text-muted-foreground">
-              Monday–Saturday are open for online booking. Sundays are by
+              Monday-Saturday are open for online booking. Sundays are by
               appointment and are not bookable online.
             </p>
             <div className="mt-6 flex justify-center rounded-xl border border-border p-4">

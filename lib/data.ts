@@ -7,7 +7,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/client";
 import { createClient } from "@/lib/supabase/server";
 import type { GalleryItem, Service, Testimonial } from "@/types";
 
-/** Fetch active services — falls back to demo data without Supabase. */
+/** Fetch active services, falls back to demo data without Supabase. */
 export async function getServices(): Promise<Service[]> {
   if (!isSupabaseConfigured()) {
     return [...DEMO_SERVICES] as Service[];

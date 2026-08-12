@@ -47,7 +47,7 @@ export function TestimonialsManager({ initialTestimonials }: { initialTestimonia
       is_approved: editing?.is_approved ?? true,
     };
     if (!payload.client_name || payload.content.length < 10 || payload.rating < 1 || payload.rating > 5) {
-      toast.error("Add a client name, review, and rating from 1–5.");
+      toast.error("Add a client name, review, and rating from 1-5.");
       setIsSaving(false);
       return;
     }

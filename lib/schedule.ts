@@ -1,4 +1,4 @@
-/** Studio schedule — single source of truth for booking + display. */
+/** Studio schedule, single source of truth for booking + display. */
 
 export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -11,12 +11,12 @@ export interface DayHours {
 /** Open/close in 24h HH:mm. null = closed. */
 export const STUDIO_HOURS: Record<Weekday, DayHours> = {
   0: { open: null, close: null, label: "By appointment" },
-  1: { open: "10:00", close: "18:00", label: "10:00 AM – 6:00 PM" },
-  2: { open: "10:00", close: "18:00", label: "10:00 AM – 6:00 PM" },
-  3: { open: "10:00", close: "18:00", label: "10:00 AM – 6:00 PM" },
-  4: { open: "10:00", close: "19:00", label: "10:00 AM – 7:00 PM" },
-  5: { open: "10:00", close: "19:00", label: "10:00 AM – 7:00 PM" },
-  6: { open: "09:00", close: "17:00", label: "9:00 AM – 5:00 PM" },
+  1: { open: "10:00", close: "18:00", label: "10:00 AM - 6:00 PM" },
+  2: { open: "10:00", close: "18:00", label: "10:00 AM - 6:00 PM" },
+  3: { open: "10:00", close: "18:00", label: "10:00 AM - 6:00 PM" },
+  4: { open: "10:00", close: "19:00", label: "10:00 AM - 7:00 PM" },
+  5: { open: "10:00", close: "19:00", label: "10:00 AM - 7:00 PM" },
+  6: { open: "09:00", close: "17:00", label: "9:00 AM - 5:00 PM" },
 };
 
 export const BUFFER_MINUTES = 15;

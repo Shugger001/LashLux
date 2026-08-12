@@ -8,7 +8,7 @@ import { getGallery } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Eyelash Fixing Gallery",
   description:
-    "Browse eyelash fixing looks from Lash Lux — classic, hybrid, volume, and specialty sets in Old Ashongman.",
+    "Browse eyelash fixing looks from Lash Lux, classic, hybrid, volume, and specialty sets in Old Ashongman.",
 };
 
 export default async function GalleryPage() {

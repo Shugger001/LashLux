@@ -42,7 +42,7 @@ export async function sendBookingConfirmation(input: {
   await resend.emails.send({
     from,
     to: input.to,
-    subject: `Booking received — ${input.serviceName}`,
+    subject: `Booking received, ${input.serviceName}`,
     html: `
       <div style="font-family:Georgia,serif;color:#4a3a35;line-height:1.6">
         <h1 style="color:#c17a6b;font-weight:400">You're almost set, ${clientName}</h1>
@@ -51,7 +51,7 @@ export async function sendBookingConfirmation(input: {
         <strong>Time:</strong> ${time}</p>
         ${notes ? `<p><strong>Notes:</strong> ${notes}</p>` : ""}
         <p>We'll confirm shortly. Reply to this email if you need to change anything.</p>
-        <p style="color:#8a756c">— ${SITE.name}</p>
+        <p style="color:#8a756c">- ${SITE.name}</p>
       </div>
     `,
   });
@@ -60,7 +60,7 @@ export async function sendBookingConfirmation(input: {
   await resend.emails.send({
     from,
     to: adminEmail,
-    subject: `New booking — ${input.serviceName}`,
+    subject: `New booking, ${input.serviceName}`,
     html: `<p>${clientName} booked ${serviceName} on ${date} at ${time}.</p>`,
   });
 
@@ -89,7 +89,7 @@ export async function sendContactNotification(input: {
     from,
     to: adminEmail,
     replyTo: input.email,
-    subject: `Contact form — ${input.name}`,
+    subject: `Contact form, ${input.name}`,
     html: `<p><strong>${name}</strong> (${email})</p><p>${message}</p>`,
   });
 

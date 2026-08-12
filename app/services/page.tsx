@@ -9,7 +9,7 @@ import { getServices } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Eyelash Fixing Services",
   description:
-    "Book eyelash fixing at Lash Lux — classic, hybrid, volume, mega volume, removal, and lash care in Old Ashongman.",
+    "Book eyelash fixing at Lash Lux, classic, hybrid, volume, mega volume, removal, and lash care in Old Ashongman.",
 };
 
 const careIcons = [Droplets, Sparkles, Eye, Moon];
@@ -27,7 +27,7 @@ export default async function ServicesPage() {
               Choose your lash look.
             </h1>
             <p className="mt-5 text-pretty text-lg leading-8 text-muted-foreground">
-              From natural classic fixing to bold mega volume — every set starts
+              From natural classic fixing to bold mega volume, every set starts
               with a consultation and is applied with care for your natural lashes.
             </p>
           </div>

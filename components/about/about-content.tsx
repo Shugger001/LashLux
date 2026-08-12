@@ -30,7 +30,7 @@ export function AboutContent() {
               Expert lash sets, gently applied.
             </h1>
             <p className="mt-6 text-pretty text-lg leading-8 text-muted-foreground">
-              Lash Lux specializes in eyelash fixing — classic, hybrid, volume, and
+              Lash Lux specializes in eyelash fixing, classic, hybrid, volume, and
               mega volume extensions tailored to your eye shape and lifestyle.
             </p>
             <p className="mt-4 leading-7 text-muted-foreground">

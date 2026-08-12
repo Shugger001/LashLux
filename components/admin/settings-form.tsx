@@ -124,7 +124,7 @@ export function SettingsForm({ initialSettings }: { initialSettings: AdminSettin
           <div className="grid gap-2">
             <Label htmlFor="seoDescription">SEO description</Label>
             <Textarea id="seoDescription" name="seoDescription" required minLength={40} maxLength={170} rows={4} defaultValue={initialSettings.seoDescription} />
-            <p className="text-xs text-muted-foreground">Aim for 140–160 clear, specific characters.</p>
+            <p className="text-xs text-muted-foreground">Aim for 140-160 clear, specific characters.</p>
           </div>
         </CardContent>
       </Card>

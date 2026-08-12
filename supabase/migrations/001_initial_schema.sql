@@ -1,4 +1,4 @@
--- Lash Lux — initial schema + RLS
+-- Lash Lux, initial schema + RLS
 -- Run via Supabase SQL editor or CLI: supabase db push
 
 -- Extensions
@@ -265,7 +265,7 @@ create policy "Admins manage contact messages"
 -- Seed services (aligned with official Lash Lux flyer)
 insert into public.services (name, description, price, duration, category, image_url, is_active, sort_order)
 values
-  ('Classic Lashes', 'Natural & timeless — one extension per natural lash for everyday elegance.', 250, 120, 'Classic', 'https://images.unsplash.com/photo-1583003879471-c8e003cdc6ea?w=800&q=80', true, 1),
+  ('Classic Lashes', 'Natural & timeless, one extension per natural lash for everyday elegance.', 250, 120, 'Classic', 'https://images.unsplash.com/photo-1583003879471-c8e003cdc6ea?w=800&q=80', true, 1),
   ('Hybrid Lashes', 'The perfect blend of natural & volume for soft dimension.', 300, 135, 'Hybrid', 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800&q=80', true, 2),
   ('Volume Lashes', 'Fuller & fluffier handmade fans for elevated glam.', 350, 150, 'Volume', 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=800&q=80', true, 3),
   ('Mega Volume Lashes', 'Bold & dramatic density for maximum impact.', 450, 180, 'Volume', 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=800&q=80', true, 4),
@@ -290,7 +290,7 @@ on conflict do nothing;
 insert into public.testimonials (client_name, content, rating, service_used, is_approved)
 values
   ('Amara K.', 'The most natural volume set I have ever worn. Soft, fluffy, and lasted beautifully.', 5, 'Volume Lashes', true),
-  ('Jade M.', 'Lash Lux is meticulous — my classic set looked perfect from every angle.', 5, 'Classic Lashes', true),
+  ('Jade M.', 'Lash Lux is meticulous, my classic set looked perfect from every angle.', 5, 'Classic Lashes', true),
   ('Sofia R.', 'Hybrid lashes gave me the exact balance of glam and everyday wear I wanted.', 5, 'Hybrid Lashes', true),
   ('Nina T.', 'Clean studio, gentle technique, and she listened to exactly what I wanted.', 5, 'Mega Volume', true)
 on conflict do nothing;
@@ -303,7 +303,7 @@ values
   ('phone', '0547986899', 'text'),
   ('email', 'hello@lashlux.com', 'text'),
   ('address', 'Manna Apartment, Old Ashongman', 'text'),
-  ('hours', '{"mon":"10:00 AM – 6:00 PM","tue":"10:00 AM – 6:00 PM","wed":"10:00 AM – 6:00 PM","thu":"10:00 AM – 7:00 PM","fri":"10:00 AM – 7:00 PM","sat":"9:00 AM – 5:00 PM","sun":"By appointment"}', 'json'),
+  ('hours', '{"mon":"10:00 AM - 6:00 PM","tue":"10:00 AM - 6:00 PM","wed":"10:00 AM - 6:00 PM","thu":"10:00 AM - 7:00 PM","fri":"10:00 AM - 7:00 PM","sat":"9:00 AM - 5:00 PM","sun":"By appointment"}', 'json'),
   ('instagram', 'https://instagram.com/lashlux_', 'text'),
   ('facebook', 'https://facebook.com/lashlux', 'text'),
   ('tiktok', 'https://tiktok.com/@lashlux_', 'text'),
@@ -314,7 +314,7 @@ values
   ('booking_open_time', '09:00', 'text'),
   ('booking_close_time', '18:00', 'text'),
   ('seo_title', 'Lash Lux | Luxury Lash Extensions', 'text'),
-  ('seo_description', 'Book classic, hybrid, volume, and mega volume lashes with Lash Lux — luxury in every lash at Manna Apartment, Old Ashongman.', 'text'),
+  ('seo_description', 'Book classic, hybrid, volume, and mega volume lashes with Lash Lux, luxury in every lash at Manna Apartment, Old Ashongman.', 'text'),
   ('map_embed_url', 'https://www.google.com/maps?q=Manna%20Apartment%20Old%20Ashongman&output=embed', 'text'),
-  ('about_bio', 'At Lash Lux, every set is customized to your eye shape, lifestyle, and desired glam — from natural classic to bold mega volume. Premium products, gentle technique, and results that last.', 'text')
+  ('about_bio', 'At Lash Lux, every set is customized to your eye shape, lifestyle, and desired glam, from natural classic to bold mega volume. Premium products, gentle technique, and results that last.', 'text')
 on conflict (key) do nothing;

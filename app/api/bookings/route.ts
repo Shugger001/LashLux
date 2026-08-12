@@ -157,7 +157,7 @@ export async function POST(request: Request) {
 
     let userId: string | null = signedInUser?.id ?? null;
 
-    // Link to an existing auth user by email when possible — never invent passwords.
+    // Link to an existing auth user by email when possible, never invent passwords.
     if (!userId) {
       const { data: authUsers } = await admin.auth.admin.listUsers({
         page: 1,

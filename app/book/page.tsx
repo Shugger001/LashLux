@@ -8,7 +8,7 @@ import { getServices } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Book Eyelash Fixing",
   description:
-    "Book professional eyelash fixing at Lash Lux — classic, hybrid, volume, or mega volume in Old Ashongman.",
+    "Book professional eyelash fixing at Lash Lux, classic, hybrid, volume, or mega volume in Old Ashongman.",
 };
 
 export default async function BookPage() {

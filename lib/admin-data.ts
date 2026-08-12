@@ -147,7 +147,7 @@ export const DEMO_SETTINGS: AdminSettings = {
   maxBookingDays: 60,
   seoTitle: "Lash Lux | Eyelash Fixing & Lash Extensions in Old Ashongman",
   seoDescription:
-    "Professional eyelash fixing at Lash Lux — classic, hybrid, volume, and mega volume extensions at Manna Apartment, Old Ashongman.",
+    "Professional eyelash fixing at Lash Lux, classic, hybrid, volume, and mega volume extensions at Manna Apartment, Old Ashongman.",
 };
 
 async function queryOrDemo<T>(
@@ -254,7 +254,7 @@ export async function getAdminStats(): Promise<AdminStats> {
     {}
   );
   const popularService =
-    Object.entries(serviceCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "—";
+    Object.entries(serviceCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "-";
   const weeklyBookings = Array.from({ length: 7 }, (_, index) => {
     const date = new Date(now);
     date.setDate(date.getDate() - (6 - index));

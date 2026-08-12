@@ -102,7 +102,7 @@ export function AppointmentsManager({
     const events = chosen.map((appointment) =>
       buildICalEvent({
         id: appointment.id,
-        title: `${appointment.service?.name ?? "Lash appointment"} — ${appointment.client_name ?? "Client"}`,
+        title: `${appointment.service?.name ?? "Lash appointment"}, ${appointment.client_name ?? "Client"}`,
         date: appointment.appointment_date,
         time: appointment.appointment_time,
         durationMinutes: appointment.service?.duration ?? 60,
