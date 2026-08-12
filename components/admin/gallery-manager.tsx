@@ -18,7 +18,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import type { GalleryItem, GalleryMediaType } from "@/types";
 
 function isVideo(item: GalleryItem) {
@@ -58,25 +57,19 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
       media_type: mediaType,
     }));
     let added: GalleryItem[];
-    if (isSupabaseConfigured()) {
-      const { data, error } = await createClient()
-        .from("gallery")
-        .insert(payloads)
-        .select(
-          "id, image_url, title, description, category, is_featured, media_type, poster_url, created_at"
-        );
-      if (error || !data) {
-        toast.error("Media could not be added.");
-        setIsSaving(false);
-        return;
-      }
-      added = data as GalleryItem[];
-    } else {
-      added = payloads.map((payload) => ({
-        id: `demo-${crypto.randomUUID()}`,
-        ...payload,
-        created_at: new Date().toISOString(),
-      }));
+    try {
+      const response = await fetch("/api/admin/gallery", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payloads),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? "Media could not be added.");
+      added = result.items as GalleryItem[];
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Media could not be added.");
+      setIsSaving(false);
+      return;
     }
     setItems((current) => [...added, ...current]);
     setIsSaving(false);
@@ -91,33 +84,39 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
         value.id === item.id ? { ...value, is_featured: next } : value
       )
     );
-    if (isSupabaseConfigured()) {
-      const { error } = await createClient()
-        .from("gallery")
-        .update({ is_featured: next })
-        .eq("id", item.id);
-      if (error) {
-        setItems((current) =>
-          current.map((value) => (value.id === item.id ? item : value))
-        );
-        toast.error("Featured state could not be updated.");
-        return;
-      }
+    try {
+      const response = await fetch("/api/admin/gallery", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: item.id, is_featured: next }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? "Featured state could not be updated.");
+      toast.success(next ? "Added to featured gallery" : "Removed from featured gallery");
+    } catch (error) {
+      setItems((current) =>
+        current.map((value) => (value.id === item.id ? item : value))
+      );
+      toast.error(
+        error instanceof Error ? error.message : "Featured state could not be updated."
+      );
     }
-    toast.success(next ? "Added to featured gallery" : "Removed from featured gallery");
   }
 
   async function removeItem(item: GalleryItem) {
     if (!window.confirm(`Delete “${item.title}”?`)) return;
-    if (isSupabaseConfigured()) {
-      const { error } = await createClient().from("gallery").delete().eq("id", item.id);
-      if (error) {
-        toast.error("Item could not be deleted.");
-        return;
-      }
+    try {
+      const response = await fetch(
+        `/api/admin/gallery?id=${encodeURIComponent(item.id)}`,
+        { method: "DELETE" }
+      );
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error ?? "Item could not be deleted.");
+      setItems((current) => current.filter((value) => value.id !== item.id));
+      toast.success("Gallery item deleted");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Item could not be deleted.");
     }
-    setItems((current) => current.filter((value) => value.id !== item.id));
-    toast.success("Gallery item deleted");
   }
 
   return (

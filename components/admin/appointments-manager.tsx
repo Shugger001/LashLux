@@ -15,7 +15,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { APPOINTMENT_STATUSES } from "@/lib/constants";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { buildICalEvent, formatCurrency, formatTime } from "@/lib/utils";
 import type { Appointment, AppointmentStatus } from "@/types";
 
@@ -75,26 +74,11 @@ export function AppointmentsManager({
           ? `Marked ${nextStatus} · client emailed`
           : `Appointment marked ${nextStatus}`
       );
-    } catch {
+    } catch (error) {
       setAppointments(previous);
-      if (isSupabaseConfigured()) {
-        const { error } = await createClient()
-          .from("appointments")
-          .update({ status: nextStatus, updated_at: new Date().toISOString() })
-          .eq("id", id);
-        if (error) {
-          toast.error("Status could not be updated.");
-          return;
-        }
-        setAppointments((items) =>
-          items.map((item) =>
-            item.id === id ? { ...item, status: nextStatus } : item
-          )
-        );
-        toast.success(`Appointment marked ${nextStatus}`);
-        return;
-      }
-      toast.error("Status could not be updated.");
+      toast.error(
+        error instanceof Error ? error.message : "Status could not be updated."
+      );
     }
   }
 
@@ -102,16 +86,25 @@ export function AppointmentsManager({
     if (!window.confirm("Delete this appointment? This cannot be undone.")) return;
     const previous = appointments;
     setAppointments((items) => items.filter((item) => item.id !== id));
-    if (isSupabaseConfigured()) {
-      const { error } = await createClient().from("appointments").delete().eq("id", id);
-      if (error) {
-        setAppointments(previous);
-        toast.error("Appointment could not be deleted.");
-        return;
+    try {
+      const response = await fetch(
+        `/api/admin/appointments?id=${encodeURIComponent(id)}`,
+        { method: "DELETE" }
+      );
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(
+          typeof result.error === "string" ? result.error : "Delete failed"
+        );
       }
+      setSelected((ids) => ids.filter((item) => item !== id));
+      toast.success("Appointment deleted");
+    } catch (error) {
+      setAppointments(previous);
+      toast.error(
+        error instanceof Error ? error.message : "Appointment could not be deleted."
+      );
     }
-    setSelected((ids) => ids.filter((item) => item !== id));
-    toast.success("Appointment deleted");
   }
 
   function exportCalendar() {

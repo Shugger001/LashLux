@@ -18,18 +18,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { formatCurrency, formatDuration } from "@/lib/utils";
 import type { Service } from "@/types";
 
 const EMPTY_SERVICE = {
   name: "",
   description: "",
-  price: 120,
+  price: 250,
   duration: 120,
   category: "Classic",
   image_url: "",
 };
+
+async function parseError(response: Response) {
+  try {
+    const body = (await response.json()) as { error?: string };
+    return body.error ?? "Request failed.";
+  } catch {
+    return "Request failed.";
+  }
+}
 
 /** Service creation, editing, availability, and display ordering. */
 export function ServicesManager({ initialServices }: { initialServices: Service[] }) {
@@ -50,90 +58,113 @@ export function ServicesManager({ initialServices }: { initialServices: Service[
       category: String(values.get("category") ?? "").trim(),
       image_url: String(values.get("image_url") ?? "").trim() || null,
     };
-    if (!payload.name || !payload.description || !payload.category || payload.price < 0 || payload.duration < 15) {
+    if (
+      !payload.name ||
+      !payload.description ||
+      !payload.category ||
+      Number.isNaN(payload.price) ||
+      payload.price < 0 ||
+      Number.isNaN(payload.duration) ||
+      payload.duration < 15
+    ) {
       toast.error("Complete all fields with a valid price and duration.");
       setIsSaving(false);
       return;
     }
 
-    let saved: Service;
-    if (isSupabaseConfigured()) {
-      const supabase = createClient();
-      const query = editing
-        ? supabase.from("services").update(payload).eq("id", editing.id)
-        : supabase.from("services").insert({
-            ...payload,
-            is_active: true,
-            sort_order: services.length + 1,
-          });
-      const { data, error } = await query
-        .select("id, name, description, price, duration, category, image_url, is_active, sort_order, created_at")
-        .single();
-      if (error || !data) {
-        toast.error("Service could not be saved.");
-        setIsSaving(false);
-        return;
-      }
-      saved = data as Service;
-    } else {
-      saved = {
-        id: editing?.id ?? `demo-${crypto.randomUUID()}`,
-        ...payload,
-        is_active: editing?.is_active ?? true,
-        sort_order: editing?.sort_order ?? services.length + 1,
-        created_at: editing?.created_at ?? new Date().toISOString(),
-      };
+    try {
+      const response = await fetch("/api/admin/services", {
+        method: editing ? "PATCH" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editing ? { id: editing.id, ...payload } : payload),
+      });
+      if (!response.ok) throw new Error(await parseError(response));
+      const result = (await response.json()) as { service: Service };
+      const saved = result.service;
+      setServices((items) =>
+        editing
+          ? items.map((item) => (item.id === editing.id ? saved : item))
+          : [...items, saved].sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+      );
+      setIsOpen(false);
+      setEditing(null);
+      toast.success(editing ? "Service updated" : "Service added");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Service could not be saved.");
+    } finally {
+      setIsSaving(false);
     }
-    setServices((items) =>
-      editing ? items.map((item) => (item.id === editing.id ? saved : item)) : [...items, saved]
-    );
-    setIsSaving(false);
-    setIsOpen(false);
-    setEditing(null);
-    toast.success(editing ? "Service updated" : "Service added");
   }
 
   async function toggleService(service: Service) {
     const next = !service.is_active;
-    setServices((items) => items.map((item) => item.id === service.id ? { ...item, is_active: next } : item));
-    if (isSupabaseConfigured()) {
-      const { error } = await createClient().from("services").update({ is_active: next }).eq("id", service.id);
-      if (error) {
-        setServices((items) => items.map((item) => item.id === service.id ? service : item));
-        toast.error("Availability could not be updated.");
-        return;
-      }
+    setServices((items) =>
+      items.map((item) => (item.id === service.id ? { ...item, is_active: next } : item))
+    );
+    try {
+      const response = await fetch("/api/admin/services", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: service.id, is_active: next }),
+      });
+      if (!response.ok) throw new Error(await parseError(response));
+      toast.success(next ? "Service is now bookable" : "Service hidden from booking");
+    } catch (error) {
+      setServices((items) =>
+        items.map((item) => (item.id === service.id ? service : item))
+      );
+      toast.error(
+        error instanceof Error ? error.message : "Availability could not be updated."
+      );
     }
-    toast.success(next ? "Service is now bookable" : "Service hidden from booking");
   }
 
   async function reorder(index: number, direction: -1 | 1) {
     const target = index + direction;
     if (target < 0 || target >= services.length) return;
+    const previous = services;
     const reordered = [...services];
     [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
-    const normalized = reordered.map((item, itemIndex) => ({ ...item, sort_order: itemIndex + 1 }));
+    const normalized = reordered.map((item, itemIndex) => ({
+      ...item,
+      sort_order: itemIndex + 1,
+    }));
     setServices(normalized);
-    if (isSupabaseConfigured()) {
-      await Promise.all(
-        normalized.map((item) =>
-          createClient().from("services").update({ sort_order: item.sort_order }).eq("id", item.id)
-        )
+    try {
+      const response = await fetch("/api/admin/services/reorder", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: normalized.map((item) => ({
+            id: item.id,
+            sort_order: item.sort_order,
+          })),
+        }),
+      });
+      if (!response.ok) throw new Error(await parseError(response));
+    } catch (error) {
+      setServices(previous);
+      toast.error(
+        error instanceof Error ? error.message : "Service order could not be saved."
       );
     }
   }
 
   async function removeService(service: Service) {
     if (!window.confirm(`Delete ${service.name}?`)) return;
-    if (isSupabaseConfigured()) {
-      const { error } = await createClient().from("services").delete().eq("id", service.id);
-      if (error) {
-        toast.error("Service could not be deleted. It may have bookings attached.");
-        return;
-      }
+    try {
+      const response = await fetch(
+        `/api/admin/services?id=${encodeURIComponent(service.id)}`,
+        { method: "DELETE" }
+      );
+      if (!response.ok) throw new Error(await parseError(response));
+      setServices((items) => items.filter((item) => item.id !== service.id));
+      toast.success("Service deleted");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Service could not be deleted."
+      );
     }
-    setServices((items) => items.filter((item) => item.id !== service.id));
-    toast.success("Service deleted");
   }
 
   function openEditor(service: Service | null) {
@@ -147,9 +178,17 @@ export function ServicesManager({ initialServices }: { initialServices: Service[
         <div>
           <p className="text-sm font-medium text-primary">Service menu</p>
           <h1 className="mt-1 text-4xl text-ink">Services</h1>
-          <p className="mt-2 text-muted-foreground">Control pricing, timing, order, and booking availability.</p>
+          <p className="mt-2 text-muted-foreground">
+            Control pricing, timing, order, and booking availability.
+          </p>
         </div>
-        <Dialog open={isOpen} onOpenChange={(open) => { setIsOpen(open); if (!open) setEditing(null); }}>
+        <Dialog
+          open={isOpen}
+          onOpenChange={(open) => {
+            setIsOpen(open);
+            if (!open) setEditing(null);
+          }}
+        >
           <DialogTrigger asChild>
             <Button type="button" onClick={() => openEditor(null)}>
               <Plus /> Add service
@@ -158,36 +197,82 @@ export function ServicesManager({ initialServices }: { initialServices: Service[
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{editing ? "Edit service" : "Add service"}</DialogTitle>
-              <DialogDescription>Pricing is shown to clients during booking.</DialogDescription>
+              <DialogDescription>
+                Pricing is shown to clients during booking (GH₵).
+              </DialogDescription>
             </DialogHeader>
-            <form className="grid gap-4" onSubmit={saveService}>
+            <form
+              key={editing?.id ?? "new-service"}
+              className="grid gap-4"
+              onSubmit={saveService}
+            >
               <div className="grid gap-2">
                 <Label htmlFor="service-name">Name</Label>
-                <Input id="service-name" name="name" required maxLength={80} defaultValue={editing?.name ?? EMPTY_SERVICE.name} />
+                <Input
+                  id="service-name"
+                  name="name"
+                  required
+                  maxLength={80}
+                  defaultValue={editing?.name ?? EMPTY_SERVICE.name}
+                />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="service-description">Description</Label>
-                <Textarea id="service-description" name="description" required maxLength={500} defaultValue={editing?.description ?? EMPTY_SERVICE.description} />
+                <Textarea
+                  id="service-description"
+                  name="description"
+                  required
+                  maxLength={1000}
+                  defaultValue={editing?.description ?? EMPTY_SERVICE.description}
+                />
               </div>
               <div className="grid gap-4 sm:grid-cols-3">
                 <div className="grid gap-2">
-                  <Label htmlFor="service-price">Price ($)</Label>
-                  <Input id="service-price" name="price" type="number" min="0" step="1" required defaultValue={editing?.price ?? EMPTY_SERVICE.price} />
+                  <Label htmlFor="service-price">Price (GH₵)</Label>
+                  <Input
+                    id="service-price"
+                    name="price"
+                    type="number"
+                    min="0"
+                    step="1"
+                    required
+                    defaultValue={Number(editing?.price ?? EMPTY_SERVICE.price)}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="service-duration">Minutes</Label>
-                  <Input id="service-duration" name="duration" type="number" min="15" step="15" required defaultValue={editing?.duration ?? EMPTY_SERVICE.duration} />
+                  <Input
+                    id="service-duration"
+                    name="duration"
+                    type="number"
+                    min="15"
+                    step="15"
+                    required
+                    defaultValue={editing?.duration ?? EMPTY_SERVICE.duration}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="service-category">Category</Label>
-                  <Input id="service-category" name="category" required defaultValue={editing?.category ?? EMPTY_SERVICE.category} />
+                  <Input
+                    id="service-category"
+                    name="category"
+                    required
+                    defaultValue={editing?.category ?? EMPTY_SERVICE.category}
+                  />
                 </div>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="service-image">Image URL (optional)</Label>
-                <Input id="service-image" name="image_url" type="url" defaultValue={editing?.image_url ?? EMPTY_SERVICE.image_url} />
+                <Input
+                  id="service-image"
+                  name="image_url"
+                  type="text"
+                  inputMode="url"
+                  placeholder="https://…"
+                  defaultValue={editing?.image_url ?? EMPTY_SERVICE.image_url}
+                />
               </div>
-              <Button type="submit" disabled={isSaving}>
+              <Button type="submit" disabled={isSaving} aria-busy={isSaving}>
                 {isSaving ? "Saving…" : editing ? "Save changes" : "Add service"}
               </Button>
             </form>
@@ -196,7 +281,15 @@ export function ServicesManager({ initialServices }: { initialServices: Service[
       </div>
 
       {services.length === 0 ? (
-        <Card><CardContent className="py-16 text-center"><Scissors className="mx-auto h-8 w-8 text-muted-foreground" /><h2 className="mt-4 font-display text-2xl">No services yet</h2><p className="mt-2 text-sm text-muted-foreground">Add your first bookable lash service.</p></CardContent></Card>
+        <Card>
+          <CardContent className="py-16 text-center">
+            <Scissors className="mx-auto h-8 w-8 text-muted-foreground" />
+            <h2 className="mt-4 font-display text-2xl">No services yet</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Add your first bookable lash service.
+            </p>
+          </CardContent>
+        </Card>
       ) : (
         <div className="space-y-3">
           {services.map((service, index) => (
@@ -205,18 +298,72 @@ export function ServicesManager({ initialServices }: { initialServices: Service[
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-3">
                     <h2 className="font-display text-2xl">{service.name}</h2>
-                    <span className="rounded-md bg-secondary px-2 py-1 text-xs">{service.category}</span>
+                    <span className="rounded-md bg-secondary px-2 py-1 text-xs">
+                      {service.category}
+                    </span>
+                    {!service.is_active ? (
+                      <span className="rounded-md bg-destructive/10 px-2 py-1 text-xs text-destructive">
+                        Hidden
+                      </span>
+                    ) : null}
                   </div>
-                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{service.description}</p>
-                  <p className="mt-2 text-sm font-medium">{formatCurrency(service.price)} · {formatDuration(service.duration)}</p>
+                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                    {service.description}
+                  </p>
+                  <p className="mt-2 text-sm font-medium">
+                    {formatCurrency(Number(service.price))} ·{" "}
+                    {formatDuration(service.duration)}
+                  </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <Label htmlFor={`active-${service.id}`} className="mr-1 text-xs text-muted-foreground">Active</Label>
-                  <Switch id={`active-${service.id}`} checked={service.is_active} onCheckedChange={() => toggleService(service)} />
-                  <Button type="button" variant="ghost" size="icon" disabled={index === 0} aria-label={`Move ${service.name} up`} onClick={() => reorder(index, -1)}><ArrowUp /></Button>
-                  <Button type="button" variant="ghost" size="icon" disabled={index === services.length - 1} aria-label={`Move ${service.name} down`} onClick={() => reorder(index, 1)}><ArrowDown /></Button>
-                  <Button type="button" variant="outline" size="sm" onClick={() => openEditor(service)}><Pencil /> Edit</Button>
-                  <Button type="button" variant="ghost" size="icon" aria-label={`Delete ${service.name}`} onClick={() => removeService(service)}><Trash2 /></Button>
+                  <Label
+                    htmlFor={`active-${service.id}`}
+                    className="mr-1 text-xs text-muted-foreground"
+                  >
+                    Active
+                  </Label>
+                  <Switch
+                    id={`active-${service.id}`}
+                    checked={service.is_active}
+                    onCheckedChange={() => toggleService(service)}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    disabled={index === 0}
+                    aria-label={`Move ${service.name} up`}
+                    onClick={() => reorder(index, -1)}
+                  >
+                    <ArrowUp />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    disabled={index === services.length - 1}
+                    aria-label={`Move ${service.name} down`}
+                    onClick={() => reorder(index, 1)}
+                  >
+                    <ArrowDown />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => openEditor(service)}
+                  >
+                    <Pencil /> Edit
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    aria-label={`Delete ${service.name}`}
+                    onClick={() => removeService(service)}
+                  >
+                    <Trash2 />
+                  </Button>
                 </div>
               </CardContent>
             </Card>

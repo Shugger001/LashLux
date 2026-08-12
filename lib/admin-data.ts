@@ -4,7 +4,7 @@ import {
   DEMO_TESTIMONIALS,
   SITE,
 } from "@/lib/constants";
-import { createAdminClient, createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import type {
   AdminStats,
   Appointment,
@@ -150,53 +150,84 @@ export const DEMO_SETTINGS: AdminSettings = {
     "Professional eyelash fixing at Lash Lux, classic, hybrid, volume, and mega volume extensions at Manna Apartment, Old Ashongman.",
 };
 
-async function queryOrDemo<T>(
-  query: () => PromiseLike<{ data: unknown; error: unknown }>,
-  demo: T
-): Promise<T> {
-  if (!isSupabaseConfigured()) return demo;
-  try {
-    const { data, error } = await query();
-    return error || !data ? demo : (data as T);
-  } catch {
-    return demo;
-  }
-}
-
 /** Return all services for administration, including inactive entries. */
 export async function getAdminServices(): Promise<Service[]> {
-  return queryOrDemo(
-    () =>
-      createClient()
-        .from("services")
-        .select("id, name, description, price, duration, category, image_url, is_active, sort_order, created_at")
-        .order("sort_order"),
-    [...DEMO_SERVICES] as Service[]
-  );
+  if (!isSupabaseConfigured()) {
+    return process.env.NODE_ENV === "production" ? [] : ([...DEMO_SERVICES] as Service[]);
+  }
+  try {
+    const admin = createAdminClient();
+    const { data, error } = await admin
+      .from("services")
+      .select(
+        "id, name, description, price, duration, category, image_url, is_active, sort_order, created_at"
+      )
+      .order("sort_order", { ascending: true });
+    if (error) {
+      console.error("[admin:services-query]", { message: error.message });
+      return [];
+    }
+    return (data as Service[]) ?? [];
+  } catch (error) {
+    console.error("[admin:services-failed]", {
+      message: error instanceof Error ? error.message : "unknown",
+    });
+    return [];
+  }
 }
 
 /** Return gallery entries for administration. */
 export async function getAdminGallery(): Promise<GalleryItem[]> {
-  return queryOrDemo(
-    () =>
-      createClient()
-        .from("gallery")
-        .select("id, image_url, title, description, category, is_featured, media_type, poster_url, created_at")
-        .order("created_at", { ascending: false }),
-    [...DEMO_GALLERY] as GalleryItem[]
-  );
+  if (!isSupabaseConfigured()) {
+    return process.env.NODE_ENV === "production" ? [] : ([...DEMO_GALLERY] as GalleryItem[]);
+  }
+  try {
+    const admin = createAdminClient();
+    const { data, error } = await admin
+      .from("gallery")
+      .select(
+        "id, image_url, title, description, category, is_featured, media_type, poster_url, created_at"
+      )
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.error("[admin:gallery-query]", { message: error.message });
+      return [];
+    }
+    return (data as GalleryItem[]) ?? [];
+  } catch (error) {
+    console.error("[admin:gallery-failed]", {
+      message: error instanceof Error ? error.message : "unknown",
+    });
+    return [];
+  }
 }
 
 /** Return testimonials, including those awaiting approval. */
 export async function getAdminTestimonials(): Promise<Testimonial[]> {
-  return queryOrDemo(
-    () =>
-      createClient()
-        .from("testimonials")
-        .select("id, client_name, client_image, content, rating, service_used, is_approved, created_at")
-        .order("created_at", { ascending: false }),
-    [...DEMO_TESTIMONIALS] as Testimonial[]
-  );
+  if (!isSupabaseConfigured()) {
+    return process.env.NODE_ENV === "production"
+      ? []
+      : ([...DEMO_TESTIMONIALS] as Testimonial[]);
+  }
+  try {
+    const admin = createAdminClient();
+    const { data, error } = await admin
+      .from("testimonials")
+      .select(
+        "id, client_name, client_image, content, rating, service_used, is_approved, created_at"
+      )
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.error("[admin:testimonials-query]", { message: error.message });
+      return [];
+    }
+    return (data as Testimonial[]) ?? [];
+  } catch (error) {
+    console.error("[admin:testimonials-failed]", {
+      message: error instanceof Error ? error.message : "unknown",
+    });
+    return [];
+  }
 }
 
 /** Return appointments with related service and client profile data. */
@@ -228,13 +259,13 @@ export async function getAdminAppointments(): Promise<Appointment[]> {
 export async function getAdminClients(): Promise<AdminClient[]> {
   if (!isSupabaseConfigured()) return DEMO_CLIENTS;
   try {
-    const supabase = createClient();
-    const { data: users, error } = await supabase
+    const admin = createAdminClient();
+    const { data: users, error } = await admin
       .from("users")
       .select("id, full_name, phone, role, created_at, updated_at")
       .eq("role", "client")
       .order("created_at", { ascending: false });
-    if (error || !users) return DEMO_CLIENTS;
+    if (error || !users) return [];
     const appointments = await getAdminAppointments();
     return users.map((user) => ({
       ...user,
@@ -246,7 +277,7 @@ export async function getAdminClients(): Promise<AdminClient[]> {
       ),
     })) as AdminClient[];
   } catch {
-    return DEMO_CLIENTS;
+    return [];
   }
 }
 
@@ -300,23 +331,38 @@ export async function getAdminStats(): Promise<AdminStats> {
 /** Return persisted settings mapped onto the admin settings form. */
 export async function getAdminSettings(): Promise<AdminSettings> {
   if (!isSupabaseConfigured()) return DEMO_SETTINGS;
-  const rows = await queryOrDemo<SiteSetting[]>(
-    () => createClient().from("site_settings").select("id, key, value, type"),
-    []
-  );
-  const values = Object.fromEntries(rows.map((row) => [row.key, row.value]));
-  return {
-    ...DEMO_SETTINGS,
-    businessName: values.business_name ?? DEMO_SETTINGS.businessName,
-    email: values.business_email ?? DEMO_SETTINGS.email,
-    phone: values.business_phone ?? DEMO_SETTINGS.phone,
-    address: values.business_address ?? DEMO_SETTINGS.address,
-    instagram: values.instagram ?? DEMO_SETTINGS.instagram,
-    facebook: values.facebook ?? DEMO_SETTINGS.facebook,
-    tiktok: values.tiktok ?? DEMO_SETTINGS.tiktok,
-    bookingBuffer: Number(values.booking_buffer ?? DEMO_SETTINGS.bookingBuffer),
-    maxBookingDays: Number(values.max_booking_days ?? DEMO_SETTINGS.maxBookingDays),
-    seoTitle: values.seo_title ?? DEMO_SETTINGS.seoTitle,
-    seoDescription: values.seo_description ?? DEMO_SETTINGS.seoDescription,
-  };
+  try {
+    const admin = createAdminClient();
+    const { data: rows, error } = await admin
+      .from("site_settings")
+      .select("id, key, value, type");
+    if (error) {
+      console.error("[admin:settings-query]", { message: error.message });
+      return DEMO_SETTINGS;
+    }
+    const values = Object.fromEntries(
+      (rows as SiteSetting[] | null)?.map((row) => [row.key, row.value]) ?? []
+    );
+    return {
+      ...DEMO_SETTINGS,
+      businessName: values.business_name ?? DEMO_SETTINGS.businessName,
+      email: values.business_email ?? DEMO_SETTINGS.email,
+      phone: values.business_phone ?? DEMO_SETTINGS.phone,
+      address: values.business_address ?? DEMO_SETTINGS.address,
+      instagram: values.instagram ?? DEMO_SETTINGS.instagram,
+      facebook: values.facebook ?? DEMO_SETTINGS.facebook,
+      tiktok: values.tiktok ?? DEMO_SETTINGS.tiktok,
+      bookingBuffer: Number(values.booking_buffer ?? DEMO_SETTINGS.bookingBuffer),
+      maxBookingDays: Number(
+        values.max_booking_days ?? DEMO_SETTINGS.maxBookingDays
+      ),
+      seoTitle: values.seo_title ?? DEMO_SETTINGS.seoTitle,
+      seoDescription: values.seo_description ?? DEMO_SETTINGS.seoDescription,
+    };
+  } catch (error) {
+    console.error("[admin:settings-failed]", {
+      message: error instanceof Error ? error.message : "unknown",
+    });
+    return DEMO_SETTINGS;
+  }
 }

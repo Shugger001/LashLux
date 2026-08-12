@@ -9,21 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { AdminSettings } from "@/lib/admin-data";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
-
-const SETTING_KEYS: Record<keyof AdminSettings, string> = {
-  businessName: "business_name",
-  email: "business_email",
-  phone: "business_phone",
-  address: "business_address",
-  instagram: "instagram",
-  facebook: "facebook",
-  tiktok: "tiktok",
-  bookingBuffer: "booking_buffer",
-  maxBookingDays: "max_booking_days",
-  seoTitle: "seo_title",
-  seoDescription: "seo_description",
-};
 
 /** Editable business, booking, social, and search settings. */
 export function SettingsForm({ initialSettings }: { initialSettings: AdminSettings }) {
@@ -60,23 +45,20 @@ export function SettingsForm({ initialSettings }: { initialSettings: AdminSettin
       setIsSaving(false);
       return;
     }
-    if (isSupabaseConfigured()) {
-      const rows = Object.entries(settings).map(([field, value]) => ({
-        key: SETTING_KEYS[field as keyof AdminSettings],
-        value: String(value),
-        type: typeof value === "number" ? "text" : "text",
-      }));
-      const { error } = await createClient()
-        .from("site_settings")
-        .upsert(rows, { onConflict: "key" });
-      if (error) {
-        toast.error("Settings could not be saved.");
-        setIsSaving(false);
-        return;
-      }
+    try {
+      const response = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(settings),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? "Settings could not be saved.");
+      toast.success("Studio settings saved");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Settings could not be saved.");
+    } finally {
+      setIsSaving(false);
     }
-    setIsSaving(false);
-    toast.success(isSupabaseConfigured() ? "Studio settings saved" : "Demo settings saved for this preview");
   }
 
   return (

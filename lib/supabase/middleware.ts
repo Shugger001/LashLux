@@ -60,7 +60,13 @@ export async function updateSession(request: NextRequest) {
 
   if (isAuthRoute && user) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/";
+    const next = request.nextUrl.searchParams.get("next");
+    redirectUrl.search = "";
+    if (next?.startsWith("/") && !next.startsWith("//")) {
+      redirectUrl.pathname = next;
+    } else {
+      redirectUrl.pathname = "/";
+    }
     return NextResponse.redirect(redirectUrl);
   }
 

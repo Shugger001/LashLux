@@ -18,7 +18,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import type { Testimonial } from "@/types";
 
 /** Testimonial moderation, editing, creation, and sorting. */
@@ -52,25 +51,19 @@ export function TestimonialsManager({ initialTestimonials }: { initialTestimonia
       return;
     }
     let saved: Testimonial;
-    if (isSupabaseConfigured()) {
-      const query = editing
-        ? createClient().from("testimonials").update(payload).eq("id", editing.id)
-        : createClient().from("testimonials").insert(payload);
-      const { data, error } = await query
-        .select("id, client_name, client_image, content, rating, service_used, is_approved, created_at")
-        .single();
-      if (error || !data) {
-        toast.error("Testimonial could not be saved.");
-        setIsSaving(false);
-        return;
-      }
-      saved = data as Testimonial;
-    } else {
-      saved = {
-        id: editing?.id ?? `demo-${crypto.randomUUID()}`,
-        ...payload,
-        created_at: editing?.created_at ?? new Date().toISOString(),
-      };
+    try {
+      const response = await fetch("/api/admin/testimonials", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editing ? { id: editing.id, ...payload } : payload),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? "Testimonial could not be saved.");
+      saved = result.testimonial as Testimonial;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Testimonial could not be saved.");
+      setIsSaving(false);
+      return;
     }
     setTestimonials((items) => editing ? items.map((item) => item.id === editing.id ? saved : item) : [saved, ...items]);
     setIsSaving(false);
@@ -81,28 +74,35 @@ export function TestimonialsManager({ initialTestimonials }: { initialTestimonia
 
   async function moderate(item: Testimonial, approved: boolean) {
     setTestimonials((items) => items.map((value) => value.id === item.id ? { ...value, is_approved: approved } : value));
-    if (isSupabaseConfigured()) {
-      const { error } = await createClient().from("testimonials").update({ is_approved: approved }).eq("id", item.id);
-      if (error) {
-        setTestimonials((items) => items.map((value) => value.id === item.id ? item : value));
-        toast.error("Approval state could not be updated.");
-        return;
-      }
+    try {
+      const response = await fetch("/api/admin/testimonials", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: item.id, is_approved: approved }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? "Approval state could not be updated.");
+      toast.success(approved ? "Testimonial approved" : "Testimonial rejected");
+    } catch (error) {
+      setTestimonials((items) => items.map((value) => value.id === item.id ? item : value));
+      toast.error(error instanceof Error ? error.message : "Approval state could not be updated.");
     }
-    toast.success(approved ? "Testimonial approved" : "Testimonial rejected");
   }
 
   async function remove(item: Testimonial) {
     if (!window.confirm(`Delete testimonial from ${item.client_name}?`)) return;
-    if (isSupabaseConfigured()) {
-      const { error } = await createClient().from("testimonials").delete().eq("id", item.id);
-      if (error) {
-        toast.error("Testimonial could not be deleted.");
-        return;
-      }
+    try {
+      const response = await fetch(
+        `/api/admin/testimonials?id=${encodeURIComponent(item.id)}`,
+        { method: "DELETE" }
+      );
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error ?? "Testimonial could not be deleted.");
+      setTestimonials((items) => items.filter((value) => value.id !== item.id));
+      toast.success("Testimonial deleted");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Testimonial could not be deleted.");
     }
-    setTestimonials((items) => items.filter((value) => value.id !== item.id));
-    toast.success("Testimonial deleted");
   }
 
   function openEditor(item: Testimonial | null) {
