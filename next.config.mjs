@@ -1,24 +1,7 @@
 /** @type {import('next').NextConfig} */
 
+/** Static browser hardening headers. CSP is set per-request in middleware (nonce). */
 const securityHeaders = [
-  {
-    key: "Content-Security-Policy",
-    value: [
-      "default-src 'self'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'self'",
-      "object-src 'none'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co",
-      "font-src 'self' data: https://fonts.gstatic.com",
-      "media-src 'self' blob:",
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.paystack.co https://checkout.paystack.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://*.ingest.sentry.io",
-      "frame-src 'self' https://checkout.paystack.com https://*.paystack.com https://accounts.google.com",
-      "upgrade-insecure-requests",
-    ].join("; "),
-  },
   { key: "X-Frame-Options", value: "SAMEORIGIN" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },

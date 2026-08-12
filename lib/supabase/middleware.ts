@@ -1,14 +1,34 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+import { buildContentSecurityPolicy } from "@/lib/csp";
+
+/** Refresh auth session, enforce admin routes, and attach a nonce-based CSP. */
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  const csp = buildContentSecurityPolicy({
+    nonce,
+    isDev: process.env.NODE_ENV === "development",
+  });
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("Content-Security-Policy", csp);
+
+  const applyCsp = (response: NextResponse) => {
+    response.headers.set("Content-Security-Policy", csp);
+    return response;
+  };
+
+  let supabaseResponse = NextResponse.next({
+    request: { headers: requestHeaders },
+  });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!url || !key) {
-    return supabaseResponse;
+    return applyCsp(supabaseResponse);
   }
 
   const supabase = createServerClient(url, key, {
@@ -20,7 +40,9 @@ export async function updateSession(request: NextRequest) {
         cookiesToSet.forEach(({ name, value }) =>
           request.cookies.set(name, value)
         );
-        supabaseResponse = NextResponse.next({ request });
+        supabaseResponse = NextResponse.next({
+          request: { headers: requestHeaders },
+        });
         cookiesToSet.forEach(({ name, value, options }) =>
           supabaseResponse.cookies.set(name, value, options)
         );
@@ -42,7 +64,7 @@ export async function updateSession(request: NextRequest) {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = "/auth/login";
       redirectUrl.searchParams.set("next", pathname);
-      return NextResponse.redirect(redirectUrl);
+      return applyCsp(NextResponse.redirect(redirectUrl));
     }
 
     const { data: profile } = await supabase
@@ -54,7 +76,7 @@ export async function updateSession(request: NextRequest) {
     if (profile?.role !== "admin") {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = "/";
-      return NextResponse.redirect(redirectUrl);
+      return applyCsp(NextResponse.redirect(redirectUrl));
     }
   }
 
@@ -67,8 +89,8 @@ export async function updateSession(request: NextRequest) {
     } else {
       redirectUrl.pathname = "/";
     }
-    return NextResponse.redirect(redirectUrl);
+    return applyCsp(NextResponse.redirect(redirectUrl));
   }
 
-  return supabaseResponse;
+  return applyCsp(supabaseResponse);
 }
