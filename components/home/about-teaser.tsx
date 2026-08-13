@@ -12,12 +12,16 @@ export function AboutTeaser() {
       <div className="container-page grid items-center gap-7 lg:grid-cols-2 lg:gap-16">
         <FadeIn>
           <div className="frame-lux">
-            <div className="frame-lux-inner relative aspect-[4/5] max-h-[22rem] overflow-hidden sm:max-h-none">
+            {/*
+              Keep height from aspect-ratio only — max-height + aspect-ratio
+              can leave empty space beside the image on mobile WebKit.
+            */}
+            <div className="frame-lux-inner relative aspect-[4/5] w-full overflow-hidden">
               <Image
-                src="/services/volume.jpg"
+                src="/images/hero-lashes.jpg"
                 alt="Finished volume eyelash extensions at Lash Lux"
                 fill
-                className="object-cover object-center"
+                className="object-cover object-[center_28%]"
                 sizes="(max-width:1024px) 100vw, 50vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/35 via-transparent to-transparent" />
@@ -29,7 +33,9 @@ export function AboutTeaser() {
           <h2 className="mt-3 font-editorial text-3xl text-ink sm:mt-4 sm:text-5xl lg:text-6xl">
             Eyelash fixing, done with care.
           </h2>
-          <p className="mt-3 font-script text-3xl text-rose sm:mt-4 sm:text-5xl">{SITE.slogan}</p>
+          <p className="mt-3 font-script text-3xl text-rose sm:mt-4 sm:text-5xl">
+            {SITE.slogan}
+          </p>
           <div className="mt-4 h-px w-14 bg-gradient-to-r from-[#c9a27e] to-transparent sm:mt-5 sm:w-16" />
           <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground sm:mt-6 sm:text-base sm:leading-8">
             Lash Lux is a professional eyelash fixing studio specializing in
@@ -50,7 +56,9 @@ export function AboutTeaser() {
               <Link href="/book">Book fixing</Link>
             </Button>
           </div>
-          <p className="mt-8 text-sm tracking-wide text-muted-foreground">{SITE.address}</p>
+          <p className="mt-8 text-sm tracking-wide text-muted-foreground">
+            {SITE.address}
+          </p>
         </FadeIn>
       </div>
     </section>
