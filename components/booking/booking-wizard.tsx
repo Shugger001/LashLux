@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -237,7 +238,7 @@ export function BookingWizard({ services }: { services: Service[] }) {
                   key={service.id}
                   type="button"
                   className={cn(
-                    "rounded-2xl border p-3 text-left transition-all duration-300 transition-lux focus-ring sm:p-5",
+                    "overflow-hidden rounded-2xl border text-left transition-all duration-300 transition-lux focus-ring",
                     serviceId === service.id
                       ? "border-[#c9a27e] bg-blush/40 shadow-soft"
                       : "border-[#c9a27e]/25 hover:border-[#c9a27e]/60 hover:bg-white/70"
@@ -245,13 +246,24 @@ export function BookingWizard({ services }: { services: Service[] }) {
                   aria-pressed={serviceId === service.id}
                   onClick={() => setServiceId(service.id)}
                 >
-                  <span className="font-display text-base leading-snug text-ink sm:text-2xl">
-                    {service.name}
+                  <span className="relative block aspect-[4/3] w-full overflow-hidden">
+                    <Image
+                      src={service.image_url ?? "/services/volume.jpg"}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 50vw, 280px"
+                    />
                   </span>
-                  <span className="mt-2 flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:justify-between sm:gap-3 sm:text-sm">
-                    <span>{formatDuration(service.duration)}</span>
-                    <span className="font-medium text-rose-deep">
-                      {formatCurrency(Number(service.price))}
+                  <span className="block p-3 sm:p-4">
+                    <span className="font-display text-base leading-snug text-ink sm:text-xl">
+                      {service.name}
+                    </span>
+                    <span className="mt-2 flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:justify-between sm:gap-3 sm:text-sm">
+                      <span>{formatDuration(service.duration)}</span>
+                      <span className="font-medium text-rose-deep">
+                        {formatCurrency(Number(service.price))}
+                      </span>
                     </span>
                   </span>
                 </button>

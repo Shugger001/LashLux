@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { AtSign, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { ContactForm } from "@/components/contact/contact-form";
+import { Button } from "@/components/ui/button";
 import { DAY_LABELS, DEFAULT_HOURS, SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -27,7 +29,27 @@ export default function ContactPage() {
               Walk-ins welcome, appointments preferred.
             </p>
 
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Button asChild size="lg">
+                <Link href="/book">Book fixing</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <a href={SITE.whatsapp} target="_blank" rel="noreferrer">
+                  WhatsApp
+                </a>
+              </Button>
+            </div>
+
             <address className="mt-8 space-y-4 text-sm not-italic">
+              <a
+                className="flex items-center gap-3 transition-colors hover:text-rose-deep"
+                href={`mailto:${SITE.email}`}
+              >
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#c9a27e]/35 bg-blush/60 text-[#c9a27e]">
+                  <AtSign className="h-4 w-4" aria-hidden />
+                </span>
+                {SITE.email}
+              </a>
               <a
                 className="flex items-center gap-3 transition-colors hover:text-rose-deep"
                 href={`tel:${SITE.phone}`}

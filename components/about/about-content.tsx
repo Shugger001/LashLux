@@ -46,8 +46,8 @@ export function AboutContent() {
           <div className="frame-lux">
             <div className="frame-lux-inner relative aspect-[4/5] overflow-hidden">
               <Image
-                src="/images/hero-lashes.jpg"
-                alt="Close-up of volume eyelash extensions"
+                src="/gallery/look-01.png"
+                alt="Client finish with full, lifted lashes at Lash Lux"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"

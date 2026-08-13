@@ -103,7 +103,16 @@ export function FeaturedServices({ services }: { services: Service[] }) {
                         href={`/book?service=${service.id}`}
                         className="group flex h-full items-start justify-between gap-3 px-4 py-4 transition-all duration-300 transition-lux hover:bg-gradient-to-r hover:from-blush/50 hover:to-transparent sm:gap-4 sm:px-6 sm:py-5"
                       >
-                        <div className="min-w-0">
+                        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-[#c9a27e]/25 sm:h-16 sm:w-16">
+                          <Image
+                            src={service.image_url ?? "/services/volume.jpg"}
+                            alt=""
+                            fill
+                            className="object-cover"
+                            sizes="64px"
+                          />
+                        </div>
+                        <div className="min-w-0 flex-1">
                           <p className="font-display text-base text-ink transition-colors group-hover:text-rose-deep sm:text-lg">
                             {service.name}
                           </p>

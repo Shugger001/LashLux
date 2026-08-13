@@ -41,11 +41,16 @@ export function HeroSection() {
             aria-hidden
           />
 
-          <div className="mb-5 hidden sm:mb-8 sm:block">
+          <div className="mb-5 sm:mb-8">
+            <BrandLogo
+              size="md"
+              priority
+              className="rounded-xl bg-cream/95 p-1.5 shadow-soft sm:hidden"
+            />
             <BrandLogo
               size="lg"
               priority
-              className="rounded-xl bg-cream/95 p-2 shadow-soft"
+              className="hidden rounded-xl bg-cream/95 p-2 shadow-soft sm:block"
             />
           </div>
 
