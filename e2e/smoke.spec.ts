@@ -43,8 +43,7 @@ test.describe("Lash Lux critical paths", () => {
     await page.getByRole("button", { name: /add your details/i }).click();
 
     await page.getByLabel(/full name/i).fill("Demo Client");
-    await page.getByLabel(/email/i).fill("demo.client@example.com");
-    await page.getByLabel(/phone/i).fill("0547986899");
+    await page.getByLabel(/phone|whatsapp/i).fill("0547986899");
     await page.getByRole("button", { name: /add notes/i }).click();
     await page.getByRole("button", { name: /request appointment|pay/i }).click();
 

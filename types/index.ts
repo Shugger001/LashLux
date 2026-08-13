@@ -126,7 +126,6 @@ export interface BookingFormData {
   date: string;
   time: string;
   fullName: string;
-  email: string;
   phone: string;
   notes?: string;
 }

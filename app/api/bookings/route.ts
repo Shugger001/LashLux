@@ -69,7 +69,6 @@ export async function POST(request: Request) {
   const input = {
     ...parsed.data,
     fullName: parsed.data.fullName.trim(),
-    email: parsed.data.email.trim().toLowerCase(),
     phone: parsed.data.phone.trim(),
     notes: parsed.data.notes?.trim() || undefined,
   };
@@ -212,18 +211,9 @@ export async function POST(request: Request) {
       data: { user: signedInUser },
     } = await sessionClient.auth.getUser();
 
-    let userId: string | null = signedInUser?.id ?? null;
-
-    if (!userId) {
-      const { data: authUsers } = await admin.auth.admin.listUsers({
-        page: 1,
-        perPage: 1000,
-      });
-      userId =
-        authUsers?.users.find(
-          (user) => user.email?.toLowerCase() === input.email
-        )?.id ?? null;
-    }
+    const userId: string | null = signedInUser?.id ?? null;
+    // Paystack requires an email; use a phone-derived placeholder when deposits are on.
+    const paystackEmail = `${input.phone.replace(/\D/g, "") || "guest"}@bookings.lashlux.app`;
 
     const depositRequired = isDepositRequired();
     const depositAmount = depositRequired ? getDepositAmountGhs() : 0;
@@ -241,7 +231,7 @@ export async function POST(request: Request) {
         status: "pending",
         notes: input.notes ?? null,
         client_name: input.fullName,
-        client_email: input.email,
+        client_email: signedInUser?.email?.toLowerCase() ?? null,
         client_phone: input.phone,
         payment_status: depositRequired ? "pending" : "none",
         payment_reference: paymentReference,
@@ -254,7 +244,7 @@ export async function POST(request: Request) {
     if (depositRequired && paymentReference) {
       try {
         const pay = await initializePaystackDeposit({
-          email: input.email,
+          email: paystackEmail,
           amountGhs: depositAmount,
           reference: paymentReference,
           appointmentId: appointment.id,
@@ -287,8 +277,8 @@ export async function POST(request: Request) {
     let emailSent = false;
     try {
       const result = await sendBookingConfirmation({
-        to: input.email,
         clientName: input.fullName,
+        clientPhone: input.phone,
         serviceName: service.name,
         date: input.date,
         time: normalizedTime,

@@ -25,7 +25,6 @@ export const contactSchema = z.object({
 
 export const bookingDetailsSchema = z.object({
   fullName: z.string().min(2, "Name is required").max(80),
-  email: z.string().email("Enter a valid email"),
   phone: z.string().min(7, "Enter a valid phone number").max(20),
   notes: z.string().max(500).optional(),
 });
@@ -35,7 +34,6 @@ export const bookingApiSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   time: z.string().regex(/^\d{2}:\d{2}/),
   fullName: z.string().min(2).max(80),
-  email: z.string().email(),
   phone: z.string().min(7).max(20),
   notes: z.string().max(500).optional(),
 });

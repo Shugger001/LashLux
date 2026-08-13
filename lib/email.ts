@@ -17,52 +17,64 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#039;");
 }
 
-/** Send booking confirmation to the client (and optional admin copy). */
+/** Notify the studio about a new booking request (client email no longer collected). */
 export async function sendBookingConfirmation(input: {
-  to: string;
   clientName: string;
+  clientPhone: string;
   serviceName: string;
   date: string;
   time: string;
   notes?: string;
+  to?: string;
 }) {
   const resend = getResend();
   if (!resend) {
-    console.info("[email:skipped] booking confirmation", input.to);
+    console.info("[email:skipped] booking confirmation", input.clientPhone);
     return { skipped: true as const };
   }
 
   const from = process.env.RESEND_FROM_EMAIL ?? `Lash Lux <bookings@${SITE.url.replace(/^https?:\/\//, "")}>`;
   const clientName = escapeHtml(input.clientName);
+  const clientPhone = escapeHtml(input.clientPhone);
   const serviceName = escapeHtml(input.serviceName);
   const date = escapeHtml(input.date);
   const time = escapeHtml(input.time);
   const notes = input.notes ? escapeHtml(input.notes) : "";
-
-  await resend.emails.send({
-    from,
-    to: input.to,
-    subject: `Booking received, ${input.serviceName}`,
-    html: `
-      <div style="font-family:Georgia,serif;color:#4a3a35;line-height:1.6">
-        <h1 style="color:#c17a6b;font-weight:400">You're almost set, ${clientName}</h1>
-        <p>We received your request for <strong>${serviceName}</strong>.</p>
-        <p><strong>Date:</strong> ${date}<br/>
-        <strong>Time:</strong> ${time}</p>
-        ${notes ? `<p><strong>Notes:</strong> ${notes}</p>` : ""}
-        <p>We'll confirm shortly. Reply to this email if you need to change anything.</p>
-        <p style="color:#8a756c">- ${SITE.name}</p>
-      </div>
-    `,
-  });
 
   const adminEmail = process.env.ADMIN_NOTIFY_EMAIL ?? SITE.email;
   await resend.emails.send({
     from,
     to: adminEmail,
     subject: `New booking, ${input.serviceName}`,
-    html: `<p>${clientName} booked ${serviceName} on ${date} at ${time}.</p>`,
+    html: `
+      <div style="font-family:Georgia,serif;color:#4a3a35;line-height:1.6">
+        <p><strong>${clientName}</strong> booked <strong>${serviceName}</strong>.</p>
+        <p><strong>Date:</strong> ${date}<br/>
+        <strong>Time:</strong> ${time}<br/>
+        <strong>Phone / WhatsApp:</strong> ${clientPhone}</p>
+        ${notes ? `<p><strong>Notes:</strong> ${notes}</p>` : ""}
+      </div>
+    `,
   });
+
+  if (input.to) {
+    await resend.emails.send({
+      from,
+      to: input.to,
+      subject: `Booking received, ${input.serviceName}`,
+      html: `
+        <div style="font-family:Georgia,serif;color:#4a3a35;line-height:1.6">
+          <h1 style="color:#c17a6b;font-weight:400">You're almost set, ${clientName}</h1>
+          <p>We received your request for <strong>${serviceName}</strong>.</p>
+          <p><strong>Date:</strong> ${date}<br/>
+          <strong>Time:</strong> ${time}</p>
+          ${notes ? `<p><strong>Notes:</strong> ${notes}</p>` : ""}
+          <p>We'll confirm shortly by WhatsApp or phone.</p>
+          <p style="color:#8a756c">- ${SITE.name}</p>
+        </div>
+      `,
+    });
+  }
 
   return { skipped: false as const };
 }

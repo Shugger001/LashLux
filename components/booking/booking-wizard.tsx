@@ -62,7 +62,6 @@ export function BookingWizard({ services }: { services: Service[] }) {
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingId, setBookingId] = useState(searchParams.get("id") ?? "");
-  const [emailSent, setEmailSent] = useState(false);
   const [paidConfirmed, setPaidConfirmed] = useState(payStatus === "success");
   const selectedService = services.find((item) => item.id === serviceId);
 
@@ -73,7 +72,7 @@ export function BookingWizard({ services }: { services: Service[] }) {
     formState: { errors },
   } = useForm<BookingDetailsInput>({
     resolver: zodResolver(bookingDetailsSchema),
-    defaultValues: { fullName: "", email: "", phone: "", notes: "" },
+    defaultValues: { fullName: "", phone: "", notes: "" },
   });
 
   useEffect(() => {
@@ -146,7 +145,6 @@ export function BookingWizard({ services }: { services: Service[] }) {
           date: toDateKey(date),
           time,
           fullName: details.fullName,
-          email: details.email,
           phone: details.phone,
           notes: notes.trim() || undefined,
         }),
@@ -161,7 +159,6 @@ export function BookingWizard({ services }: { services: Service[] }) {
       }
 
       setBookingId(result.id ?? "");
-      setEmailSent(result.emailSent === true);
       trackEvent("book_success");
       setStep(6);
     } catch (error) {
@@ -433,7 +430,7 @@ export function BookingWizard({ services }: { services: Service[] }) {
               Your details
             </h2>
             <p className="mt-2 text-muted-foreground">
-              We will use these details to confirm your appointment.
+              We will confirm your appointment by WhatsApp or phone.
             </p>
             <form className="mt-6 space-y-5" onSubmit={handleSubmit(continueFromDetails)}>
               <FormField
@@ -449,21 +446,12 @@ export function BookingWizard({ services }: { services: Service[] }) {
                   {...register("fullName")}
                 />
               </FormField>
-              <FormField id="email" label="Email" error={errors.email?.message}>
-                <Input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  aria-invalid={Boolean(errors.email)}
-                  aria-describedby={errors.email ? "email-error" : undefined}
-                  {...register("email")}
-                />
-              </FormField>
-              <FormField id="phone" label="Phone" error={errors.phone?.message}>
+              <FormField id="phone" label="Phone / WhatsApp" error={errors.phone?.message}>
                 <Input
                   id="phone"
                   type="tel"
                   autoComplete="tel"
+                  inputMode="tel"
                   aria-invalid={Boolean(errors.phone)}
                   aria-describedby={errors.phone ? "phone-error" : undefined}
                   {...register("phone")}
@@ -572,10 +560,8 @@ export function BookingWizard({ services }: { services: Service[] }) {
             )}
             <p className="mx-auto mt-5 max-w-md text-sm text-muted-foreground">
               {paidConfirmed
-                ? "A receipt was emailed when payment completed. Message us on WhatsApp if you need to reschedule."
-                : emailSent
-                  ? "We sent your request details by email. We will follow up once the appointment is confirmed."
-                  : "We will confirm your appointment via WhatsApp or phone."}
+                ? "Deposit received. Message us on WhatsApp if you need to reschedule."
+                : "We will confirm your appointment via WhatsApp or phone."}
             </p>
             {bookingId && (
               <p className="mt-4 text-xs text-muted-foreground">
