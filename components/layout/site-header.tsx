@@ -17,13 +17,7 @@ const NAV = [
   { href: "/contact", label: "Contact" },
 ];
 
-export function SiteHeader({
-  isAdmin = false,
-  isLoggedIn = false,
-}: {
-  isAdmin?: boolean;
-  isLoggedIn?: boolean;
-}) {
+export function SiteHeader({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();

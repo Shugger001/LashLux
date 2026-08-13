@@ -60,10 +60,7 @@ export default async function RootLayout({
           >
             Skip to content
           </a>
-          <SiteHeader
-            isAdmin={profile?.role === "admin"}
-            isLoggedIn={Boolean(profile)}
-          />
+          <SiteHeader isLoggedIn={Boolean(profile)} />
           <main id="main" className="pt-[4.75rem]">
             {children}
           </main>
