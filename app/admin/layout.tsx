@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 
 import { AdminShell } from "@/components/admin/admin-shell";
+import { getPendingAppointmentCount } from "@/lib/admin-data";
 
 export const metadata: Metadata = {
   title: "Studio Admin",
   robots: { index: false, follow: false },
 };
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return <AdminShell>{children}</AdminShell>;
+  const pendingCount = await getPendingAppointmentCount();
+  return <AdminShell pendingCount={pendingCount}>{children}</AdminShell>;
 }

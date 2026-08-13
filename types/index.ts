@@ -138,4 +138,9 @@ export interface AdminStats {
   popularService: string;
   weeklyBookings: { day: string; count: number }[];
   recentAppointments: Appointment[];
+  pendingCount: number;
+  todayDate: string;
+  todayAppointments: Appointment[];
+  todayActiveCount: number;
+  todayCapacity: number;
 }

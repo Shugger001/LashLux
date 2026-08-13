@@ -4,6 +4,7 @@ import {
   DEMO_TESTIMONIALS,
   SITE,
 } from "@/lib/constants";
+import { MAX_APPOINTMENTS_PER_DAY } from "@/lib/schedule";
 import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import type {
   AdminStats,
@@ -281,6 +282,30 @@ export async function getAdminClients(): Promise<AdminClient[]> {
   }
 }
 
+/** Count appointments awaiting confirmation (for nav badge). */
+export async function getPendingAppointmentCount(): Promise<number> {
+  if (!isSupabaseConfigured()) {
+    return DEMO_APPOINTMENTS.filter((item) => item.status === "pending").length;
+  }
+  try {
+    const admin = createAdminClient();
+    const { count, error } = await admin
+      .from("appointments")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "pending");
+    if (error) {
+      console.error("[admin:pending-count]", { message: error.message });
+      return 0;
+    }
+    return count ?? 0;
+  } catch (error) {
+    console.error("[admin:pending-count-failed]", {
+      message: error instanceof Error ? error.message : "unknown",
+    });
+    return 0;
+  }
+}
+
 /** Calculate dashboard metrics from current appointment and client data. */
 export async function getAdminStats(): Promise<AdminStats> {
   const [appointments, clients] = await Promise.all([
@@ -309,6 +334,14 @@ export async function getAdminStats(): Promise<AdminStats> {
     };
   });
 
+  const todayDate = now.toISOString().slice(0, 10);
+  const todayAppointments = appointments
+    .filter((item) => item.appointment_date === todayDate)
+    .sort((a, b) => a.appointment_time.localeCompare(b.appointment_time));
+  const todayActiveCount = todayAppointments.filter(
+    (item) => item.status !== "cancelled" && item.status !== "no_show"
+  ).length;
+
   return {
     totalAppointments: appointments.length,
     revenue: completed.reduce(
@@ -325,6 +358,12 @@ export async function getAdminStats(): Promise<AdminStats> {
     recentAppointments: [...appointments]
       .sort((a, b) => b.created_at.localeCompare(a.created_at))
       .slice(0, 5),
+    pendingCount: appointments.filter((item) => item.status === "pending")
+      .length,
+    todayDate,
+    todayAppointments,
+    todayActiveCount,
+    todayCapacity: MAX_APPOINTMENTS_PER_DAY,
   };
 }
 

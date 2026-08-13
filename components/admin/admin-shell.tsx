@@ -40,7 +40,13 @@ const NAV_ITEMS = [
 ] as const;
 
 /** Responsive navigation shell shared by every admin route. */
-export function AdminShell({ children }: { children: React.ReactNode }) {
+export function AdminShell({
+  children,
+  pendingCount = 0,
+}: {
+  children: React.ReactNode;
+  pendingCount?: number;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -91,7 +97,11 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           return (
             <Link
               key={item.href}
-              href={item.href}
+              href={
+                item.href === "/admin/appointments" && pendingCount > 0
+                  ? "/admin/appointments?status=pending"
+                  : item.href
+              }
               aria-current={isActive ? "page" : undefined}
               className={cn(
                 "flex min-h-11 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors focus-ring",
@@ -101,7 +111,19 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               )}
             >
               <item.icon className="h-5 w-5" aria-hidden />
-              {item.label}
+              <span className="flex-1">{item.label}</span>
+              {item.href === "/admin/appointments" && pendingCount > 0 ? (
+                <span
+                  className={cn(
+                    "rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums",
+                    isActive
+                      ? "bg-primary-foreground/20 text-primary-foreground"
+                      : "bg-amber-100 text-amber-800"
+                  )}
+                >
+                  {pendingCount}
+                </span>
+              ) : null}
             </Link>
           );
         })}
@@ -178,6 +200,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <Menu />
           </Button>
           <span className="ml-3 font-display text-2xl text-ink">Lash Lux Admin</span>
+          {pendingCount > 0 ? (
+            <Link
+              href="/admin/appointments?status=pending"
+              className="ml-auto rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-800 focus-ring"
+            >
+              {pendingCount} pending
+            </Link>
+          ) : null}
         </header>
         <div className="mx-auto w-full max-w-7xl p-4 sm:p-6 lg:p-8">
           {children}

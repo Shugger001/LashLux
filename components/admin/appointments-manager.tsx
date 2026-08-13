@@ -28,17 +28,37 @@ const statusStyles = {
   no_show: "bg-stone-100 text-stone-700 border-stone-300",
 };
 
+function resolveInitialStatus(value?: string) {
+  if (!value || value === "all") return "all";
+  return APPOINTMENT_STATUSES.includes(value as AppointmentStatus)
+    ? value
+    : "all";
+}
+
+function resolveInitialView(value?: string, hasDate?: boolean): ViewMode {
+  if (value === "day" || value === "week" || value === "list") return value;
+  return hasDate ? "day" : "list";
+}
+
 /** Appointment filters, calendar export, and status management. */
 export function AppointmentsManager({
   initialAppointments,
+  initialStatus,
+  initialDate,
+  initialView,
 }: {
   initialAppointments: Appointment[];
+  initialStatus?: string;
+  initialDate?: string;
+  initialView?: string;
 }) {
   const [appointments, setAppointments] = useState(initialAppointments);
-  const [status, setStatus] = useState("all");
-  const [date, setDate] = useState("");
+  const [status, setStatus] = useState(() => resolveInitialStatus(initialStatus));
+  const [date, setDate] = useState(initialDate ?? "");
   const [query, setQuery] = useState("");
-  const [view, setView] = useState<ViewMode>("list");
+  const [view, setView] = useState<ViewMode>(() =>
+    resolveInitialView(initialView, Boolean(initialDate))
+  );
   const [selected, setSelected] = useState<string[]>([]);
 
   const filtered = useMemo(
@@ -179,7 +199,7 @@ export function AppointmentsManager({
               <SelectItem value="all">All statuses</SelectItem>
               {APPOINTMENT_STATUSES.map((item) => (
                 <SelectItem key={item} value={item}>
-                  {item[0].toUpperCase() + item.slice(1)}
+                  {item[0].toUpperCase() + item.slice(1).replace("_", " ")}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -190,6 +210,22 @@ export function AppointmentsManager({
             aria-label="Filter by date"
             onChange={(event) => setDate(event.target.value)}
           />
+          <div className="flex flex-wrap items-center gap-2">
+            {(status !== "all" || date || query) && (
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  setStatus("all");
+                  setDate("");
+                  setQuery("");
+                  setView("list");
+                }}
+              >
+                Clear filters
+              </Button>
+            )}
           <div className="flex rounded-md border border-border p-1">
             <Button
               type="button"
@@ -221,6 +257,7 @@ export function AppointmentsManager({
             >
               <Rows3 /> Week
             </Button>
+          </div>
           </div>
         </CardContent>
       </Card>
