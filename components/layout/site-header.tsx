@@ -27,7 +27,7 @@ export function SiteHeader({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-40 px-2.5 pb-1.5 pt-2 sm:px-4 sm:pb-2 sm:pt-4">
       <div className="pointer-events-auto container-page">
-        <div className="flex items-center justify-between gap-3 rounded-full border border-[#c9a27e]/30 bg-cream/75 px-3 py-2 shadow-[0_18px_44px_-24px_rgba(58,42,44,0.5)] backdrop-blur-2xl sm:px-4">
+        <div className="flex items-center justify-between gap-3 rounded-full border border-[#c9a27e]/30 bg-[rgba(255,247,244,0.92)] px-3 py-2 shadow-[0_18px_44px_-24px_rgba(58,42,44,0.5)] backdrop-blur-2xl sm:px-4">
           <Link href="/" className="rounded-full focus-ring" aria-label="Lash Lux home">
             <BrandWordmark priority />
           </Link>
@@ -88,7 +88,8 @@ export function SiteHeader({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
             transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
             className="pointer-events-auto container-page mt-2 md:hidden"
           >
-            <div className="rounded-[1.75rem] border border-[#c9a27e]/30 bg-cream/95 p-5 shadow-lux backdrop-blur-2xl">
+            {/* Inline rgba: Tailwind opacity on cream CSS vars does not apply. */}
+            <div className="rounded-[1.75rem] border border-[#c9a27e]/40 bg-[rgba(255,247,244,0.97)] p-5 shadow-lux backdrop-blur-2xl">
               <nav className="flex flex-col gap-1" aria-label="Mobile">
                 {NAV.map((item, index) => (
                   <motion.div
@@ -99,7 +100,12 @@ export function SiteHeader({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
                   >
                     <Link
                       href={item.href}
-                      className="block rounded-xl px-3 py-3.5 text-base font-medium"
+                      className={cn(
+                        "block rounded-xl px-3 py-3.5 text-base font-semibold text-ink transition-colors focus-ring",
+                        pathname === item.href
+                          ? "bg-white text-rose-deep shadow-sm"
+                          : "hover:bg-white/80 hover:text-rose-deep"
+                      )}
                       onClick={() => setOpen(false)}
                     >
                       {item.label}
@@ -109,13 +115,18 @@ export function SiteHeader({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
                 {isLoggedIn && (
                   <Link
                     href="/account"
-                    className="block rounded-xl px-3 py-3 text-base"
+                    className={cn(
+                      "block rounded-xl px-3 py-3.5 text-base font-semibold text-ink transition-colors focus-ring",
+                      pathname === "/account"
+                        ? "bg-white text-rose-deep shadow-sm"
+                        : "hover:bg-white/80 hover:text-rose-deep"
+                    )}
                     onClick={() => setOpen(false)}
                   >
                     My bookings
                   </Link>
                 )}
-                <Button asChild className="mt-2">
+                <Button asChild className="mt-3">
                   <Link href="/book" onClick={() => setOpen(false)}>
                     Book now
                   </Link>
