@@ -29,7 +29,8 @@ export function pageMetadata(input: {
   const socialTitle = `${input.title} | ${SITE.name}`;
 
   return {
-    title: input.title,
+    // Use absolute titles so brand always appears (template was dropping on home).
+    title: { absolute: socialTitle },
     description: input.description,
     alternates: { canonical: url },
     robots: input.noIndex

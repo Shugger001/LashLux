@@ -90,7 +90,8 @@ npm run test:e2e
 4. **Resend** — verify sending domain so booking emails are not skipped.
 5. **Deposits** — set Paystack keys + `NEXT_PUBLIC_DEPOSIT_ENABLED=true` when ready.
 6. **Cron** — set `CRON_SECRET` in Vercel so 8:00 UTC reminders run for **confirmed** appointments tomorrow (failed/skipped sends are retried; `reminder_sent_at` is only set after a successful email).
-7. Smoke-check home + `/book` after every production deploy.
+7. **Auth** — enable [leaked password protection](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection) in Supabase Auth settings.
+8. Smoke-check home + `/book` after every production deploy.
 
 ## Deploy on Vercel
 
