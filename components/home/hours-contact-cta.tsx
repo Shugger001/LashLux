@@ -9,15 +9,15 @@ import { DAY_LABELS, DEFAULT_HOURS, SITE } from "@/lib/constants";
 export function HoursContactCta() {
   return (
     <section className="section-pad border-t border-[#c9a27e]/20 bg-gradient-to-b from-blush/50 to-cream">
-      <div className="container-page grid gap-12 lg:grid-cols-2">
+      <div className="container-page grid gap-8 lg:grid-cols-2 lg:gap-12">
         <FadeIn>
           <span className="eyebrow">Book eyelash fixing</span>
-          <h2 className="mt-4 font-editorial text-4xl text-ink sm:text-5xl lg:text-6xl">
+          <h2 className="mt-3 font-editorial text-3xl text-ink sm:mt-4 sm:text-5xl lg:text-6xl">
             Ready when you are.
           </h2>
-          <p className="mt-4 font-script text-4xl text-rose sm:text-5xl">{SITE.badge}</p>
-          <div className="mt-5 h-px w-16 bg-gradient-to-r from-[#c9a27e] to-transparent" />
-          <p className="mt-5 max-w-md text-muted-foreground leading-7">
+          <p className="mt-3 font-script text-3xl text-rose sm:mt-4 sm:text-5xl">{SITE.badge}</p>
+          <div className="mt-4 h-px w-14 bg-gradient-to-r from-[#c9a27e] to-transparent sm:mt-5 sm:w-16" />
+          <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground sm:mt-5 sm:text-base sm:leading-7">
             Book a classic, hybrid, volume, or mega volume set online, WhatsApp
             us, or walk in when the schedule allows, appointments preferred.
           </p>

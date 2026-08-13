@@ -61,7 +61,7 @@ export default async function RootLayout({
             Skip to content
           </a>
           <SiteHeader isLoggedIn={Boolean(profile)} />
-          <main id="main" className="pt-[4.75rem]">
+          <main id="main" className="pt-16 sm:pt-[4.75rem]">
             {children}
           </main>
           <SiteFooter />

@@ -26,10 +26,10 @@ export function SiteFooter() {
           aria-hidden
         />
 
-        <div className="container-page relative grid gap-10 py-12 pb-[max(3rem,calc(env(safe-area-inset-bottom)+2rem))] md:grid-cols-3 md:gap-12 md:py-16">
+        <div className="container-page relative grid gap-8 py-9 pb-[max(2.25rem,calc(env(safe-area-inset-bottom)+1.5rem))] md:grid-cols-3 md:gap-12 md:py-16">
           <div>
             <BrandWordmark size="footer" className="rounded-lg bg-cream p-1.5" />
-            <p className="mt-5 font-script text-3xl text-[#e8c4a8]">{SITE.slogan}</p>
+            <p className="mt-4 font-script text-3xl text-[#e8c4a8] sm:mt-5">{SITE.slogan}</p>
             <p className="mt-2 text-sm text-cream/70">{SITE.promise}</p>
             <a
               href={SITE.instagram}

@@ -12,7 +12,7 @@ const ICONS = {
 export function ValuePropsBar() {
   return (
     <section className="relative border-y border-[#c9a27e]/20 bg-white/65 backdrop-blur-sm">
-      <div className="container-page grid grid-cols-2 gap-x-4 gap-y-7 py-9 sm:grid-cols-4 sm:gap-6 sm:py-12">
+      <div className="container-page grid grid-cols-2 gap-x-3 gap-y-5 py-6 sm:grid-cols-4 sm:gap-6 sm:py-12">
         {VALUE_PROPS.map((item) => {
           const Icon = ICONS[item.icon];
           return (

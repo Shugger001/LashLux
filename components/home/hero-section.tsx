@@ -8,7 +8,7 @@ import { SITE } from "@/lib/constants";
 
 export function HeroSection() {
   return (
-    <section className="hero-flush relative min-h-[100svh] overflow-hidden">
+    <section className="hero-flush relative min-h-[88svh] overflow-hidden sm:min-h-[100svh]">
       <Image
         src="/images/hero-lashes.jpg"
         alt="Close-up of volume eyelash extensions on a Black woman"
@@ -34,14 +34,14 @@ export function HeroSection() {
         aria-hidden
       />
 
-      <div className="container-page relative flex min-h-[100svh] flex-col justify-end pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-24 sm:pb-16 sm:pt-28 lg:pb-20">
+      <div className="container-page relative flex min-h-[88svh] flex-col justify-end pb-[max(1rem,env(safe-area-inset-bottom))] pt-20 sm:min-h-[100svh] sm:pb-16 sm:pt-28 lg:pb-20">
         <div className="relative max-w-2xl text-cream">
           <div
-            className="pointer-events-none absolute -inset-x-3 -inset-y-4 -z-10 rounded-[1.75rem] bg-ink/55 blur-[2px] sm:-inset-x-5 sm:-inset-y-6"
+            className="pointer-events-none absolute -inset-x-2 -inset-y-3 -z-10 rounded-[1.25rem] bg-ink/55 blur-[2px] sm:-inset-x-5 sm:-inset-y-6 sm:rounded-[1.75rem]"
             aria-hidden
           />
 
-          <div className="mb-5 sm:mb-8">
+          <div className="mb-3 sm:mb-8">
             <BrandLogo
               size="md"
               priority
@@ -54,21 +54,21 @@ export function HeroSection() {
             />
           </div>
 
-          <p className="font-script text-[2.85rem] leading-none text-[#f0d2b8] drop-shadow-[0_2px_12px_rgba(26,18,20,0.55)] sm:text-5xl lg:text-6xl">
+          <p className="font-script text-[2.35rem] leading-none text-[#f0d2b8] drop-shadow-[0_2px_12px_rgba(26,18,20,0.55)] sm:text-5xl lg:text-6xl">
             {SITE.slogan}
           </p>
-          <div className="mt-4 h-px w-16 bg-gradient-to-r from-[#c9a27e] to-transparent sm:mt-5 sm:w-24" />
+          <div className="mt-3 h-px w-14 bg-gradient-to-r from-[#c9a27e] to-transparent sm:mt-5 sm:w-24" />
 
-          <h1 className="mt-5 max-w-xl font-display text-[1.9rem] font-semibold leading-[1.08] tracking-tight text-cream drop-shadow-[0_2px_16px_rgba(26,18,20,0.65)] sm:mt-6 sm:text-5xl lg:text-6xl">
+          <h1 className="mt-3.5 max-w-xl font-display text-[1.65rem] font-semibold leading-[1.08] tracking-tight text-cream drop-shadow-[0_2px_16px_rgba(26,18,20,0.65)] sm:mt-6 sm:text-5xl lg:text-6xl">
             Professional eyelash fixing, classic to mega volume.
           </h1>
 
-          <p className="mt-4 max-w-md text-sm leading-6 text-cream/90 drop-shadow-[0_1px_10px_rgba(26,18,20,0.7)] sm:mt-5 sm:text-base sm:leading-7">
+          <p className="mt-3 max-w-md text-sm leading-5 text-cream/90 drop-shadow-[0_1px_10px_rgba(26,18,20,0.7)] sm:mt-5 sm:text-base sm:leading-7">
             Soft, custom lash sets mapped to your eye shape. Book a full set, fill,
             or safe removal at Old Ashongman.
           </p>
 
-          <div className="mt-7 flex w-full flex-col gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
+          <div className="mt-5 flex w-full flex-col gap-2.5 sm:mt-10 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
             <Button asChild size="lg" className="w-full pr-2 sm:w-auto">
               <Link
                 href="/book"
@@ -92,7 +92,7 @@ export function HeroSection() {
             </Button>
           </div>
 
-          <p className="mt-6 text-[10px] uppercase tracking-[0.18em] text-cream/70 sm:mt-8 sm:text-[11px]">
+          <p className="mt-4 text-[10px] uppercase tracking-[0.18em] text-cream/70 sm:mt-8 sm:text-[11px]">
             {SITE.policy}
           </p>
         </div>

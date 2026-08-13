@@ -30,20 +30,20 @@ export function FeaturedServices({ services }: { services: Service[] }) {
   const featured = services.slice(0, 6);
 
   return (
-    <section className="pb-14 pt-10 sm:pb-24 sm:pt-16 lg:pb-28 lg:pt-20">
+    <section className="pb-9 pt-7 sm:pb-24 sm:pt-16 lg:pb-28 lg:pt-20">
       <div className="container-page">
         <FadeIn className="mx-auto max-w-2xl text-center">
           <span className="eyebrow">Eyelash fixing menu</span>
-          <h2 className="mt-5 font-editorial text-4xl text-ink sm:text-5xl lg:text-6xl">
+          <h2 className="mt-3 font-editorial text-3xl text-ink sm:mt-5 sm:text-5xl lg:text-6xl">
             Enhance. Elevate. Empower.
           </h2>
-          <div className="mx-auto mt-5 h-px w-16 bg-gradient-to-r from-transparent via-[#c9a27e] to-transparent" />
-          <p className="mt-5 text-muted-foreground">
+          <div className="mx-auto mt-3 h-px w-14 bg-gradient-to-r from-transparent via-[#c9a27e] to-transparent sm:mt-5 sm:w-16" />
+          <p className="mt-3 text-sm text-muted-foreground sm:mt-5 sm:text-base">
             Classic, hybrid, volume, and mega volume fixing, looks tailored to your eyes.
           </p>
         </FadeIn>
 
-        <FadeIn delay={0.05} className="mt-10 lg:mt-14">
+        <FadeIn delay={0.05} className="mt-7 sm:mt-10 lg:mt-14">
           <div className="relative mx-auto max-w-lg lg:max-w-md">
             <div
               className="absolute -inset-6 rounded-full opacity-70 blur-3xl sm:-inset-8"
@@ -84,7 +84,7 @@ export function FeaturedServices({ services }: { services: Service[] }) {
           </div>
         </FadeIn>
 
-        <div className="mt-10 grid items-start gap-8 lg:mt-14">
+        <div className="mt-7 grid items-start gap-6 sm:mt-10 lg:mt-14">
           <FadeIn>
             <div className="frame-lux">
               <div className="frame-lux-inner overflow-hidden">
@@ -138,7 +138,7 @@ export function FeaturedServices({ services }: { services: Service[] }) {
           </FadeIn>
         </div>
 
-        <div className="mt-10 text-center sm:mt-12">
+        <div className="mt-7 text-center sm:mt-12">
           <Button asChild variant="outline">
             <Link href="/services">Explore full menu</Link>
           </Button>
