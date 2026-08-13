@@ -1,4 +1,20 @@
-import { SITE } from "@/lib/constants";
+import { FAQ_ITEMS, SITE } from "@/lib/constants";
+
+/** FAQPage structured data for common booking questions. */
+export function faqPageJsonLd(items: readonly { q: string; a: string }[] = FAQ_ITEMS) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  };
+}
 
 /** LocalBusiness + BeautySalon structured data for Google. */
 export function localBusinessJsonLd() {

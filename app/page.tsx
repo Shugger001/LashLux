@@ -1,12 +1,14 @@
 import { AboutTeaser } from "@/components/home/about-teaser";
+import { FaqSection } from "@/components/home/faq-section";
 import { FeaturedServices } from "@/components/home/featured-services";
 import { GalleryPreview } from "@/components/home/gallery-preview";
 import { HeroSection } from "@/components/home/hero-section";
 import { HoursContactCta } from "@/components/home/hours-contact-cta";
 import { TestimonialsSlider } from "@/components/home/testimonials-slider";
 import { ValuePropsBar } from "@/components/home/value-props-bar";
+import { FAQ_ITEMS } from "@/lib/constants";
 import { getGallery, getServices, getTestimonials } from "@/lib/data";
-import { localBusinessJsonLd } from "@/lib/seo";
+import { faqPageJsonLd, localBusinessJsonLd } from "@/lib/seo";
 
 export default async function HomePage() {
   const [services, gallery, testimonials] = await Promise.all([
@@ -15,13 +17,18 @@ export default async function HomePage() {
     getTestimonials(),
   ]);
 
-  const jsonLd = localBusinessJsonLd();
+  const businessLd = localBusinessJsonLd();
+  const faqLd = faqPageJsonLd(FAQ_ITEMS.slice(0, 6));
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(businessLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
       />
       <HeroSection />
       <ValuePropsBar />
@@ -29,6 +36,7 @@ export default async function HomePage() {
       <GalleryPreview items={gallery} />
       <TestimonialsSlider items={testimonials} />
       <AboutTeaser />
+      <FaqSection />
       <HoursContactCta />
     </>
   );

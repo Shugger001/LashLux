@@ -188,10 +188,31 @@ export function BookingWizard({ services }: { services: Service[] }) {
     reference: bookingId || undefined,
   });
 
+  function goToStep(target: number) {
+    if (target >= step || target < 1 || target > 5) return;
+    if (target >= 2 && !serviceId) return;
+    if (target >= 3 && !date) return;
+    if (target >= 4 && !time) return;
+    trackEvent("book_step", { step: target });
+    setStep(target);
+  }
+
+  const summaryParts = [
+    selectedService?.name,
+    date
+      ? date.toLocaleDateString("en-US", {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+        })
+      : null,
+    time ? formatTime(time) : null,
+  ].filter(Boolean);
+
   return (
     <div className="frame-lux mx-auto max-w-3xl">
       <div className="frame-lux-inner overflow-hidden">
-      <div className="border-b border-[#c9a27e]/20 bg-gradient-to-r from-blush/40 via-white to-transparent p-6 sm:p-8">
+      <div className="sticky top-0 z-10 border-b border-[#c9a27e]/20 bg-gradient-to-r from-blush/40 via-white to-transparent p-4 backdrop-blur-sm sm:p-6">
         <div className="flex items-center justify-between gap-4">
           <p className="text-sm font-medium tracking-wide text-rose-deep">
             Step {step} of 6 · {STEP_LABELS[step - 1]}
@@ -199,11 +220,14 @@ export function BookingWizard({ services }: { services: Service[] }) {
           {selectedService && step < 6 && (
             <p className="text-sm text-muted-foreground">
               {formatDuration(selectedService.duration)}
+              {selectedService.price != null
+                ? ` · ${formatCurrency(Number(selectedService.price))}`
+                : ""}
             </p>
           )}
         </div>
         <div
-          className="mt-4 h-1.5 overflow-hidden rounded-full bg-[#c9a27e]/15"
+          className="mt-3 h-1.5 overflow-hidden rounded-full bg-[#c9a27e]/15 sm:mt-4"
           role="progressbar"
           aria-label="Booking progress"
           aria-valuemin={1}
@@ -215,6 +239,47 @@ export function BookingWizard({ services }: { services: Service[] }) {
             style={{ width: progress }}
           />
         </div>
+        {step < 6 ? (
+          <ol className="mt-3 flex gap-1.5 overflow-x-auto pb-0.5 sm:mt-4 sm:gap-2">
+            {STEP_LABELS.slice(0, 5).map((label, index) => {
+              const target = index + 1;
+              const isCurrent = target === step;
+              const isComplete = target < step;
+              const canJump =
+                isComplete &&
+                (target === 1 || Boolean(serviceId)) &&
+                (target < 3 || Boolean(date)) &&
+                (target < 4 || Boolean(time));
+              return (
+                <li key={label} className="shrink-0">
+                  <button
+                    type="button"
+                    disabled={!canJump}
+                    onClick={() => goToStep(target)}
+                    className={cn(
+                      "rounded-full px-2.5 py-1 text-[11px] uppercase tracking-[0.12em] transition-colors focus-ring sm:px-3 sm:text-xs",
+                      isCurrent && "bg-rose-deep text-cream",
+                      isComplete &&
+                        "bg-[#c9a27e]/20 text-ink hover:bg-[#c9a27e]/35",
+                      !isCurrent &&
+                        !isComplete &&
+                        "bg-[#c9a27e]/10 text-muted-foreground",
+                      !canJump && !isCurrent && "cursor-default"
+                    )}
+                    aria-current={isCurrent ? "step" : undefined}
+                  >
+                    {label}
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        ) : null}
+        {step > 1 && step < 6 && summaryParts.length ? (
+          <p className="mt-3 truncate text-xs text-muted-foreground sm:text-sm">
+            {summaryParts.join(" · ")}
+          </p>
+        ) : null}
       </div>
 
       <div className="p-6 sm:p-8">
