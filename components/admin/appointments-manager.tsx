@@ -1,6 +1,14 @@
 "use client";
 
-import { CalendarPlus, List, Rows3, Search, Trash2 } from "lucide-react";
+import {
+  CalendarPlus,
+  List,
+  MessageCircle,
+  Phone,
+  Rows3,
+  Search,
+  Trash2,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -16,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { APPOINTMENT_STATUSES } from "@/lib/constants";
 import { buildICalEvent, formatCurrency, formatTime } from "@/lib/utils";
+import { telHref, whatsappToClient } from "@/lib/whatsapp";
 import type { Appointment, AppointmentStatus } from "@/types";
 
 type ViewMode = "list" | "week" | "day";
@@ -27,6 +36,65 @@ const statusStyles = {
   cancelled: "bg-red-50 text-red-700 border-red-200",
   no_show: "bg-stone-100 text-stone-700 border-stone-300",
 };
+
+function clientWhatsAppMessage(appointment: Appointment) {
+  const service = appointment.service?.name ?? "eyelash fixing";
+  const when = `${appointment.appointment_date} at ${formatTime(appointment.appointment_time)}`;
+  return `Hi ${appointment.client_name ?? "there"}, this is Lash Lux about your ${service} appointment on ${when}.`;
+}
+
+/** Phone display with Call + WhatsApp deep links. */
+function ClientPhoneActions({
+  appointment,
+  compact = false,
+}: {
+  appointment: Appointment;
+  compact?: boolean;
+}) {
+  const phone = appointment.client_phone?.trim();
+  if (!phone) {
+    return (
+      <span className="text-xs text-muted-foreground">No phone on file</span>
+    );
+  }
+
+  const callLink = telHref(phone);
+  const chatLink = whatsappToClient(phone, clientWhatsAppMessage(appointment));
+
+  return (
+    <div className={compact ? "space-y-1" : "space-y-2"}>
+      <a
+        href={callLink}
+        className="block text-sm font-medium text-rose-deep hover:underline"
+      >
+        {phone}
+      </a>
+      <div className="flex flex-wrap gap-1.5">
+        {callLink ? (
+          <Button asChild size="sm" variant="outline" className="h-8 px-2.5">
+            <a href={callLink} aria-label={`Call ${phone}`}>
+              <Phone className="h-3.5 w-3.5" aria-hidden />
+              Call
+            </a>
+          </Button>
+        ) : null}
+        {chatLink ? (
+          <Button asChild size="sm" variant="outline" className="h-8 px-2.5">
+            <a
+              href={chatLink}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`WhatsApp ${phone}`}
+            >
+              <MessageCircle className="h-3.5 w-3.5" aria-hidden />
+              WhatsApp
+            </a>
+          </Button>
+        ) : null}
+      </div>
+    </div>
+  );
+}
 
 function resolveInitialStatus(value?: string) {
   if (!value || value === "all") return "all";
@@ -64,7 +132,8 @@ export function AppointmentsManager({
   const filtered = useMemo(
     () =>
       appointments.filter((appointment) => {
-        const haystack = `${appointment.client_name} ${appointment.client_email} ${appointment.service?.name}`.toLowerCase();
+        const haystack =
+          `${appointment.client_name} ${appointment.client_email} ${appointment.client_phone} ${appointment.service?.name}`.toLowerCase();
         return (
           (status === "all" || appointment.status === status) &&
           (!date || appointment.appointment_date === date) &&
