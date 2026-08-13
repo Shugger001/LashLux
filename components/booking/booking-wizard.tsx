@@ -231,13 +231,13 @@ export function BookingWizard({ services }: { services: Service[] }) {
                 or try again shortly.
               </p>
             ) : null}
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4">
               {services.map((service) => (
                 <button
                   key={service.id}
                   type="button"
                   className={cn(
-                    "rounded-2xl border p-5 text-left transition-all duration-300 transition-lux focus-ring",
+                    "rounded-2xl border p-3 text-left transition-all duration-300 transition-lux focus-ring sm:p-5",
                     serviceId === service.id
                       ? "border-[#c9a27e] bg-blush/40 shadow-soft"
                       : "border-[#c9a27e]/25 hover:border-[#c9a27e]/60 hover:bg-white/70"
@@ -245,10 +245,10 @@ export function BookingWizard({ services }: { services: Service[] }) {
                   aria-pressed={serviceId === service.id}
                   onClick={() => setServiceId(service.id)}
                 >
-                  <span className="font-display text-xl text-ink sm:text-2xl">
+                  <span className="font-display text-base leading-snug text-ink sm:text-2xl">
                     {service.name}
                   </span>
-                  <span className="mt-2 flex justify-between gap-3 text-sm text-muted-foreground">
+                  <span className="mt-2 flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:justify-between sm:gap-3 sm:text-sm">
                     <span>{formatDuration(service.duration)}</span>
                     <span className="font-medium text-rose-deep">
                       {formatCurrency(Number(service.price))}

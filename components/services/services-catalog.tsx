@@ -54,11 +54,11 @@ export function ServicesCatalog({ services }: { services: Service[] }) {
         ))}
       </div>
 
-      <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 grid grid-cols-2 gap-3 sm:mt-10 sm:gap-6 lg:grid-cols-3 lg:gap-8">
         {filtered.map((service) => (
           <FadeIn key={service.id}>
           <article className="frame-lux group h-full">
-            <div className="frame-lux-inner h-full overflow-hidden">
+            <div className="frame-lux-inner flex h-full flex-col overflow-hidden">
             <button
               type="button"
               className="relative block aspect-[4/3] w-full overflow-hidden focus-ring"
@@ -70,37 +70,37 @@ export function ServicesCatalog({ services }: { services: Service[] }) {
                 alt={service.name}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
               />
             </button>
-            <div className="p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="eyebrow">
+            <div className="flex flex-1 flex-col p-3 sm:p-6">
+              <div className="flex items-start justify-between gap-2 sm:gap-4">
+                <div className="min-w-0">
+                  <p className="eyebrow text-[10px] sm:text-xs">
                     {service.category}
                   </p>
-                  <h2 className="mt-2 font-editorial text-3xl text-ink">
+                  <h2 className="mt-1 font-editorial text-lg leading-tight text-ink sm:mt-2 sm:text-3xl">
                     {service.name}
                   </h2>
                 </div>
-                <p className="font-display text-base font-semibold text-rose-deep">
+                <p className="shrink-0 font-display text-sm font-semibold text-rose-deep sm:text-base">
                   {formatCurrency(Number(service.price))}
                 </p>
               </div>
-              <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
+              <p className="mt-2 hidden text-sm leading-6 text-muted-foreground sm:mt-3 sm:line-clamp-2 sm:block">
                 {service.description}
               </p>
-              <p className="mt-4 flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-[#c9a27e]">
-                <Clock className="h-3.5 w-3.5" aria-hidden />
+              <p className="mt-2 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.12em] text-[#c9a27e] sm:mt-4 sm:gap-2 sm:text-[11px] sm:tracking-[0.14em]">
+                <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden />
                 {formatDuration(service.duration)}
               </p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <Button asChild className="flex-1">
+              <div className="mt-auto flex flex-col gap-2 pt-3 sm:mt-6 sm:flex-row sm:gap-3 sm:pt-0">
+                <Button asChild size="sm" className="w-full sm:flex-1 sm:text-sm">
                   <Link href={`/book?service=${encodeURIComponent(service.id)}`}>
                     Book now
                   </Link>
                 </Button>
-                <Button asChild variant="outline" className="flex-1">
+                <Button asChild size="sm" variant="outline" className="hidden sm:flex sm:flex-1">
                   <a
                     href={whatsappBookService(service.name)}
                     target="_blank"
@@ -114,7 +114,9 @@ export function ServicesCatalog({ services }: { services: Service[] }) {
                 </Button>
                 <Button
                   type="button"
+                  size="sm"
                   variant="outline"
+                  className="w-full sm:w-auto"
                   onClick={() => setSelectedService(service)}
                 >
                   Details
