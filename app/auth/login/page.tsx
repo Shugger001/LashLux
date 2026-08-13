@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 
 import { LoginForm } from "@/components/auth/login-form";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Sign In",
   description: "Sign in to your Lash Lux account to view and manage appointments.",
-};
+  path: "/auth/login",
+  noIndex: true,
+});
 
 export default function LoginPage({
   searchParams,

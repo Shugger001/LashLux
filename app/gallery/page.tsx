@@ -4,18 +4,28 @@ import Link from "next/link";
 import { GalleryGrid } from "@/components/gallery/gallery-grid";
 import { Button } from "@/components/ui/button";
 import { getGallery } from "@/lib/data";
+import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Eyelash Fixing Gallery",
   description:
     "Browse eyelash fixing looks from Lash Lux, classic, hybrid, volume, and specialty sets in Old Ashongman.",
-};
+  path: "/gallery",
+});
 
 export default async function GalleryPage() {
   const gallery = await getGallery();
+  const crumbsLd = breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Gallery", path: "/gallery" },
+  ]);
 
   return (
     <section className="section-pad">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(crumbsLd) }}
+      />
       <div className="container-page">
         <div className="flex flex-col justify-between gap-8 sm:flex-row sm:items-end">
           <div className="max-w-2xl">

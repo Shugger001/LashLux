@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/constants";
+import { pageMetadata } from "@/lib/seo";
 import {
   createAdminClient,
   createClient,
@@ -12,10 +13,12 @@ import { cn, formatTime } from "@/lib/utils";
 import { whatsappHref } from "@/lib/whatsapp";
 import type { AppointmentStatus } from "@/types";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Your Account",
   description: "View your Lash Lux appointment requests and confirmed sessions.",
-};
+  path: "/account",
+  noIndex: true,
+});
 
 interface AccountAppointment {
   id: string;

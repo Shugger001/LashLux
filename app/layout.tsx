@@ -18,18 +18,22 @@ export const metadata: Metadata = {
   },
   description:
     "Lash Lux offers professional eyelash fixing in Old Ashongman, classic, hybrid, volume, and mega volume lash extensions. Walk-ins welcome, appointments preferred.",
+  alternates: {
+    canonical: SITE.url,
+  },
   openGraph: {
     title: "Lash Lux | Eyelash Fixing & Lash Extensions",
     description: `${SITE.businessType}. ${SITE.tagline}`,
     url: SITE.url,
     siteName: SITE.name,
     type: "website",
+    locale: "en_GH",
     images: [
       {
-        url: "/images/lash-lux-logo.png",
-        width: 1024,
-        height: 682,
-        alt: "Lash Lux logo",
+        url: "/images/hero-lashes.jpg",
+        width: 1600,
+        height: 1067,
+        alt: "Lash Lux eyelash fixing studio",
       },
     ],
   },
@@ -37,7 +41,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Lash Lux | Eyelash Fixing",
     description: "Book classic, hybrid, volume, or mega volume lashes at Lash Lux.",
-    images: ["/images/lash-lux-logo.png"],
+    images: ["/images/hero-lashes.jpg"],
   },
 };
 

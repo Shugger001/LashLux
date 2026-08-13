@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SignupForm } from "@/components/auth/signup-form";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Create an Account",
   description: "Create a Lash Lux account to keep track of your lash appointments.",
-};
+  path: "/auth/signup",
+  noIndex: true,
+});
 
 export default function SignupPage({
   searchParams,

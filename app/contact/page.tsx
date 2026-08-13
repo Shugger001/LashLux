@@ -6,22 +6,32 @@ import { ContactForm } from "@/components/contact/contact-form";
 import { Button } from "@/components/ui/button";
 import { DAY_LABELS, DEFAULT_HOURS, SITE } from "@/lib/constants";
 import { getStudioOpenStatus } from "@/lib/schedule";
+import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact",
   description:
     "Contact Lash Lux for eyelash fixing in Old Ashongman, WhatsApp, call, or book classic, hybrid, volume, and mega volume lashes online.",
-};
+  path: "/contact",
+});
 
 /** Refresh open/closed status about once a minute. */
 export const revalidate = 60;
 
 export default function ContactPage() {
   const openStatus = getStudioOpenStatus();
+  const crumbsLd = breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Contact", path: "/contact" },
+  ]);
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(crumbsLd) }}
+      />
       <section className="section-pad">
         <div className="container-page grid gap-12 lg:grid-cols-2 lg:gap-16">
           <div>

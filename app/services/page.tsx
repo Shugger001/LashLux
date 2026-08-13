@@ -7,20 +7,39 @@ import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/ui/fade-in";
 import { LASH_CARE_TIPS, SITE } from "@/lib/constants";
 import { getServices } from "@/lib/data";
+import {
+  breadcrumbJsonLd,
+  pageMetadata,
+  serviceCatalogJsonLd,
+} from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Eyelash Fixing Services",
   description:
     "Book eyelash fixing at Lash Lux, classic, hybrid, volume, mega volume, removal, and lash care in Old Ashongman.",
-};
+  path: "/services",
+});
 
 const careIcons = [Droplets, Sparkles, Eye, Moon];
 
 export default async function ServicesPage() {
   const services = await getServices();
+  const catalogLd = serviceCatalogJsonLd(services);
+  const crumbsLd = breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Services", path: "/services" },
+  ]);
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(catalogLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(crumbsLd) }}
+      />
       <section className="section-pad">
         <div className="container-page">
           <div className="max-w-2xl">
