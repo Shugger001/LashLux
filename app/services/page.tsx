@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Droplets, Eye, Moon, Sparkles } from "lucide-react";
 
 import { ServicesCatalog } from "@/components/services/services-catalog";
+import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/ui/fade-in";
-import { LASH_CARE_TIPS } from "@/lib/constants";
+import { LASH_CARE_TIPS, SITE } from "@/lib/constants";
 import { getServices } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -68,6 +70,35 @@ export default async function ServicesPage() {
                 </FadeIn>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-pad border-t border-[#c9a27e]/20">
+        <div className="container-page">
+          <div className="frame-lux">
+            <div className="frame-lux-inner flex flex-col items-start justify-between gap-6 p-6 sm:flex-row sm:items-center sm:p-10">
+              <div className="max-w-xl">
+                <p className="eyebrow">Ready to book</p>
+                <h2 className="mt-3 font-editorial text-3xl text-ink sm:text-4xl">
+                  Pick a look and reserve your slot.
+                </h2>
+                <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+                  Online booking is open Monday–Saturday. Prefer chatting first?
+                  Message us on WhatsApp.
+                </p>
+              </div>
+              <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+                <Button asChild size="lg" className="w-full sm:w-auto">
+                  <Link href="/book">Book fixing</Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
+                  <a href={SITE.whatsapp} target="_blank" rel="noreferrer">
+                    WhatsApp
+                  </a>
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

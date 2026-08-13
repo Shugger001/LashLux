@@ -47,6 +47,32 @@ export function isStudioOpenOn(date: Date) {
   return Boolean(hours.open && hours.close);
 }
 
+/**
+ * Open/closed status for Accra (UTC+0, no DST).
+ * Safe on Vercel where server time is UTC.
+ */
+export function getStudioOpenStatus(now = new Date()) {
+  const hours = getHoursForDate(now);
+  if (!hours.open || !hours.close) {
+    return {
+      isOpen: false,
+      label: "Closed today · by appointment",
+      hoursLabel: hours.label,
+    };
+  }
+
+  const minutes = now.getUTCHours() * 60 + now.getUTCMinutes();
+  const open = timeToMinutes(hours.open);
+  const close = timeToMinutes(hours.close);
+  const isOpen = minutes >= open && minutes < close;
+
+  return {
+    isOpen,
+    label: isOpen ? "Open now" : "Closed right now",
+    hoursLabel: hours.label,
+  };
+}
+
 /** True when a date is bookable online (open day, not in the past). */
 export function isBookableDate(date: Date, today = new Date()) {
   const start = new Date(today);

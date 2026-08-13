@@ -25,6 +25,10 @@ export const SITE = {
   phoneDisplay: "054 798 6899",
   whatsapp: "https://wa.me/233547986899",
   address: "Manna Apartment, Old Ashongman",
+  mapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=Manna+Apartment+Old+Ashongman",
+  mapsEmbedUrl:
+    "https://www.google.com/maps?q=Manna%20Apartment%20Old%20Ashongman&output=embed",
   instagram: "https://instagram.com/lashlux_",
   instagramHandle: "@lashlux_",
   snapchat: "c_tamidu",

@@ -35,26 +35,32 @@ export function ServicesCatalog({ services }: { services: Service[] }) {
 
   return (
     <>
-      <div
-        className="flex flex-wrap gap-2"
-        role="group"
-        aria-label="Filter services by category"
-      >
-        {SERVICE_CATEGORIES.map((item) => (
-          <Button
-            key={item}
-            type="button"
-            variant={category === item ? "primary" : "outline"}
-            size="sm"
-            aria-pressed={category === item}
-            onClick={() => setCategory(item)}
-          >
-            {item}
-          </Button>
-        ))}
+      <div className="sticky top-16 z-20 -mx-1 space-y-3 bg-[hsl(var(--background)/0.95)] px-1 py-3 backdrop-blur-sm sm:top-20">
+        <div
+          className="flex gap-2 overflow-x-auto pb-1"
+          role="group"
+          aria-label="Filter services by category"
+        >
+          {SERVICE_CATEGORIES.map((item) => (
+            <Button
+              key={item}
+              type="button"
+              variant={category === item ? "primary" : "outline"}
+              size="sm"
+              aria-pressed={category === item}
+              className="shrink-0"
+              onClick={() => setCategory(item)}
+            >
+              {item}
+            </Button>
+          ))}
+        </div>
+        <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+          {filtered.length} service{filtered.length === 1 ? "" : "s"}
+        </p>
       </div>
 
-      <div className="mt-8 grid grid-cols-2 gap-3 sm:mt-10 sm:gap-6 lg:grid-cols-3 lg:gap-8">
+      <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-8 sm:gap-6 lg:grid-cols-3 lg:gap-8">
         {filtered.map((service) => (
           <FadeIn key={service.id}>
           <article className="frame-lux group h-full">
