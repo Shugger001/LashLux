@@ -2,11 +2,11 @@ import Link from "next/link";
 
 import { SITE } from "@/lib/constants";
 
-/** Instagram CTA strip using real studio handle (no fake embed grid). */
+/** Instagram / Snapchat follow CTA used at the top of the site footer. */
 export function InstagramStrip() {
   return (
-    <section className="section-pad border-y border-[#c9a27e]/20 bg-gradient-to-b from-blush/30 to-transparent">
-      <div className="container-page text-center">
+    <div className="border-b border-[#c9a27e]/20 bg-gradient-to-b from-blush/55 to-blush/25">
+      <div className="container-page py-12 text-center sm:py-14">
         <p className="eyebrow">Follow the studio</p>
         <h2 className="mt-5 font-editorial text-4xl text-ink sm:text-5xl">
           {SITE.instagramHandle}
@@ -34,6 +34,6 @@ export function InstagramStrip() {
           </Link>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
