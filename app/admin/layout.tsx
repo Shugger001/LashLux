@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 
 import { AdminShell } from "@/components/admin/admin-shell";
-import { getPendingAppointmentCount } from "@/lib/admin-data";
+import {
+  getPendingAppointmentCount,
+  getUnreadContactCount,
+} from "@/lib/admin-data";
 
 export const metadata: Metadata = {
   title: "Studio Admin",
@@ -11,6 +14,13 @@ export const metadata: Metadata = {
 export default async function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const pendingCount = await getPendingAppointmentCount();
-  return <AdminShell pendingCount={pendingCount}>{children}</AdminShell>;
+  const [pendingCount, unreadMessages] = await Promise.all([
+    getPendingAppointmentCount(),
+    getUnreadContactCount(),
+  ]);
+  return (
+    <AdminShell pendingCount={pendingCount} unreadMessages={unreadMessages}>
+      {children}
+    </AdminShell>
+  );
 }

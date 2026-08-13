@@ -9,6 +9,7 @@ import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import type {
   AdminStats,
   Appointment,
+  ContactMessage,
   GalleryItem,
   Service,
   SiteSetting,
@@ -279,6 +280,53 @@ export async function getAdminClients(): Promise<AdminClient[]> {
     })) as AdminClient[];
   } catch {
     return [];
+  }
+}
+
+/** Return contact form messages for the admin inbox. */
+export async function getAdminContactMessages(): Promise<ContactMessage[]> {
+  if (!isSupabaseConfigured()) {
+    return process.env.NODE_ENV === "production" ? [] : [];
+  }
+  try {
+    const admin = createAdminClient();
+    const { data, error } = await admin
+      .from("contact_messages")
+      .select("id, name, email, message, is_read, created_at")
+      .order("created_at", { ascending: false })
+      .limit(200);
+    if (error) {
+      console.error("[admin:messages-query]", { message: error.message });
+      return [];
+    }
+    return (data as ContactMessage[]) ?? [];
+  } catch (error) {
+    console.error("[admin:messages-failed]", {
+      message: error instanceof Error ? error.message : "unknown",
+    });
+    return [];
+  }
+}
+
+/** Unread contact messages count for nav badge. */
+export async function getUnreadContactCount(): Promise<number> {
+  if (!isSupabaseConfigured()) return 0;
+  try {
+    const admin = createAdminClient();
+    const { count, error } = await admin
+      .from("contact_messages")
+      .select("id", { count: "exact", head: true })
+      .eq("is_read", false);
+    if (error) {
+      console.error("[admin:messages-unread]", { message: error.message });
+      return 0;
+    }
+    return count ?? 0;
+  } catch (error) {
+    console.error("[admin:messages-unread-failed]", {
+      message: error instanceof Error ? error.message : "unknown",
+    });
+    return 0;
   }
 }
 

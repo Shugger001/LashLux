@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { sendContactNotification } from "@/lib/email";
+import { checkRateLimit, getRequestIp } from "@/lib/rate-limit";
 import {
   createClient,
   isSupabaseConfigured,
@@ -9,6 +10,21 @@ import { contactSchema } from "@/lib/validations";
 
 /** Validate, store, and notify the studio about a contact request. */
 export async function POST(request: Request) {
+  const limit = checkRateLimit({
+    key: `contact:${getRequestIp(request)}`,
+    limit: 5,
+    windowMs: 10 * 60 * 1000,
+  });
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Too many messages. Please try again in a few minutes." },
+      {
+        status: 429,
+        headers: { "Retry-After": String(limit.retryAfterSec) },
+      }
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();

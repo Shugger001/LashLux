@@ -5,6 +5,7 @@ import {
   CalendarOff,
   ChevronLeft,
   Images,
+  Inbox,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -27,6 +28,7 @@ import { cn } from "@/lib/utils";
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/appointments", label: "Appointments", icon: CalendarDays },
+  { href: "/admin/messages", label: "Messages", icon: Inbox },
   { href: "/admin/blocked-times", label: "Blocked times", icon: CalendarOff },
   { href: "/admin/services", label: "Services", icon: Scissors },
   { href: "/admin/gallery", label: "Gallery", icon: Images },
@@ -43,9 +45,11 @@ const NAV_ITEMS = [
 export function AdminShell({
   children,
   pendingCount = 0,
+  unreadMessages = 0,
 }: {
   children: React.ReactNode;
   pendingCount?: number;
+  unreadMessages?: number;
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -100,7 +104,9 @@ export function AdminShell({
               href={
                 item.href === "/admin/appointments" && pendingCount > 0
                   ? "/admin/appointments?status=pending"
-                  : item.href
+                  : item.href === "/admin/messages" && unreadMessages > 0
+                    ? "/admin/messages"
+                    : item.href
               }
               aria-current={isActive ? "page" : undefined}
               className={cn(
@@ -122,6 +128,18 @@ export function AdminShell({
                   )}
                 >
                   {pendingCount}
+                </span>
+              ) : null}
+              {item.href === "/admin/messages" && unreadMessages > 0 ? (
+                <span
+                  className={cn(
+                    "rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums",
+                    isActive
+                      ? "bg-primary-foreground/20 text-primary-foreground"
+                      : "bg-amber-100 text-amber-800"
+                  )}
+                >
+                  {unreadMessages}
                 </span>
               ) : null}
             </Link>
@@ -200,14 +218,24 @@ export function AdminShell({
             <Menu />
           </Button>
           <span className="ml-3 font-display text-2xl text-ink">Lash Lux Admin</span>
-          {pendingCount > 0 ? (
-            <Link
-              href="/admin/appointments?status=pending"
-              className="ml-auto rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-800 focus-ring"
-            >
-              {pendingCount} pending
-            </Link>
-          ) : null}
+          <div className="ml-auto flex items-center gap-2">
+            {pendingCount > 0 ? (
+              <Link
+                href="/admin/appointments?status=pending"
+                className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-800 focus-ring"
+              >
+                {pendingCount} pending
+              </Link>
+            ) : null}
+            {unreadMessages > 0 ? (
+              <Link
+                href="/admin/messages"
+                className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-800 focus-ring"
+              >
+                {unreadMessages} msgs
+              </Link>
+            ) : null}
+          </div>
         </header>
         <div className="mx-auto w-full max-w-7xl p-4 sm:p-6 lg:p-8">
           {children}

@@ -243,6 +243,7 @@ export function DashboardOverview({ stats }: { stats: AdminStats }) {
                 "Today's board",
                 `${stats.todayActiveCount}/${stats.todayCapacity} slots used`,
               ],
+              ["/admin/messages", "Contact inbox", "Read website contact messages"],
               ["/admin/services", "Edit services", "Update pricing and availability"],
               ["/admin/clients", "Message clients", "Send a thoughtful promotion"],
             ].map(([href, label, detail]) => (
