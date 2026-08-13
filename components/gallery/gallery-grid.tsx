@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { Play } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight, Play } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,9 +14,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { GALLERY_CATEGORIES } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+import { whatsappBookService } from "@/lib/whatsapp";
 import type { GalleryItem } from "@/types";
 
 const PAGE_SIZE = 6;
+type MediaFilter = "all" | "photos" | "videos";
 
 function isVideo(item: GalleryItem) {
   return item.media_type === "video" || item.image_url.endsWith(".mp4");
@@ -26,57 +30,128 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
   const [category, setCategory] = useState<(typeof GALLERY_CATEGORIES)[number]>(
     "All"
   );
+  const [media, setMedia] = useState<MediaFilter>("all");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const filtered = useMemo(
-    () =>
+  const filtered = useMemo(() => {
+    const byCategory =
       category === "All"
         ? items
-        : items.filter((item) => item.category === category),
-    [category, items]
-  );
+        : items.filter((item) => item.category === category);
 
-  useEffect(() => setVisibleCount(PAGE_SIZE), [category]);
+    const byMedia = byCategory.filter((item) => {
+      if (media === "photos") return !isVideo(item);
+      if (media === "videos") return isVideo(item);
+      return true;
+    });
+
+    return [...byMedia].sort((a, b) => Number(isVideo(a)) - Number(isVideo(b)));
+  }, [category, items, media]);
+
+  const visibleItems = filtered.slice(0, visibleCount);
+  const selectedItem =
+    selectedIndex == null ? null : filtered[selectedIndex] ?? null;
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+    setSelectedIndex(null);
+  }, [category, media]);
+
+  const showPrev = useCallback(() => {
+    setSelectedIndex((current) => {
+      if (current == null || !filtered.length) return current;
+      return (current - 1 + filtered.length) % filtered.length;
+    });
+  }, [filtered.length]);
+
+  const showNext = useCallback(() => {
+    setSelectedIndex((current) => {
+      if (current == null || !filtered.length) return current;
+      return (current + 1) % filtered.length;
+    });
+  }, [filtered.length]);
+
+  useEffect(() => {
+    if (selectedIndex == null) return;
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "ArrowLeft") showPrev();
+      if (event.key === "ArrowRight") showNext();
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [selectedIndex, showNext, showPrev]);
 
   return (
     <>
-      <div
-        className="flex flex-wrap gap-2"
-        role="group"
-        aria-label="Filter gallery by category"
-      >
-        {GALLERY_CATEGORIES.map((item) => (
-          <Button
-            key={item}
-            type="button"
-            size="sm"
-            variant={category === item ? "primary" : "outline"}
-            aria-pressed={category === item}
-            onClick={() => setCategory(item)}
+      <div className="sticky top-16 z-20 -mx-1 space-y-3 bg-[hsl(var(--background)/0.95)] px-1 py-3 backdrop-blur-sm sm:top-20">
+        <div
+          className="flex gap-2 overflow-x-auto pb-1"
+          role="group"
+          aria-label="Filter gallery by category"
+        >
+          {GALLERY_CATEGORIES.map((item) => (
+            <Button
+              key={item}
+              type="button"
+              size="sm"
+              variant={category === item ? "primary" : "outline"}
+              aria-pressed={category === item}
+              className="shrink-0"
+              onClick={() => setCategory(item)}
+            >
+              {item}
+            </Button>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div
+            className="flex gap-2"
+            role="group"
+            aria-label="Filter gallery by media type"
           >
-            {item}
-          </Button>
-        ))}
+            {(
+              [
+                ["all", "All media"],
+                ["photos", "Photos"],
+                ["videos", "Videos"],
+              ] as const
+            ).map(([value, label]) => (
+              <Button
+                key={value}
+                type="button"
+                size="sm"
+                variant={media === value ? "secondary" : "ghost"}
+                aria-pressed={media === value}
+                onClick={() => setMedia(value)}
+              >
+                {label}
+              </Button>
+            ))}
+          </div>
+          <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+            {filtered.length} look{filtered.length === 1 ? "" : "s"}
+          </p>
+        </div>
       </div>
 
-      <div className="mt-10 columns-1 gap-6 sm:columns-2 lg:columns-3">
-        {filtered.slice(0, visibleCount).map((item, index) => {
+      <div className="mt-6 columns-1 gap-6 sm:mt-8 sm:columns-2 lg:columns-3">
+        {visibleItems.map((item, index) => {
           const video = isVideo(item);
           return (
             <button
               key={item.id}
               type="button"
               className="frame-lux group relative mb-6 block w-full break-inside-avoid focus-ring"
-              onClick={() => setSelectedItem(item)}
+              onClick={() => setSelectedIndex(index)}
               aria-label={`Open ${item.title}${video ? " video" : ""}`}
             >
               <div
-                className={`frame-lux-inner overflow-hidden ${
-                  index % 3 === 1
-                    ? "relative aspect-[4/5]"
-                    : "relative aspect-[4/3]"
-                }`}
+                className={cn(
+                  "frame-lux-inner overflow-hidden",
+                  index % 3 === 1 ? "relative aspect-[4/5]" : "relative aspect-[4/3]"
+                )}
               >
                 {video ? (
                   <>
@@ -133,21 +208,22 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
       {filtered.length === 0 && (
         <div className="frame-lux mt-10">
           <p className="frame-lux-inner p-8 text-center text-muted-foreground">
-            No looks are available in this category yet.
+            No looks match these filters yet. Try another category or media type.
           </p>
         </div>
       )}
 
       <Dialog
         open={Boolean(selectedItem)}
-        onOpenChange={(open) => !open && setSelectedItem(null)}
+        onOpenChange={(open) => !open && setSelectedIndex(null)}
       >
         <DialogContent className="max-h-[90vh] overflow-y-auto p-0 sm:max-w-3xl">
-          {selectedItem && (
+          {selectedItem && selectedIndex != null ? (
             <>
               <div className="relative aspect-[4/3] overflow-hidden bg-ink sm:rounded-t-xl">
                 {isVideo(selectedItem) ? (
                   <video
+                    key={selectedItem.id}
                     className="absolute inset-0 h-full w-full object-contain"
                     src={selectedItem.image_url}
                     poster={selectedItem.poster_url ?? undefined}
@@ -168,20 +244,64 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
                     priority
                   />
                 )}
+                {filtered.length > 1 ? (
+                  <>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="secondary"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 bg-cream/90"
+                      aria-label="Previous look"
+                      onClick={showPrev}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="secondary"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 bg-cream/90"
+                      aria-label="Next look"
+                      onClick={showNext}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </>
+                ) : null}
               </div>
               <DialogHeader className="p-6 sm:p-8">
-                <p className="eyebrow">{selectedItem.category}</p>
+                <p className="eyebrow">
+                  {selectedItem.category}
+                  {isVideo(selectedItem) ? " · Video" : ""}
+                  {filtered.length > 1
+                    ? ` · ${selectedIndex + 1} of ${filtered.length}`
+                    : ""}
+                </p>
                 <DialogTitle className="text-4xl text-ink">
                   {selectedItem.title}
                 </DialogTitle>
-                {selectedItem.description && (
+                {selectedItem.description ? (
                   <DialogDescription className="text-base">
                     {selectedItem.description}
                   </DialogDescription>
-                )}
+                ) : null}
+                <div className="flex flex-col gap-3 pt-4 sm:flex-row">
+                  <Button asChild>
+                    <Link href="/book">Book this look</Link>
+                  </Button>
+                  <Button asChild variant="outline">
+                    <a
+                      href={whatsappBookService(selectedItem.title)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      WhatsApp about this look
+                    </a>
+                  </Button>
+                </div>
               </DialogHeader>
             </>
-          )}
+          ) : null}
         </DialogContent>
       </Dialog>
     </>

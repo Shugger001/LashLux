@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { SITE } from "@/lib/constants";
 import {
   createAdminClient,
   createClient,
   isSupabaseConfigured,
 } from "@/lib/supabase/server";
 import { cn, formatTime } from "@/lib/utils";
+import { whatsappHref } from "@/lib/whatsapp";
 import type { AppointmentStatus } from "@/types";
 
 export const metadata: Metadata = {
@@ -34,6 +36,69 @@ const statusStyles: Record<AppointmentStatus, string> = {
 function getServiceName(service: AccountAppointment["service"]) {
   if (Array.isArray(service)) return service[0]?.name ?? "Lash service";
   return service?.name ?? "Lash service";
+}
+
+function appointmentStamp(appointment: AccountAppointment) {
+  return `${appointment.appointment_date}T${appointment.appointment_time}`;
+}
+
+function isUpcoming(appointment: AccountAppointment) {
+  if (
+    appointment.status === "cancelled" ||
+    appointment.status === "completed" ||
+    appointment.status === "no_show"
+  ) {
+    return false;
+  }
+  const when = new Date(
+    `${appointment.appointment_date}T${appointment.appointment_time}`
+  );
+  return Number.isFinite(when.getTime()) && when.getTime() >= Date.now();
+}
+
+function AppointmentRow({ appointment }: { appointment: AccountAppointment }) {
+  const serviceName = getServiceName(appointment.service);
+  const dateLabel = new Date(
+    `${appointment.appointment_date}T12:00:00`
+  ).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  const timeLabel = formatTime(appointment.appointment_time);
+  const helpHref = whatsappHref(
+    `Hi Lash Lux! I have a question about my ${serviceName} appointment on ${dateLabel} at ${timeLabel} (ref ${appointment.id.slice(0, 8)}).`
+  );
+
+  return (
+    <li className="flex flex-col gap-4 py-5 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h3 className="font-display text-xl text-ink">{serviceName}</h3>
+        <p className="mt-1 tabular-nums text-sm text-muted-foreground">
+          {dateLabel} at {timeLabel}
+        </p>
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <span
+          className={cn(
+            "w-fit rounded-full px-3 py-1 text-xs font-semibold capitalize",
+            statusStyles[appointment.status]
+          )}
+        >
+          {appointment.status.replace("_", " ")}
+        </span>
+        {(appointment.status === "pending" ||
+          appointment.status === "confirmed") && (
+          <Button asChild size="sm" variant="outline">
+            <a href={helpHref} target="_blank" rel="noreferrer">
+              WhatsApp
+            </a>
+          </Button>
+        )}
+      </div>
+    </li>
+  );
 }
 
 /** Client account view with appointments linked by auth ID or booking email. */
@@ -81,13 +146,16 @@ export default async function AccountPage() {
     });
 
     appointments = Array.from(uniqueAppointments.values()).sort((a, b) =>
-      `${b.appointment_date}T${b.appointment_time}`.localeCompare(
-        `${a.appointment_date}T${a.appointment_time}`
-      )
+      appointmentStamp(b).localeCompare(appointmentStamp(a))
     );
   } catch {
     loadError = true;
   }
+
+  const upcoming = appointments.filter(isUpcoming).sort((a, b) =>
+    appointmentStamp(a).localeCompare(appointmentStamp(b))
+  );
+  const past = appointments.filter((item) => !isUpcoming(item));
 
   return (
     <section className="section-pad">
@@ -100,7 +168,7 @@ export default async function AccountPage() {
                 Your appointments.
               </h1>
               <p className="mt-3 text-pretty text-muted-foreground">
-                Track pending requests and confirmed eyelash fixing appointments in one place.
+                Track upcoming sessions and past eyelash fixing visits in one place.
               </p>
             </div>
             <Button asChild>
@@ -118,41 +186,71 @@ export default async function AccountPage() {
                   <p className="mt-2 text-muted-foreground">
                     Please refresh the page or contact the studio for help.
                   </p>
+                  <Button asChild className="mt-6" variant="outline">
+                    <a href={SITE.whatsapp} target="_blank" rel="noreferrer">
+                      WhatsApp the studio
+                    </a>
+                  </Button>
                 </div>
               ) : appointments.length ? (
-                <ul className="divide-y divide-border">
-                  {appointments.map((appointment) => (
-                    <li
-                      key={appointment.id}
-                      className="flex flex-col gap-4 py-5 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
-                    >
-                      <div>
-                        <h2 className="font-display text-xl text-ink">
-                          {getServiceName(appointment.service)}
-                        </h2>
-                        <p className="mt-1 tabular-nums text-sm text-muted-foreground">
-                          {new Date(
-                            `${appointment.appointment_date}T12:00:00`
-                          ).toLocaleDateString("en-US", {
-                            weekday: "long",
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                          })}{" "}
-                          at {formatTime(appointment.appointment_time)}
-                        </p>
-                      </div>
-                      <span
-                        className={cn(
-                          "w-fit rounded-full px-3 py-1 text-xs font-semibold capitalize",
-                          statusStyles[appointment.status]
-                        )}
+                <div className="space-y-10">
+                  <section aria-labelledby="upcoming-title">
+                    <div className="flex items-end justify-between gap-3">
+                      <h2
+                        id="upcoming-title"
+                        className="font-display text-2xl text-ink"
                       >
-                        {appointment.status}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                        Upcoming
+                      </h2>
+                      <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                        {upcoming.length}
+                      </p>
+                    </div>
+                    {upcoming.length ? (
+                      <ul className="mt-4 divide-y divide-border">
+                        {upcoming.map((appointment) => (
+                          <AppointmentRow
+                            key={appointment.id}
+                            appointment={appointment}
+                          />
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="mt-4 rounded-xl bg-secondary/70 p-5 text-sm text-muted-foreground">
+                        No upcoming appointments.{" "}
+                        <Link href="/book" className="font-medium text-rose-deep hover:underline">
+                          Book your next set
+                        </Link>
+                        .
+                      </p>
+                    )}
+                  </section>
+
+                  <section aria-labelledby="past-title">
+                    <div className="flex items-end justify-between gap-3">
+                      <h2 id="past-title" className="font-display text-2xl text-ink">
+                        Past
+                      </h2>
+                      <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                        {past.length}
+                      </p>
+                    </div>
+                    {past.length ? (
+                      <ul className="mt-4 divide-y divide-border">
+                        {past.map((appointment) => (
+                          <AppointmentRow
+                            key={appointment.id}
+                            appointment={appointment}
+                          />
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="mt-4 text-sm text-muted-foreground">
+                        Past visits will appear here after your first appointment.
+                      </p>
+                    )}
+                  </section>
+                </div>
               ) : (
                 <div className="py-10 text-center">
                   <h2 className="font-display text-2xl text-ink">
@@ -194,7 +292,9 @@ function SignedOutAccount() {
               </Button>
               <Button asChild variant="outline">
                 <a
-                  href="https://wa.me/233547986899?text=Hi%20Lash%20Lux!%20I%E2%80%99d%20like%20to%20book%20eyelash%20fixing."
+                  href={whatsappHref(
+                    "Hi Lash Lux! I'd like to book eyelash fixing."
+                  )}
                   target="_blank"
                   rel="noreferrer"
                 >
