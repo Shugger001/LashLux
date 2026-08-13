@@ -179,13 +179,15 @@ export async function sendStatusUpdateEmail(input: {
   return { skipped: false as const };
 }
 
-/** 24-hour appointment reminder. */
+/** 24-hour appointment reminder for confirmed bookings. */
 export async function sendBookingReminder(input: {
   to: string;
   clientName: string;
   serviceName: string;
   date: string;
   time: string;
+  manageHref?: string;
+  reference?: string;
 }) {
   const resend = getResend();
   if (!resend) {
@@ -199,23 +201,37 @@ export async function sendBookingReminder(input: {
   const serviceName = escapeHtml(input.serviceName);
   const date = escapeHtml(input.date);
   const time = escapeHtml(input.time);
+  const reference = input.reference ? escapeHtml(input.reference) : "";
+  const manageHref = input.manageHref ?? SITE.whatsapp;
 
-  await resend.emails.send({
+  const { error } = await resend.emails.send({
     from,
     to: input.to,
-    subject: `Reminder, ${input.serviceName} tomorrow`,
+    subject: `Reminder: ${input.serviceName} tomorrow at ${input.time}`,
     html: `
-      <div style="font-family:Georgia,serif;color:#4a3a35;line-height:1.6">
-        <h1 style="color:#c17a6b;font-weight:400">See you soon, ${clientName}</h1>
-        <p>This is a friendly reminder for your <strong>${serviceName}</strong> appointment.</p>
-        <p><strong>Date:</strong> ${date}<br/>
-        <strong>Time:</strong> ${time}<br/>
-        <strong>Where:</strong> ${escapeHtml(SITE.address)}</p>
-        <p>Arrive with clean, makeup-free lashes. Need to reschedule? Reply to this email or WhatsApp us.</p>
+      <div style="font-family:Georgia,serif;color:#4a3a35;line-height:1.6;max-width:560px">
+        <h1 style="color:#c17a6b;font-weight:400;font-size:28px">See you tomorrow, ${clientName}</h1>
+        <p>This is your reminder for <strong>${serviceName}</strong> at ${SITE.name}.</p>
+        <p>
+          <strong>When:</strong> ${date} at ${time}<br/>
+          <strong>Where:</strong> ${escapeHtml(SITE.address)}<br/>
+          <strong>Phone:</strong> ${escapeHtml(SITE.phoneDisplay)}
+          ${reference ? `<br/><strong>Reference:</strong> ${reference}` : ""}
+        </p>
+        <p>Arrive with clean, makeup-free lashes so we can start on time.</p>
+        <p style="margin:24px 0">
+          <a href="${escapeHtml(manageHref)}" style="display:inline-block;background:#c17a6b;color:#fff7f4;text-decoration:none;padding:12px 18px;border-radius:999px">
+            WhatsApp if you need to reschedule
+          </a>
+        </p>
         <p style="color:#8a756c">- ${SITE.name}</p>
       </div>
     `,
   });
+
+  if (error) {
+    throw new Error(error.message ?? "Reminder email failed");
+  }
 
   return { skipped: false as const };
 }

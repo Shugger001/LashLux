@@ -298,6 +298,11 @@ export function AppointmentsManager({
                         : appointment.payment_status === "pending"
                           ? " · deposit pending"
                           : ""}
+                      {appointment.reminder_sent_at
+                        ? " · reminder sent"
+                        : appointment.status === "confirmed"
+                          ? " · reminder queued"
+                          : ""}
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -373,7 +378,7 @@ export function AppointmentsManager({
                         }
                       />
                     </th>
-                    {["Client", "Service", "Date & time", "Value", "Status", "Actions"].map((heading) => (
+                    {["Client", "Service", "Date & time", "Value", "Status", "Reminder", "Actions"].map((heading) => (
                       <th key={heading} className="px-4 py-3 font-medium">{heading}</th>
                     ))}
                   </tr>
@@ -425,6 +430,19 @@ export function AppointmentsManager({
                             ))}
                           </SelectContent>
                         </Select>
+                      </td>
+                      <td className="px-4 py-4 text-xs text-muted-foreground">
+                        {appointment.reminder_sent_at ? (
+                          <span className="rounded-full bg-emerald-50 px-2 py-1 font-medium text-emerald-800">
+                            Sent
+                          </span>
+                        ) : appointment.status === "confirmed" ? (
+                          <span className="rounded-full bg-amber-50 px-2 py-1 font-medium text-amber-800">
+                            Queued
+                          </span>
+                        ) : (
+                          <span>—</span>
+                        )}
                       </td>
                       <td className="px-4 py-4">
                         <Button
