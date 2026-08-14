@@ -292,7 +292,7 @@ export async function getAdminContactMessages(): Promise<ContactMessage[]> {
     const admin = createAdminClient();
     const { data, error } = await admin
       .from("contact_messages")
-      .select("id, name, email, message, is_read, created_at")
+      .select("id, name, email, phone, message, is_read, created_at")
       .order("created_at", { ascending: false })
       .limit(200);
     if (error) {

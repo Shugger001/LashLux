@@ -43,6 +43,7 @@ export async function POST(request: Request) {
   const message = {
     name: parsed.data.name.trim(),
     email: parsed.data.email.trim().toLowerCase(),
+    phone: parsed.data.phone.trim(),
     message: parsed.data.message.trim(),
   };
 

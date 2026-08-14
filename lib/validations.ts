@@ -20,6 +20,7 @@ export const signupSchema = z.object({
 export const contactSchema = z.object({
   name: z.string().min(2, "Name is required").max(80),
   email: z.string().email("Enter a valid email"),
+  phone: z.string().min(7, "Enter a valid phone number").max(20),
   message: z.string().min(10, "Message must be at least 10 characters").max(2000),
 });
 

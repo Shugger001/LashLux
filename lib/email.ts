@@ -83,6 +83,7 @@ export async function sendBookingConfirmation(input: {
 export async function sendContactNotification(input: {
   name: string;
   email: string;
+  phone: string;
   message: string;
 }) {
   const resend = getResend();
@@ -95,6 +96,7 @@ export async function sendContactNotification(input: {
   const adminEmail = process.env.ADMIN_NOTIFY_EMAIL ?? SITE.email;
   const name = escapeHtml(input.name);
   const email = escapeHtml(input.email);
+  const phone = escapeHtml(input.phone);
   const message = escapeHtml(input.message).replaceAll("\n", "<br/>");
 
   await resend.emails.send({
@@ -102,7 +104,7 @@ export async function sendContactNotification(input: {
     to: adminEmail,
     replyTo: input.email,
     subject: `Contact form, ${input.name}`,
-    html: `<p><strong>${name}</strong> (${email})</p><p>${message}</p>`,
+    html: `<p><strong>${name}</strong> (${email})</p><p><strong>Phone / WhatsApp:</strong> ${phone}</p><p>${message}</p>`,
   });
 
   return { skipped: false as const };

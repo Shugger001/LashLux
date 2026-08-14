@@ -1,6 +1,6 @@
 "use client";
 
-import { Inbox, Mail, MailOpen, Search, Trash2 } from "lucide-react";
+import { Inbox, Mail, MailOpen, MessageCircle, Phone, Search, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { telHref, whatsappToClient } from "@/lib/whatsapp";
 import type { ContactMessage } from "@/types";
 
 /** Searchable contact inbox with read/unread and delete actions. */
@@ -29,7 +30,7 @@ export function MessagesManager({
       if (filter === "unread" && message.is_read) return false;
       if (filter === "read" && !message.is_read) return false;
       if (!needle) return true;
-      return `${message.name} ${message.email} ${message.message}`
+      return `${message.name} ${message.email} ${message.phone ?? ""} ${message.message}`
         .toLowerCase()
         .includes(needle);
     });
@@ -37,6 +38,16 @@ export function MessagesManager({
 
   const selected =
     filtered.find((item) => item.id === selectedId) ?? filtered[0] ?? null;
+
+  const selectedCallHref = selected?.phone
+    ? telHref(selected.phone)
+    : undefined;
+  const selectedWhatsAppHref = selected?.phone
+    ? whatsappToClient(
+        selected.phone,
+        `Hi ${selected.name}, thanks for messaging Lash Lux.`
+      )
+    : undefined;
 
   const unreadCount = messages.filter((item) => !item.is_read).length;
 
@@ -115,7 +126,7 @@ export function MessagesManager({
             <Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search name, email, or message"
+              placeholder="Search name, email, phone, or message"
               className="pl-9"
             />
           </label>
@@ -176,7 +187,9 @@ export function MessagesManager({
                     ) : null}
                   </div>
                   <p className="mt-1 truncate text-xs text-muted-foreground">
-                    {message.email}
+                    {message.phone
+                      ? `${message.phone} · ${message.email}`
+                      : message.email}
                   </p>
                   <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
                     {message.message}
@@ -208,6 +221,9 @@ export function MessagesManager({
                     >
                       {selected.email}
                     </a>
+                    {selected.phone ? (
+                      <p className="mt-1 text-sm text-ink">{selected.phone}</p>
+                    ) : null}
                     <p className="mt-2 text-xs uppercase tracking-[0.12em] text-muted-foreground">
                       {new Date(selected.created_at).toLocaleString("en-US", {
                         weekday: "short",
@@ -220,6 +236,24 @@ export function MessagesManager({
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2">
+                    {selectedCallHref ? (
+                      <Button asChild size="sm" variant="outline">
+                        <a href={selectedCallHref}>
+                          <Phone aria-hidden /> Call
+                        </a>
+                      </Button>
+                    ) : null}
+                    {selectedWhatsAppHref ? (
+                      <Button asChild size="sm" variant="outline">
+                        <a
+                          href={selectedWhatsAppHref}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <MessageCircle aria-hidden /> WhatsApp
+                        </a>
+                      </Button>
+                    ) : null}
                     <Button
                       type="button"
                       size="sm"

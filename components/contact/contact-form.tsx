@@ -58,7 +58,7 @@ export function ContactForm() {
     formState: { errors, isSubmitting },
   } = useForm<ContactInput>({
     resolver: zodResolver(contactSchema),
-    defaultValues: { name: "", email: "", message: "" },
+    defaultValues: { name: "", email: "", phone: "", message: "" },
   });
 
   const messageValue = watch("message");
@@ -172,6 +172,25 @@ export function ContactForm() {
           {errors.email && (
             <p id="contact-email-error" className="text-sm text-destructive">
               {errors.email.message}
+            </p>
+          )}
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="contact-phone">Phone / WhatsApp</Label>
+          <Input
+            id="contact-phone"
+            type="tel"
+            autoComplete="tel"
+            inputMode="tel"
+            aria-invalid={Boolean(errors.phone)}
+            aria-describedby={
+              errors.phone ? "contact-phone-error" : undefined
+            }
+            {...register("phone")}
+          />
+          {errors.phone && (
+            <p id="contact-phone-error" className="text-sm text-destructive">
+              {errors.phone.message}
             </p>
           )}
         </div>
