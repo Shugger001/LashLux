@@ -256,7 +256,7 @@ export function AppointmentsManager({
             <Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search client or service"
+              placeholder="Search client, phone, or service"
               className="pl-9"
             />
           </label>
@@ -355,7 +355,7 @@ export function AppointmentsManager({
                   key={appointment.id}
                   className="flex flex-col gap-3 rounded-xl border border-border bg-secondary/40 p-4 sm:flex-row sm:items-center sm:justify-between"
                 >
-                  <div>
+                  <div className="space-y-2">
                     <p className="font-medium">
                       {formatTime(appointment.appointment_time)} ·{" "}
                       {appointment.client_name ?? "Client"}
@@ -373,6 +373,7 @@ export function AppointmentsManager({
                           ? " · reminder queued"
                           : ""}
                     </p>
+                    <ClientPhoneActions appointment={appointment} compact />
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {(["confirmed", "completed", "no_show", "cancelled"] as AppointmentStatus[]).map(
@@ -419,6 +420,9 @@ export function AppointmentsManager({
                       </div>
                       <p className="mt-2 text-sm">{appointment.client_name ?? "Client"}</p>
                       <p className="text-xs text-muted-foreground">{appointment.service?.name}</p>
+                      <div className="mt-2">
+                        <ClientPhoneActions appointment={appointment} compact />
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -447,7 +451,7 @@ export function AppointmentsManager({
                         }
                       />
                     </th>
-                    {["Client", "Service", "Date & time", "Value", "Status", "Reminder", "Actions"].map((heading) => (
+                    {["Client", "Phone", "Service", "Date & time", "Value", "Status", "Reminder", "Actions"].map((heading) => (
                       <th key={heading} className="px-4 py-3 font-medium">{heading}</th>
                     ))}
                   </tr>
@@ -471,7 +475,14 @@ export function AppointmentsManager({
                       </td>
                       <td className="px-4 py-4">
                         <span className="block font-medium">{appointment.client_name ?? "Client"}</span>
-                        <span className="block text-xs text-muted-foreground">{appointment.client_email}</span>
+                        {appointment.client_email ? (
+                          <span className="block text-xs text-muted-foreground">
+                            {appointment.client_email}
+                          </span>
+                        ) : null}
+                      </td>
+                      <td className="px-4 py-4">
+                        <ClientPhoneActions appointment={appointment} />
                       </td>
                       <td className="px-4 py-4">{appointment.service?.name ?? "Service"}</td>
                       <td className="px-4 py-4 text-muted-foreground">
