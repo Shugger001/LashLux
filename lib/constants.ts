@@ -25,10 +25,13 @@ export const SITE = {
   phoneDisplay: "054 798 6899",
   whatsapp: "https://wa.me/233547986899",
   address: "Manna Apartment, Old Ashongman",
+  /** Exact studio coordinates (Accra / Old Ashongman). */
+  latitude: 5.716256,
+  longitude: -0.213092,
   mapsUrl:
-    "https://www.google.com/maps/search/?api=1&query=Manna+Apartment+Old+Ashongman",
+    "https://www.google.com/maps/search/?api=1&query=5.7162560%2C-0.2130920",
   mapsEmbedUrl:
-    "https://maps.google.com/maps?q=Manna%20Apartment%20Old%20Ashongman&hl=en&z=16&output=embed",
+    "https://maps.google.com/maps?q=5.7162560%2C-0.2130920&ll=5.7162560%2C-0.2130920&hl=en&z=17&output=embed",
   instagram: "https://instagram.com/lashlux_",
   instagramHandle: "@lashlux_",
   snapchat: "c_tamidu",

@@ -143,9 +143,10 @@ export function localBusinessJsonLd() {
     },
     geo: {
       "@type": "GeoCoordinates",
-      latitude: 5.703,
-      longitude: -0.22,
+      latitude: SITE.latitude,
+      longitude: SITE.longitude,
     },
+    hasMap: SITE.mapsUrl,
     openingHoursSpecification: [
       {
         "@type": "OpeningHoursSpecification",
