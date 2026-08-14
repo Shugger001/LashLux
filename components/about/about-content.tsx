@@ -8,8 +8,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { DirectionsButton } from "@/components/layout/directions-link";
 import { Button } from "@/components/ui/button";
-import { FAQ_ITEMS } from "@/lib/constants";
+import { FAQ_ITEMS, SITE } from "@/lib/constants";
 
 const hygieneStandards = [
   "Single-use disposables for every client",
@@ -37,11 +38,14 @@ export function AboutContent() {
             <p className="mt-4 leading-7 text-muted-foreground">
               Every appointment starts with a consultation for comfort, retention,
               and a look that still feels like you. Full sets, fills, and safe
-              removals available at Manna Apartment, Old Ashongman.
+              removals available at {SITE.address}.
             </p>
-            <Button asChild size="lg" className="mt-8">
-              <Link href="/book">Book eyelash fixing</Link>
-            </Button>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button asChild size="lg">
+                <Link href="/book">Book eyelash fixing</Link>
+              </Button>
+              <DirectionsButton />
+            </div>
           </div>
           <div className="frame-lux">
             <div className="frame-lux-inner relative aspect-[4/5] overflow-hidden">

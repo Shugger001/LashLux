@@ -1,7 +1,11 @@
 import Link from "next/link";
-import { AtSign, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand/logo";
+import {
+  DirectionsAddress,
+  DirectionsButton,
+} from "@/components/layout/directions-link";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/ui/fade-in";
 import { DAY_LABELS, DEFAULT_HOURS, SITE } from "@/lib/constants";
@@ -15,7 +19,9 @@ export function HoursContactCta() {
           <h2 className="mt-3 font-editorial text-3xl text-ink sm:mt-4 sm:text-5xl lg:text-6xl">
             Ready when you are.
           </h2>
-          <p className="mt-3 font-script text-3xl text-rose sm:mt-4 sm:text-5xl">{SITE.badge}</p>
+          <p className="mt-3 font-script text-3xl text-rose sm:mt-4 sm:text-5xl">
+            {SITE.badge}
+          </p>
           <div className="mt-4 h-px w-14 bg-gradient-to-r from-[#c9a27e] to-transparent sm:mt-5 sm:w-16" />
           <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground sm:mt-5 sm:text-base sm:leading-7">
             Book a classic, hybrid, volume, or mega volume set online, WhatsApp
@@ -25,26 +31,26 @@ export function HoursContactCta() {
             <Button asChild size="lg" className="w-full sm:w-auto">
               <Link href="/book">Book fixing</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="w-full sm:w-auto"
+            >
               <a href={SITE.whatsapp} target="_blank" rel="noreferrer">
                 <MessageCircle className="h-4 w-4" aria-hidden />
                 WhatsApp
               </a>
             </Button>
-            <Button asChild size="lg" variant="ghost" className="w-full sm:w-auto">
-              <a href={SITE.instagram} target="_blank" rel="noreferrer">
-                <AtSign className="h-4 w-4" aria-hidden />
-                {SITE.instagramHandle}
-              </a>
-            </Button>
+            <DirectionsButton className="w-full sm:w-auto" />
           </div>
-          <div className="mt-8 space-y-2 text-sm">
+          <div className="mt-8 space-y-3 text-sm">
             <p>
               <a className="hover:text-primary" href={`tel:${SITE.phone}`}>
                 {SITE.phoneDisplay}
               </a>
             </p>
-            <p className="text-muted-foreground">{SITE.address}</p>
+            <DirectionsAddress />
             <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
               Snapchat: {SITE.snapchat}
             </p>
@@ -76,7 +82,8 @@ export function HoursContactCta() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-6 rounded-xl border border-[#c9a27e]/30 bg-blush/50 px-4 py-3 text-center text-xs uppercase tracking-[0.14em] text-ink">
+              <DirectionsButton className="mt-6 w-full" />
+              <p className="mt-4 rounded-xl border border-[#c9a27e]/30 bg-blush/50 px-4 py-3 text-center text-xs uppercase tracking-[0.14em] text-ink">
                 {SITE.policy}
               </p>
             </div>

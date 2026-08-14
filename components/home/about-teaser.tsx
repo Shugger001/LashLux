@@ -2,6 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
+import {
+  DirectionsAddress,
+  DirectionsButton,
+} from "@/components/layout/directions-link";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/ui/fade-in";
 import { SITE } from "@/lib/constants";
@@ -12,10 +16,6 @@ export function AboutTeaser() {
       <div className="container-page grid items-center gap-7 lg:grid-cols-2 lg:gap-16">
         <FadeIn>
           <div className="frame-lux">
-            {/*
-              Keep height from aspect-ratio only — max-height + aspect-ratio
-              can leave empty space beside the image on mobile WebKit.
-            */}
             <div className="frame-lux-inner relative aspect-[4/5] w-full overflow-hidden">
               <Image
                 src="/images/hero-lashes.jpg"
@@ -55,10 +55,11 @@ export function AboutTeaser() {
             <Button asChild variant="outline">
               <Link href="/book">Book fixing</Link>
             </Button>
+            <DirectionsButton size="md" />
           </div>
-          <p className="mt-8 text-sm tracking-wide text-muted-foreground">
-            {SITE.address}
-          </p>
+          <div className="mt-8 text-sm tracking-wide text-muted-foreground">
+            <DirectionsAddress />
+          </div>
         </FadeIn>
       </div>
     </section>

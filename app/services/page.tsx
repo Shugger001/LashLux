@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Droplets, Eye, Moon, Sparkles } from "lucide-react";
 
+import { DirectionsButton } from "@/components/layout/directions-link";
 import { ServicesCatalog } from "@/components/services/services-catalog";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/ui/fade-in";
@@ -116,6 +117,7 @@ export default async function ServicesPage() {
                     WhatsApp
                   </a>
                 </Button>
+                <DirectionsButton className="w-full sm:w-auto" />
               </div>
             </div>
           </div>

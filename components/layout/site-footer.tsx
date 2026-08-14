@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 import { BrandLogo, BrandWordmark } from "@/components/brand/logo";
 import { InstagramStrip } from "@/components/home/instagram-strip";
+import { DirectionsButton } from "@/components/layout/directions-link";
 import { DAY_LABELS, DEFAULT_HOURS, SITE } from "@/lib/constants";
 
 export function SiteFooter() {
@@ -29,7 +30,9 @@ export function SiteFooter() {
         <div className="container-page relative grid gap-8 py-9 pb-[max(2.25rem,calc(env(safe-area-inset-bottom)+1.5rem))] md:grid-cols-3 md:gap-12 md:py-16">
           <div>
             <BrandWordmark size="footer" className="rounded-lg bg-cream p-1.5" />
-            <p className="mt-4 font-script text-3xl text-[#e8c4a8] sm:mt-5">{SITE.slogan}</p>
+            <p className="mt-4 font-script text-3xl text-[#e8c4a8] sm:mt-5">
+              {SITE.slogan}
+            </p>
             <p className="mt-2 text-sm text-cream/70">{SITE.promise}</p>
             <a
               href={SITE.instagram}
@@ -48,17 +51,36 @@ export function SiteFooter() {
             </p>
             <ul className="mt-4 space-y-3 text-sm text-cream/80">
               <li className="flex gap-3">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#c9a27e]" aria-hidden />
-                {SITE.address}
+                <MapPin
+                  className="mt-0.5 h-4 w-4 shrink-0 text-[#c9a27e]"
+                  aria-hidden
+                />
+                <a
+                  href={SITE.mapsUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-[#e8c4a8]"
+                >
+                  {SITE.address}
+                  <span className="mt-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-cream/50">
+                    Get directions
+                  </span>
+                </a>
               </li>
               <li className="flex gap-3">
-                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-[#c9a27e]" aria-hidden />
+                <Phone
+                  className="mt-0.5 h-4 w-4 shrink-0 text-[#c9a27e]"
+                  aria-hidden
+                />
                 <a href={`tel:${SITE.phone}`} className="hover:text-[#e8c4a8]">
                   {SITE.phoneDisplay}
                 </a>
               </li>
               <li className="flex gap-3">
-                <MessageCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#c9a27e]" aria-hidden />
+                <MessageCircle
+                  className="mt-0.5 h-4 w-4 shrink-0 text-[#c9a27e]"
+                  aria-hidden
+                />
                 <a
                   href={SITE.whatsapp}
                   target="_blank"
@@ -69,6 +91,10 @@ export function SiteFooter() {
                 </a>
               </li>
             </ul>
+            <DirectionsButton
+              size="sm"
+              className="mt-5 border-[#c9a27e]/40 bg-cream text-ink hover:bg-cream/90"
+            />
             <p className="mt-4 text-xs uppercase tracking-[0.12em] text-cream/50">
               {SITE.policy}
             </p>
@@ -79,14 +105,14 @@ export function SiteFooter() {
               Hours
             </p>
             <ul className="mt-4 space-y-2 text-sm text-cream/80">
-              {(Object.keys(DEFAULT_HOURS) as Array<keyof typeof DEFAULT_HOURS>).map(
-                (key) => (
-                  <li key={key} className="flex justify-between gap-4">
-                    <span>{DAY_LABELS[key]}</span>
-                    <span>{DEFAULT_HOURS[key]}</span>
-                  </li>
-                )
-              )}
+              {(
+                Object.keys(DEFAULT_HOURS) as Array<keyof typeof DEFAULT_HOURS>
+              ).map((key) => (
+                <li key={key} className="flex justify-between gap-4">
+                  <span>{DAY_LABELS[key]}</span>
+                  <span>{DEFAULT_HOURS[key]}</span>
+                </li>
+              ))}
             </ul>
             <div className="mt-8 inline-flex items-center gap-3 rounded-2xl border border-[#c9a27e]/40 bg-cream/95 px-3 py-2">
               <BrandLogo size="sm" />
@@ -112,6 +138,14 @@ export function SiteFooter() {
               <Link href="/contact" className="hover:text-cream">
                 Contact
               </Link>
+              <a
+                href={SITE.mapsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-cream"
+              >
+                Directions
+              </a>
             </div>
           </div>
         </div>

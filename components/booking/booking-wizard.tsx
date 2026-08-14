@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { trackEvent, captureException } from "@/lib/analytics";
+import { SITE } from "@/lib/constants";
 import { isBookableDate } from "@/lib/schedule";
 import {
   type BookingDetailsInput,
@@ -24,6 +25,7 @@ import {
 import { cn, formatCurrency, formatDuration, formatTime } from "@/lib/utils";
 import { whatsappBookingFollowUp } from "@/lib/whatsapp";
 import type { Service } from "@/types";
+import { DirectionsButton } from "@/components/layout/directions-link";
 
 const STEP_LABELS = ["Service", "Date", "Time", "Details", "Notes", "Confirmed"];
 const DEPOSIT_ENABLED =
@@ -579,10 +581,14 @@ export function BookingWizard({ services }: { services: Service[] }) {
                   Message us on WhatsApp
                 </a>
               </Button>
-              <Button asChild variant="outline">
+              <DirectionsButton />
+              <Button asChild variant="ghost">
                 <Link href="/">Return home</Link>
               </Button>
             </div>
+            <p className="mx-auto mt-4 max-w-md text-xs text-muted-foreground">
+              Studio: {SITE.address}
+            </p>
           </section>
         )}
       </div>

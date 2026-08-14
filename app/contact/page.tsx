@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AtSign, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { ContactForm } from "@/components/contact/contact-form";
+import { DirectionsButton } from "@/components/layout/directions-link";
 import { Button } from "@/components/ui/button";
 import { DAY_LABELS, DEFAULT_HOURS, SITE } from "@/lib/constants";
 import { getStudioOpenStatus } from "@/lib/schedule";
@@ -76,11 +77,7 @@ export default function ContactPage() {
                   WhatsApp
                 </a>
               </Button>
-              <Button asChild size="lg" variant="ghost">
-                <a href={SITE.mapsUrl} target="_blank" rel="noreferrer">
-                  Get directions
-                </a>
-              </Button>
+              <DirectionsButton />
             </div>
 
             <address className="mt-8 space-y-4 text-sm not-italic">
@@ -213,11 +210,7 @@ export default function ContactPage() {
                     )
                   )}
                 </ul>
-                <Button asChild className="mt-8" variant="outline">
-                  <a href={SITE.mapsUrl} target="_blank" rel="noreferrer">
-                    Get directions
-                  </a>
-                </Button>
+                <DirectionsButton className="mt-8" />
               </div>
             </div>
           </div>

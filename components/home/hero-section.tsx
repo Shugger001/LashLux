@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
+import { DirectionsButton } from "@/components/layout/directions-link";
 import { BrandLogo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/constants";
@@ -90,6 +91,11 @@ export function HeroSection() {
                 WhatsApp to book
               </a>
             </Button>
+            <DirectionsButton
+              size="lg"
+              variant="ghost"
+              className="w-full text-cream hover:bg-ink/35 hover:text-cream sm:w-auto"
+            />
           </div>
 
           <p className="mt-4 text-[10px] uppercase tracking-[0.18em] text-cream/70 sm:mt-8 sm:text-[11px]">
