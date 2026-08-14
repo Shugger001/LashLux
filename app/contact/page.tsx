@@ -166,13 +166,26 @@ export default function ContactPage() {
         <div className="container-page">
           <div className="frame-lux">
             <div className="frame-lux-inner grid overflow-hidden lg:grid-cols-2">
-              <iframe
-                title="Map showing Lash Lux at Manna Apartment, Old Ashongman"
-                src={SITE.mapsEmbedUrl}
-                className="h-[360px] w-full border-0 lg:h-full lg:min-h-[420px]"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+              <div className="relative min-h-[360px] bg-secondary lg:min-h-[420px]">
+                <iframe
+                  title="Map showing Lash Lux at Manna Apartment, Old Ashongman"
+                  src={SITE.mapsEmbedUrl}
+                  className="absolute inset-0 h-full w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/50 to-transparent p-4 pt-16 lg:hidden">
+                  <a
+                    href={SITE.mapsUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="pointer-events-auto inline-flex rounded-full bg-cream px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink focus-ring"
+                  >
+                    Open in Maps
+                  </a>
+                </div>
+              </div>
               <div className="p-8 sm:p-12">
                 <p className="eyebrow">Plan your visit</p>
                 <h2 className="mt-4 font-editorial text-4xl text-ink">Opening hours</h2>

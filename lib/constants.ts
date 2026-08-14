@@ -28,7 +28,7 @@ export const SITE = {
   mapsUrl:
     "https://www.google.com/maps/search/?api=1&query=Manna+Apartment+Old+Ashongman",
   mapsEmbedUrl:
-    "https://www.google.com/maps?q=Manna%20Apartment%20Old%20Ashongman&output=embed",
+    "https://maps.google.com/maps?q=Manna%20Apartment%20Old%20Ashongman&hl=en&z=16&output=embed",
   instagram: "https://instagram.com/lashlux_",
   instagramHandle: "@lashlux_",
   snapchat: "c_tamidu",
